@@ -11,4 +11,4 @@ Interactive system to manage Humidity/Temperature/Smoke Sensors
 
 # Reports
 
-[Link Text](reports/IES_Project_Specification_Report.pdf)
+[Report](reports/IES_Project_Specification_Report.pdf)
