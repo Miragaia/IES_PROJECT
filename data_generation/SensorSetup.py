@@ -6,9 +6,9 @@ import random
 # Configuração do RabbitMQ
 rabbitmq_host = 'localhost'  # Substitua pelo host do seu RabbitMQ
 rabbitmq_port = 5672
-rabbitmq_username = 'sensorsafe'
-rabbitmq_password = 'password'
-exchange_name = 'sensor_exchange'
+rabbitmq_username = 'guest'
+rabbitmq_password = 'guest'
+exchange_name = 'spring_exchange'
 queue_name = 'SensorSafe'
 
 # Conexão com o RabbitMQ
@@ -23,10 +23,16 @@ channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key=queue_n
 # Função para simular a leitura do sensor e enviar para o RabbitMQ
 def send_sensor_data():
     while True:
+        type = ['temperature', 'humidity', 'pressure']
+        
+        # Adiciona 'smoke' em 10% das vezes
+        smoke = 'smoke' if random.randint(1, 10) == 1 else 'no smoke'
+
         # Simula a leitura do sensor
         sensor_data = {
-            'sensor_id': random.randint(1, 10),
-            'value': random.uniform(0, 100),
+            'sensor_id': type[random.randint(1, 3)-1],
+            'smoke': smoke,
+            'value': random.uniform(0, 20),
             'timestamp': int(time.time())
         }
 
@@ -47,4 +53,3 @@ def send_sensor_data():
 
 # Chama a função para enviar dados do sensor
 send_sensor_data()
-

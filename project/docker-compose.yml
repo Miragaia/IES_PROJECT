@@ -43,8 +43,8 @@ services:
       context: ./rabbitmq
       dockerfile: Dockerfile
     environment:
-     - RABBITMQ_DEFAULT_PASS=password
-     - RABBITMQ_DEFAULT_USER=sensorsafe
+     - RABBITMQ_DEFAULT_PASS=guest
+     - RABBITMQ_DEFAULT_USER=guest
      - RABBITMQ_DEFAULT_VHOST=/
     volumes:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/

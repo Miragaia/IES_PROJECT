@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.SensorSafe.API.midleware.rabbitmq.RabbitMQHandler;
 
 import javax.annotation.PreDestroy;
+import javax.validation.OverridesAttribute.List;
 
 @Component
 public class SensorSafeEventListener {
@@ -29,19 +30,22 @@ public class SensorSafeEventListener {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void connect() {
+    public void runAfterStartup() {
         try {
             rabbitMQHandler.connect(username, password, "/");
             rabbitMQHandler.setup("SensorSafe");
             logger.info("Connected to RabbitMQ");
-            
+
         } catch (Exception e) {
             logger.error("Error connecting to RabbitMQ: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    
+
     @PreDestroy
-    public void disconnect() {
+    public void runOnShutdown() {
         try {
             rabbitMQHandler.disconnect();
         } catch (Exception e) {
@@ -49,5 +53,5 @@ public class SensorSafeEventListener {
             e.printStackTrace();
         }
     }
-    
+
 }

@@ -55,9 +55,9 @@ public class RabbitMQHandler {
 
     public void setup(String queueName) throws IOException {
         try {
-            channel.exchangeDeclare(exchange, "direct", true);
-            channel.queueDeclare(queueName, true, false, false, null);
-            channel.queueBind(queueName, exchange, queueName);
+            this.channel.exchangeDeclare(exchange, "direct", true);
+            this.channel.queueDeclare(queueName, true, false, false, null);
+            this.channel.queueBind(queueName, exchange, queueName);
             logger.info("Setup RabbitMQ");
            } catch (IOException e) {
             logger.error("Error setting up RabbitMQ: " + e.getMessage());
