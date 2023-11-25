@@ -1,0 +1,16 @@
+FROM openjdk:11.0.13-jdk-slim
+
+ENV MONGO_USERNAME=root
+ENV MONGO_PASSWORD=password
+ENV MONGO_ADDRESS=172.1.0.5
+ENV MONGO_PORT=27017
+ENV RABBITMQ_ADDRESS=sensorsafe-rabbitmq
+ENV RABBITMQ_PORT=5672
+ENV RABBITMQ_USER=sensorsafe
+ENV RABBITMQ_PASSWORD=password
+
+COPY target/API-0.0.1-SNAPSHOT.jar API-0.0.1-SNAPSHOT.jar 
+COPY run.sh run.sh
+
+RUN ["chmod", "u+x", "./run.sh"]
+CMD [ "./run.sh" ]
