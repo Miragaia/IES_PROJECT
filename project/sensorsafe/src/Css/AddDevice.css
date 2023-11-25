@@ -1,0 +1,94 @@
+.additem-page{
+    height: 100vh;
+      background-color: rgb(228, 134, 72);
+      display: flex;
+      font-family: 'Lato', sans-serif;
+      width: 100%;
+  }
+
+.additem-modal{
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 50px;
+    display: flex;
+    width: 80%;
+    max-width: 600px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.additem-modal h3{
+color:orange;
+font-size:26px;
+font-weight:bold;
+letter-spacing: 1px;
+margin-left: 20px;
+white-space: nowrap;
+padding-bottom: 2.5rem;
+align-items: center;
+text-align: center;
+
+}
+
+  
+  .form-group-item {
+    margin: 10px 0;
+  }
+  
+.form-group-item label {
+    display: block;
+    margin-bottom: 5px;
+    color:black;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  .form-group-item input[type='text'],
+  .form-group-item input[type='file'],
+  #description {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: black;
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+button.additem{
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+
+/* Dentro do arquivo DetailProduct.css */
+
+.category-selection {
+    margin-top: 20px;
+  }
+  
+  .category-options {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .category-option {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .category-option.active {
+    background-color: orange;
+    color: white;
+  }
+  
