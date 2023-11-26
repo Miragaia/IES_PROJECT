@@ -12,8 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useEffect, useRef} from 'react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -37,34 +35,21 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const adminCodeRef = useRef(null); 
-  const { login, isLoggedIn } = useAuth();
-  const [redirect, setRedirect] = useState(false);
+export default function SignUp() {
   const navigate = useNavigate();
 
-
+  const { login } = useAuth();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
-      adminCode: data.get('adminCode'), // Obtenha o valor do campo do código de administrador
     });
 
     login();
-    setRedirect(true);
-    
-  }
-
-  useEffect(() => {
-    if (redirect && isLoggedIn) {
-      console.log("alo: ",isLoggedIn);
-      navigate('/devices');    }
-  }, [redirect, isLoggedIn]);
+    navigate('/devices');  
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -82,62 +67,61 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="off"
-              autoFocus
-              inputRef={emailRef}
-            />
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="password"
-              label="Password"
-              name="password"
-              autoComplete="off"
-              autoFocus
-              inputRef={passwordRef}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="adminCode"
-              label="Admin Code"
-              name="adminCode"
-              autoComplete="off"
-              autoFocus
-                
-            />
-
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="given-name"
+                  name="fullName"
+                  required
+                  fullWidth
+                  id="fullName"
+                  label="Full Name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+            </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link to="/signin" variant="body2">
+                  Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

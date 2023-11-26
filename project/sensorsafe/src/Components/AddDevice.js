@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import '../Css/AddDevice.css';
+import { useNavigate } from 'react-router-dom';
+
 
 function AddDevice() {
+    const navigate = useNavigate();
 
     const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -56,7 +59,7 @@ function AddDevice() {
             setTimeout(() => {
                 
                 document.body.classList.remove('modal-open');
-                window.location.href = '/store';
+                navigate('/devices');
             }, 3000);
           } else {
             console.error('Erro ao adicionar o item');

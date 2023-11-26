@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import DeviceCard from './Card';
+import { useNavigate } from 'react-router-dom';
 
 
 const Devices = () => {
     const [devices, setDevices] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedItem, setSelectedItem] = useState('humidity');
+    const navigate = useNavigate();
   
     const handleItemClick = (itemName) => {
       setSelectedItem(itemName);
@@ -71,7 +73,7 @@ const Devices = () => {
                   <div>No products available.</div>
                 )}*/}
                 <DeviceCard />
-                <button className="btn edit-button add-product" onClick={() => (window.location.href = "/add_device")}>
+                <button className="btn edit-button add-product" onClick={() => (navigate('/add_device'))}>
                   <i className="animation"></i>Add device +<i className="animation"></i>
                 </button>
   
