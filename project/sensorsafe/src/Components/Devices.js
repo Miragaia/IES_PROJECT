@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
-import DeviceCard from './Card';
+import Card from './Card';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -67,12 +67,12 @@ const Devices = () => {
               <div className="room-devices-cards-container">
                 {/*{Array.isArray(devices) ? (
                   devices.map((item, index) => (
-                      <DeviceCard key={index} item={item} />
+                      <Card key={index} item={item} />
                   ))
                 ) : (
                   <div>No products available.</div>
                 )}*/}
-                <DeviceCard />
+                <Card />
                 <button className="btn edit-button add-product" onClick={() => (navigate('/add_device'))}>
                   <i className="animation"></i>Add device +<i className="animation"></i>
                 </button>

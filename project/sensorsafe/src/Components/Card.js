@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../Css/Cards.css';
-import foto from '../pc_pic_room.png';
+import foto from '../extrator.jpg';
 
 
 
