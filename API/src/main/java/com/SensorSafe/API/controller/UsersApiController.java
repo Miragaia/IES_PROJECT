@@ -1,11 +1,15 @@
 package com.SensorSafe.API.controller;
 
-import javax.print.DocFlavor.STRING;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +29,7 @@ import com.SensorSafe.API.services.UserService;
 
 @RestController
 @RequestMapping("/sensorsafe")
+@Api(value = "Users API", description = "Operations pertaining to users", tags = "Users" )
 public class UsersApiController {
 
     private final UserService userService;
@@ -45,6 +50,7 @@ public class UsersApiController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "Login", notes = "Login to the application and generate JWT token", response = JwtResponse.class)
     public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
         String username = authenticationRequest.getUsername();
         String password = authenticationRequest.getPassword();
@@ -65,6 +71,7 @@ public class UsersApiController {
     }    
 
     @PostMapping("/register")
+    @ApiOperation(value = "Register", notes = "Register a new user", response = JwtResponse.class)
     public JwtResponse register(@RequestBody User user) {
         
         if (!user.isValid()) {
@@ -79,5 +86,11 @@ public class UsersApiController {
         }
 
         return new JwtResponse("Registration successful", null);
+    }
+
+    @GetMapping("/test")
+    @ApiOperation(value = "Test", notes = "Test endpoint", response = String.class)
+    public String test() {
+        return "Test successful";
     }
 }
