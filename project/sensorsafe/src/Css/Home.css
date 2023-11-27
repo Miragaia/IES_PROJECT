@@ -13,14 +13,14 @@
   }
   
   /* Estilos para o título */
-  h1 {
+  .home-title {
     margin-top: 150px;
     font-size: 3em;
     margin-bottom: 50px;
   }
   
   /* Estilos para os parágrafos de texto */
-  p {
+  .texto-home {
     margin-bottom: 30px;
     width: 950px;
     text-align: justify;
@@ -30,12 +30,14 @@
   }
   
   /* Estilos para os botões */
-  .buttons {
+  .buttons-home {
     margin-top: 30px;
     margin-bottom: 70px;
   }
   
-  .buttons button {
+
+  #loginHome{
+    background-color: orangered;
     font-weight: 500; 
     width: 160px;
     margin-right: 20px;
@@ -47,18 +49,23 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    color: #fff; 
+    color: #fff;
   }
 
-  #loginHome{
-    background-color: orangered;
-  }
   #registerHome{
     background-color: #414040;
-  }
-  
-  .buttons button:hover {
-    background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+    font-weight: 500; 
+    width: 160px;
+    margin-right: 20px;
+    margin-left: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    height: 40px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
   }
   
   /* Estilos para a imagem */

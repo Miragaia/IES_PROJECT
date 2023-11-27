@@ -73,8 +73,8 @@ const Devices = () => {
                   <div>No products available.</div>
                 )}*/}
                 <Card />
-                <button className="btn edit-button add-product" onClick={() => (navigate('/add_device'))}>
-                  <i className="animation"></i>Add device +<i className="animation"></i>
+                <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
+                  <i className="animation"></i>Create device +<i className="animation"></i>
                 </button>
   
               </div>

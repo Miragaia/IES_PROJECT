@@ -47,6 +47,13 @@ const handleAddItem = (itemName) => {
         </ul>
       </nav>
       <div className="search-bar">
+            <div className='room-details-button'>
+                <Link to="/roomdetails" onClick={() => handleItemClick('roomdetails')}>
+                    <button className='btn-room-details'>
+                      Room Details
+                    </button>
+                </Link>
+            </div>
             <div className="search-bar-content">
                 <input
                     type="text"

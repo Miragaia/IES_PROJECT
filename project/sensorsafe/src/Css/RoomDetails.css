@@ -1,0 +1,105 @@
+/* RoomDetails.css */
+
+.room-details-content {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 200px;
+    text-align: center;
+  }
+  
+  .control-section {
+    border: 2px solid rgb(0, 0, 0);
+    padding: 20px;
+    margin: 10px;
+    width: calc(33.33% - 20px); /* Divide the width equally for three sections */
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    background-color: rgb(250, 249, 249);
+    border-radius: 5px;
+  }
+  
+  .min-max-fields {
+    margin-top: 10px;
+  }
+  
+  button {
+    outline: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(255, 0, 0);
+    min-width: 50px;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+    padding: 16px 20px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-top: 1rem;
+    text-decoration: none;
+    height: 20px;
+  }
+
+  .activate {
+    background-color: red;
+  }
+  
+  .deactivate {
+    background-color: green;
+  }
+
+  .Title-Section{
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: orange;
+    font-size: 30px;
+  }
+
+  .status-control{
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  .status-control-button{
+    margin-top: 20px;
+  }
+  
+  .Page-Title{
+    font-family: 'Roboto', sans-serif;
+    
+    color: black;
+    font-size: 70px;
+    margin-bottom: 30px;
+  }
+
+  .min-max-fields {
+    margin-top: 20px;
+    justify-content: space-between; /* Adjust spacing between fields */
+  }
+
+  .field {
+    margin-top: 10px;
+  }
+
+  .adjustable-field {
+    width: 75px;
+    margin-top: 10px;
+  }
+
+  .apply {
+    margin-top: 20px;
+    background-color: orange;
+  }
+  
+
+  /* Additional styling can be added based on your design preferences */
+  
