@@ -6,27 +6,29 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
+// ... restante do código
+
 export function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem('isLoggedIn') === 'true'
+  );
 
-
-
-
-  const login = ()  =>{
+  const login = () => {
     setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const logout = () => {
     setIsLoggedIn(false);
+    localStorage.setItem('isLoggedIn', 'false');
   };
 
-
-
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout}}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
 
 

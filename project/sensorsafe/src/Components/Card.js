@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import '../Css/Cards.css';
 import foto from '../extrator.jpg';
 
+import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 
 
 
@@ -13,7 +14,14 @@ const Card = ({ item }) => {
                 <img src={foto} className="Item-foto" alt="foto" />
             </div>
             <div className="product-details">
-                <h4>Air Conditioning</h4>
+                <h4>
+                    {/*<Link  to={`/detailproduct/${editedItem.id}`}>
+                        {editedItem.nome}
+                    </Link>*/}
+                    <Link  to={`/detail_device/1`}>
+                        Air Conditioning
+                    </Link>
+                </h4>
             </div>
         </div>
     

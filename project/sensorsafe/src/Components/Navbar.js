@@ -19,7 +19,7 @@ const Navbar = () => {
     logout()
     console.log("ola: ",isLoggedIn);
     setSelectedItem('');
-    navigate('/home');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Navbar = () => {
                   <Link to="/reports" onClick={() => handleItemClick('reports')}>Reports</Link>
                 </li>
                 <li className={selectedItem === 'about' ? 'active' : ''}>
-                  <Link to="/" onClick={() => handleItemClick('about')}>About Us</Link>
+                  <Link to="/aboutus" onClick={() => handleItemClick('about')}>About Us</Link>
                 </li>
                 <li className={selectedItem === 'profile' ? 'active' : ''}>
                   <Link to="/profile" className="login-button" onClick={() => handleItemClick('profile')}>Profile</Link>
@@ -63,16 +63,16 @@ const Navbar = () => {
           ) : (
             <>
               <div className="logo">
-                <Link to="/home">
+                <Link to="/">
                   <span>SensorSafe</span>
                 </Link>
               </div>
               <ul className="nav-links">
                 <li className={selectedItem === 'home' ? 'active' : ''}>
-                  <Link to="/home" onClick={() => handleItemClick('home')}>Home</Link>
+                  <Link to="/" onClick={() => handleItemClick('home')}>Home</Link>
                 </li>
                 <li className={selectedItem === 'about' ? 'active' : ''}>
-                  <Link to="/" onClick={() => handleItemClick('about')}>About Us</Link>
+                  <Link to="/aboutus" onClick={() => handleItemClick('about')}>About Us</Link>
                 </li>
                 <li><Link to="/signIn" className="login-button2">Login</Link></li>
                 <li><Link to="/signup" className="login-button2">Register</Link></li>
