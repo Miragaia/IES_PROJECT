@@ -1,30 +1,26 @@
-package com.SensorSafe.API.model.report;
+package com.SensorSafe.API.model.device;
+
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 
 import javax.persistence.Id;
-import java.util.Date;
 
-@Document(collection = "reports")
 @Data
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
-public class Report {
+public abstract class AbstractDevice {
 
     @Id
+    @Field("_id")
     @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId reportId;
+    private ObjectId deviceId;
     private String name;
-    private ReportType type;
-    private Date date;
-    private String description;
-    
+    private DeviceCategory category;
 }

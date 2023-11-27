@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "accessibleDevices")
 @Data
 @ToString(callSuper = true)
-public class AvailableDevice extends AbstratctDevice {
+public class AvailableDevice extends AbstractDevice {
     public AvailableDevice(ObjectId deviceId, String name, DeviceCategory category) {
         super(deviceId, name, category);
     }

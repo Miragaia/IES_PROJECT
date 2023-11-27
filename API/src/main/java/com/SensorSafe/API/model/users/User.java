@@ -1,4 +1,4 @@
-package com.SensorSafe.API.model.Users;
+package com.SensorSafe.API.model.users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

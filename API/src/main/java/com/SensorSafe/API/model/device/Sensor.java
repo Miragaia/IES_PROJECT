@@ -12,11 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @ToString(callSuper = true)
 public class Sensor extends Device {
-    private String state;
+    private boolean sensorStatus;
+    private double value;
 
-    public Sensor(ObjectId deviceId, String name, DeviceCategory category, ObjectId roomID, String state) {
+    public Sensor(ObjectId deviceId, String name, DeviceCategory category, ObjectId roomID, boolean sensorStatus, double value) {
         super(deviceId, name, category, roomID);
-        this.state = state;
+        this.sensorStatus = sensorStatus;
+        this.value = value;
     }
-    
 }

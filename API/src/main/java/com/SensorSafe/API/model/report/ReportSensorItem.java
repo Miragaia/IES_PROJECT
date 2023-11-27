@@ -1,11 +1,8 @@
 package com.SensorSafe.API.model.report;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.bson.types.ObjectId;
 
@@ -22,4 +19,10 @@ public class ReportSensorItem extends Report {
     private String sensorType;
     private String sensorStatus;
 
+    public ReportSensorItem(ObjectId reportId, String name, ReportType type, Date date, String description, ObjectId sensorId, String sensorType, String sensorStatus) {
+        super(reportId, name, type, date, description);
+        this.sensorId = sensorId;
+        this.sensorType = sensorType;
+        this.sensorStatus = sensorStatus;
+    }
 }

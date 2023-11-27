@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Device extends AbstratctDevice{
+public class Device extends AbstractDevice{
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId roomID;
 

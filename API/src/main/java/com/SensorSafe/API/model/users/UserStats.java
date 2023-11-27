@@ -1,4 +1,4 @@
-package com.SensorSafe.API.model.Users;
+package com.SensorSafe.API.model.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
