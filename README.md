@@ -26,7 +26,7 @@
 
 # Architecture
 
-![Architecture](reports/I2/Architecture.png)
+![Architecture](reports/I2/Architecture_Diagram.png)
 
 # Bookmarks
 

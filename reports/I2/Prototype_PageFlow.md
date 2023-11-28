@@ -1,4 +1,4 @@
-#Prototype Page Flow for User Story 4
+# Prototype Page Flow for User Story 4
 
 - 1. User enters the website
     - Home Page
