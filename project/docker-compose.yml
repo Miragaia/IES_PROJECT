@@ -17,7 +17,7 @@ services:
 
   api:
     build:
-      context: ../api
+      context: ../API
       dockerfile: Dockerfile
     depends_on:
       - mongo
@@ -72,16 +72,16 @@ services:
      # mongo-compose-network:
       #  ipv4_address: 172.18.0.8
 
-#  data_generators:
- #   build:
-  #    context: ../projectDataGeneration
-   #   dockerfile: Dockerfile
-    #depends_on:
-    #  - rabbitmq
-    #networks:
-     # mongo-compose-network:
-      #  ipv4_address: 172.18.0.9
-    #command: tail -F anything
+  data_generation:
+    build:
+      context: ../data_generation
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    networks:
+      mongo-compose-network:
+        ipv4_address: 172.1.0.9
+      #command: tail -F anything
 
 
 networks: 
