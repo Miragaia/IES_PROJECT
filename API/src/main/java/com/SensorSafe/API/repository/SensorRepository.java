@@ -7,7 +7,7 @@ import com.SensorSafe.API.model.device.Sensor;
 
 public interface SensorRepository extends MongoRepository<Sensor, Long>{
     
-    Sensor findBySensorId(ObjectId sensorId);
-    boolean existsBySensorId(ObjectId sensorId);
-    void deleteBySensorId(ObjectId sensorId);
+    Sensor findByDeviceId(ObjectId deviceId);
+    boolean existsByDeviceId(ObjectId deviceId);
+    void deleteByDeviceId(ObjectId deviceId);
 }

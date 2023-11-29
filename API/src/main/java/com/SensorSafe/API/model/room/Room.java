@@ -20,14 +20,14 @@ public class Room {
     @Id
     @Field(value = "_id")
     @JsonSerialize(using= ToStringSerializer.class)
-    private ObjectId id;
-    private String name;
+    private ObjectId roomId;
+    private String roomName;
     private List<String> users;
     private List<Device> devices;
     private RoomStats stats;
 
     public boolean isValid() {
-        return name != null;
+        return roomName != null;
     }
 
 }

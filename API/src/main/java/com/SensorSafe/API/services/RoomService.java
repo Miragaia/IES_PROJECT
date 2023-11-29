@@ -33,7 +33,7 @@ public class RoomService {
     
         roomRepository.save(room);    
 
-        return roomRepository.findByRoomId(room.getId());
+        return roomRepository.findByRoomId(room.getRoomId());
     }
 
     public Room getRoom(ObjectId roomId) {
@@ -53,7 +53,7 @@ public class RoomService {
     }
 
     public void deleteRoom(Room roomId){
-        roomRepository.deleteByRoomId(roomId.getId());
+        roomRepository.deleteByRoomId(roomId.getRoomId());
     }
 
     public void saveRoom(Room room){
@@ -61,7 +61,7 @@ public class RoomService {
     }
 
     public void updateRoom(Room room){
-        roomRepository.deleteByRoomId(room.getId());
+        roomRepository.deleteByRoomId(room.getRoomId());
         roomRepository.save(room);
     }
 }

@@ -40,7 +40,7 @@ public class SensorService {
     }
 
     public Sensor getSensorById(ObjectId sensorId){
-        return sensorRepository.findBySensorId(sensorId);
+        return sensorRepository.findByDeviceId(sensorId);
     }
 
     public List<Sensor> getAllSensors(){
@@ -48,11 +48,11 @@ public class SensorService {
     }
 
     public boolean sensorExists(ObjectId sensorId){
-        return sensorRepository.existsBySensorId(sensorId);
+        return sensorRepository.existsByDeviceId(sensorId);
     }
 
     public void deleteSensor(Sensor sensorId){
-        sensorRepository.deleteBySensorId(sensorId.getDeviceId());
+        sensorRepository.deleteByDeviceId(sensorId.getDeviceId());
     }
 
     public void saveSensor(Sensor sensor){
