@@ -20,7 +20,7 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public Room RegistetRoom(Room room){
+    public Room RegisteRoom(Room room){
         
         if (!room.isValid())
             throw new UserNotFoundException("Invalid room data - invalid room");
