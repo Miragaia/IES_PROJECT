@@ -24,6 +24,7 @@ public class Room {
     private String roomName;
     private List<String> users;
     private List<Device> devices;
+    private Boolean automatized;
     private RoomStats stats;
 
     public boolean isValid() {

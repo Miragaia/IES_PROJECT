@@ -46,19 +46,39 @@ export default function SignIn() {
   const navigate = useNavigate();
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-      adminCode: data.get('adminCode'), // Obtenha o valor do campo do código de administrador
-    });
 
-    login();
-    setRedirect(true);
-    
-  }
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      const response = await fetch('http://localhost:5001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.get('email'),
+          password: formData.get('password'),
+          adminCode: formData.get('adminCode'),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      sessionStorage.setItem('user', JSON.stringify(data));
+
+      if (data) {
+        login();
+        setRedirect(true);
+      }
+    } catch (error) {
+      console.log('Error in auth/signin post', error);
+    }
+  };
 
   useEffect(() => {
     if (redirect && isLoggedIn) {

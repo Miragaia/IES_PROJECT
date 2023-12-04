@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.repository.RoomRepository;
+import com.SensorSafe.API.model.room.RoomStats;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,4 +66,13 @@ public class RoomService {
         roomRepository.deleteByRoomId(room.getRoomId());
         roomRepository.save(room);
     }
+
+    public boolean roomIsAutomatized(ObjectId roomId){
+        return roomRepository.roomIsAutomatized(roomId);
+    }
+
+    public RoomStats getRoomStatistics(ObjectId roomId){
+        return roomRepository.getStatsByRoomId(roomId);
+    }
+
 }

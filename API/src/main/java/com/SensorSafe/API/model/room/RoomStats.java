@@ -9,7 +9,6 @@ public class RoomStats {
 
     private double temperature;
     private double humidity;
-    private double pressure;
     private boolean smoke;
 
 }
