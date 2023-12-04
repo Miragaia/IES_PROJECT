@@ -1,4 +1,4 @@
-FROM openjdk:11.0.13-jdk-slim
+FROM openjdk:17-jdk-slim
 
 ENV MONGO_USERNAME=root
 ENV MONGO_PASSWORD=password
