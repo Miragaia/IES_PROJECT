@@ -13,7 +13,7 @@ services:
     stdin_open: true
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.3
+        ipv4_address: 172.1.0.2
 
   api:
     build:
@@ -52,12 +52,10 @@ services:
       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/mnesia
     ports:
       - 5672:5672
-      - 15672:15672
-      - 15674:15674
+
     expose:
       - 5672
-      - 15672
-      - 15674
+
     networks:
       mongo-compose-network:
         ipv4_address: 172.1.0.6
