@@ -46,7 +46,7 @@ export default function SignUp() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/signup', {
+      const response = await fetch('http://localhost:8080/sensorsafe/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -35,7 +35,7 @@ public class ApiApplication {
 						.allowedMethods("GET", "POST","PUT", "DELETE")
 						.allowedOrigins("*")
 						.allowedHeaders("*")
-						.allowCredentials(true);
+						.allowCredentials(false);
 
 			}
 		};

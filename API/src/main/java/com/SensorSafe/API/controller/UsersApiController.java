@@ -26,7 +26,6 @@ import com.SensorSafe.API.model.users.User;
 import com.SensorSafe.API.repository.UserRepository;
 import com.SensorSafe.API.services.UserService;
 
-
 @RestController
 @RequestMapping("/sensorsafe")
 @Api(value = "Users API", description = "Operations pertaining to users", tags = "Users" )

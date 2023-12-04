@@ -52,7 +52,7 @@ export default function SignIn() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch('http://localhost:5001/login', {
+      const response = await fetch('http://localhost:8080/sensorsafe/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
