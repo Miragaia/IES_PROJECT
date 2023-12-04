@@ -68,7 +68,7 @@ public class RoomService {
     }
 
     public boolean roomIsAutomatized(ObjectId roomId){
-        return roomRepository.roomIsAutomatized(roomId);
+        return roomRepository.existsByAutomatized(roomId);
     }
 
     public RoomStats getRoomStatistics(ObjectId roomId){

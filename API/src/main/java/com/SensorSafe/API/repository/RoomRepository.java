@@ -13,7 +13,7 @@ public interface RoomRepository extends MongoRepository<Room, Long>{
     boolean existsByRoomId(ObjectId roomId);
     boolean existsByRoomName(String roomName);
     
-    boolean roomIsAutomatized(ObjectId roomId);
+    boolean existsByAutomatized(ObjectId roomId);
 
     RoomStats getStatsByRoomId(ObjectId roomId);
 
