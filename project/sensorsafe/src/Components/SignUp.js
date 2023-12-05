@@ -52,9 +52,10 @@ export default function SignUp() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: formData.get('fullName'),
+          username: formData.get('fullName'),
           email: formData.get('email'),
           password: formData.get('password'),
+          adminCode: 0
         }),
       });
 
@@ -63,12 +64,19 @@ export default function SignUp() {
       }
 
       const data = await response.json();
-      sessionStorage.setItem('user', JSON.stringify(data));
 
-      if (data) {
+      if (data && data.message === 'Login successful') {
+        // Registration was successful
+        console.log('Registration successful:', data.message);
+        sessionStorage.setItem('Token: ', data.token);
+
         login();
         navigate('/devices');
+      } else {
+        // Registration failed, handle accordingly
+        console.log('Registration failed:', data.message);
       }
+      
     } catch (error) {
       console.log('Error in auth/signup post', error);
     }

@@ -58,25 +58,37 @@ export default function SignIn() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.get('email'),
+          username: formData.get('username'),
           password: formData.get('password'),
-          adminCode: formData.get('adminCode'),
+          // caso o admin code nao seja colocado no form, o valor default é 0
+          adminCode: formData.get('adminCode') ? formData.get('adminCode') : 0
+         
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+  
       const data = await response.json();
-      sessionStorage.setItem('user', JSON.stringify(data));
+  
+      // Check the response structure and adjust accordingly
+      if (data && data.message === 'Login successful') {
+        // Registration was successful
+        console.log('Registration successful:', data.message);
+        sessionStorage.setItem('Token: ', data.token);
 
-      if (data) {
         login();
-        setRedirect(true);
+        navigate('/devices');
+        } else {
+        // Registration failed, handle accordingly
+        console.log('Login failed:', data.message);
+
+        // Perform additional actions if needed
       }
     } catch (error) {
-      console.log('Error in auth/signin post', error);
+      console.error('Error in registration post', error);
+      // Perform additional error handling if needed
     }
   };
 
@@ -109,9 +121,9 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              id="username"
+              label="username or email"
+              name="username"
               autoComplete="off"
               autoFocus
               inputRef={emailRef}
@@ -130,10 +142,9 @@ export default function SignIn() {
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               id="adminCode"
-              label="Admin Code"
+              label="Admin Code (optional) - ask your admin for this code"
               name="adminCode"
               autoComplete="off"
               autoFocus

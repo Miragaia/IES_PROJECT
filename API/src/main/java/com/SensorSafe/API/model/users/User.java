@@ -1,4 +1,5 @@
 package com.SensorSafe.API.model.users;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -15,19 +16,26 @@ import javax.persistence.Id;
 import java.util.Collection;
 
 
+@Document(collection = "users")
 @Data
 @AllArgsConstructor
-@Document(collection = "users")
 public class User implements UserDetails{
+
+    @JsonCreator
+    public User() {
+    }
 
     @Id
     @Field("_id")
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId userId;
+
     @Indexed(unique = true)
     private String username;
+
     @Indexed(unique = true)
     private String email;
+
     private String password;
     private Integer adminCode;
 
@@ -65,6 +73,6 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return false;
     }
-
     
+
 }

@@ -12,9 +12,10 @@ exchange_name = 'spring_exchange'
 queue_name = 'SensorSafe'
 
 # Conexão com o RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port, credentials=pika.PlainCredentials(rabbitmq_username, rabbitmq_password)))
+credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
+parameters = pika.ConnectionParameters(rabbitmq_host, rabbitmq_port, '/', credentials)
+connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
-
 # Declaração da exchange e da fila
 channel.exchange_declare(exchange=exchange_name, exchange_type='direct', durable=True)
 channel.queue_declare(queue=queue_name, durable=True)
