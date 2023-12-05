@@ -2,6 +2,8 @@ package com.SensorSafe.API.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,16 +51,41 @@ public class UsersApiController {
         this.userDetailsService = userDetailsService;
     }
 
-    @GetMapping("/users/{username}")
-    public User getUser(@PathVariable String username) {
+    @GetMapping("/username/{username}")
+    @ApiOperation(value = "Get user", notes = "Get user by username", response = User.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "User found", response = User.class),
+        @ApiResponse(code = 404, message = "User not found"),
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public User getUserByName(@PathVariable String username) {
         if (!userService.existsByUsername(username)) {
             throw new UserNotFoundException("User not found");
         }
         return userService.findByUsername(username);
     }
 
+    @GetMapping("/useremail/{email}")
+    @ApiOperation(value = "Get user", notes = "Get user by email", response = User.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "User found", response = User.class),
+        @ApiResponse(code = 404, message = "User not found"),
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
+    public User getUserByEmail(@PathVariable String email) {
+        if (!userService.existsByEmail(email)) {
+            throw new UserNotFoundException("User not found");
+        }
+        return userService.findByEmail(email);
+    }
+
     @PostMapping("/login")
     @ApiOperation(value = "Login", notes = "Login to the application and generate JWT token", response = JwtResponse.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Login successful", response = JwtResponse.class),
+        @ApiResponse(code = 400, message = "Invalid username or password"),
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
     public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
         // print do que é recebido em logs
         System.out.println(authenticationRequest.toString());
@@ -95,11 +119,14 @@ public class UsersApiController {
     }    
 
     @PostMapping("/register")
-    @ApiOperation(value = "Register", notes = "Register a new user", response = JwtResponse.class)
+    @ApiOperation(value = "Register", notes = "Register a new user", response = Response.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Registration successful", response = Response.class),
+        @ApiResponse(code = 400, message = "Invalid user"),
+        @ApiResponse(code = 409, message = "User already exists"),
+        @ApiResponse(code = 500, message = "Internal server error")
+    })
     public Response register(@RequestBody User user, HttpServletRequest request) {
-
-        // dar print do que é recebido em logs
-        
 
         if (!user.isValid()) {
             throw new UserNotFoundException("Invalid user");
@@ -113,11 +140,5 @@ public class UsersApiController {
         }
 
         return new Response("Registration successful");
-    }
-
-    @GetMapping("/test")
-    @ApiOperation(value = "Test", notes = "Test endpoint", response = String.class)
-    public String test() {
-        return "Test successful";
     }
 }

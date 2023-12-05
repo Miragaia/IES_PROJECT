@@ -4,7 +4,7 @@ import time
 import random
 
 # Configuração do RabbitMQ
-rabbitmq_host = 'localhost'  # Substitua pelo host do seu RabbitMQ
+rabbitmq_host = 'rabbitmq'  # Substitua pelo host do seu RabbitMQ
 rabbitmq_port = 5672
 rabbitmq_username = 'guest'
 rabbitmq_password = 'guest'
