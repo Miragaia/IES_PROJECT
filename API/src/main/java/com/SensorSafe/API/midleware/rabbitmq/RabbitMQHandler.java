@@ -34,7 +34,8 @@ public class RabbitMQHandler {
     @Value("${spring.rabbitmq.template.exchange}")
     private String exchange;
 
-    public void connect(String username, String password, String host) throws IOException, TimeoutException {
+    public void connect(String username, String password, String host) {
+
         ConnectionFactory factory = new ConnectionFactory();
        
         factory.setUsername(username);
@@ -43,8 +44,8 @@ public class RabbitMQHandler {
         factory.setHost(address);
 
         try {
-            connection = factory.newConnection();
-            channel = connection.createChannel();
+            this.connection = factory.newConnection();
+            this.channel = connection.createChannel();
             logger.info("Connected to RabbitMQ");
         } catch (IOException | TimeoutException e) {
             logger.error("Error connecting to RabbitMQ: " + e.getMessage());
@@ -53,7 +54,7 @@ public class RabbitMQHandler {
 
     }
 
-    public void setup(String queueName) throws IOException {
+    public void setup(String queueName) {
         try {
             this.channel.exchangeDeclare(exchange, "direct", true);
             this.channel.queueDeclare(queueName, true, false, false, null);

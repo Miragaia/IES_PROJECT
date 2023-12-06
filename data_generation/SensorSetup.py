@@ -4,10 +4,10 @@ import time
 import random
 
 # Configuração do RabbitMQ
-rabbitmq_host = 'rabbitmq'  # Substitua pelo host do seu RabbitMQ
+rabbitmq_host ='rabbitmq_sensorsafe'  # Substitua pelo host do seu RabbitMQ
 rabbitmq_port = 5672
-rabbitmq_username = 'guest'
-rabbitmq_password = 'guest'
+rabbitmq_username = 'test'
+rabbitmq_password = 'test'
 exchange_name = 'spring_exchange'
 queue_name = 'SensorSafe'
 

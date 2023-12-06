@@ -1,15 +1,23 @@
+FROM maven:3.8.1-openjdk-17 AS build
+
+WORKDIR /API
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+COPY src ./src
+
+RUN mvn package -DskipTests
+
 FROM openjdk:17-jdk-slim
 
-ENV MONGO_USERNAME=root
-ENV MONGO_PASSWORD=password
-ENV MONGO_ADDRESS=172.1.0.5
-ENV MONGO_PORT=27017
-ENV RABBITMQ_PORT=5672
-ENV RABBITMQ_USER=guest
-ENV RABBITMQ_PASSWORD=guest
+WORKDIR /API
 
-COPY target/API-0.0.1-SNAPSHOT.jar API-0.0.1-SNAPSHOT.jar 
+COPY --from=build /API/target/*.jar ./app.jar
+
+EXPOSE 8080
+
 COPY run.sh run.sh
-
 RUN ["chmod", "u+x", "./run.sh"]
 CMD [ "./run.sh" ]

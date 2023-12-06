@@ -13,7 +13,7 @@ services:
     stdin_open: true
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.2
+        ipv4_address: 172.18.0.2
 
   api:
     build:
@@ -21,12 +21,14 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mongo
+      - rabbitmq
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.3
+        ipv4_address: 172.18.0.3
 
   mongo:
     image: mongo:4.4
+    container_name: mongodb_sensorsafe
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -35,16 +37,19 @@ services:
       - ./.docker/mongo-data:/data/db
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.5
+        ipv4_address: 172.18.0.5
+    ports:
+      - 27017:27017
 
   rabbitmq:
     image: rabbitmq:3.9.11-management
+    container_name: rabbitmq_sensorsafe
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile
     environment:
-     - RABBITMQ_DEFAULT_PASS=guest
-     - RABBITMQ_DEFAULT_USER=guest
+     - RABBITMQ_DEFAULT_PASS=test
+     - RABBITMQ_DEFAULT_USER=test
      - RABBITMQ_DEFAULT_VHOST=/
     volumes:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
@@ -52,13 +57,23 @@ services:
       - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/mnesia
     ports:
       - 5672:5672
+      - 15672:15672
+      - 15674:15674
 
     expose:
       - 5672
+      - 15672
+      - 15674
+
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.6
+        ipv4_address: 172.18.0.7
 
  # processors:
   #  build:
@@ -78,7 +93,7 @@ services:
       - rabbitmq
     networks:
       mongo-compose-network:
-        ipv4_address: 172.1.0.9
+        ipv4_address: 172.18.0.9
       #command: tail -F anything
 
 
@@ -87,4 +102,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.1.0.0/16
+        - subnet: 172.18.0.0/16

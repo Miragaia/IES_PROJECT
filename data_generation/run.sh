@@ -1,3 +1,3 @@
 #!/bin/bash
-sleep 20
+sleep 40
 exec python3 SensorSetup.py

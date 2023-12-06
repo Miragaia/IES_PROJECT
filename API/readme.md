@@ -122,24 +122,59 @@ To run the project in Docker, ensure you have the following prerequisites instal
 
 ### Running the Application
 
+First, ensure that the application properties are the next ones:
+```properties
+jwt.secret=my-32-character-ultra-secure-and-ultra-long-secret
+
+spring.data.mongodb.uri=mongodb://root:password@172.18.0.5:27017/?readPreference=primary&appname=sensorsafe%20Compass&ssl=false
+spring.data.mongodb.database=sensorsafe
+spring.data.mongodb.auto-index-creation=true
+spring.data.mongodb.repositories.enabled=true
+
+spring.rabbitmq.host=rabbitmq_sensorsafe
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=test
+spring.rabbitmq.password=test
+spring.rabbitmq.template.exchange="spring_exchange"
+```
+
+Second, ensure that the following ports are available:
+- 5672: RabbitMQ
+- 15672: RabbitMQ Management
+- 27017: MongoDB
+- 3000: Web Application
+
+If you have any of these ports in use, you can change them in the `docker-compose.yml` file.
+If you have MongoDB or RabbitMQ running in your machine, you will have to stop them.
+    - MongoDB: `sudo service mongod stop`
+    - RabbitMQ: `sudo rabbitmqctl stop`
+
 To run the application, follow these steps:
 
 1. **Build Docker Image:**
-   - Open a terminal in the project directory
+   - Open a terminal in the [/project/](/project/) directory
    - Run the following command to build a Docker image:
      ```bash
-     docker build -t your-image-name .
+     docker-compose build --no-cache
+     
      ```
 
 2. **Run Docker Container:**
    - Once the image is built, you can run a Docker container:
      ```bash
-     docker run -p 8080:8080 your-image-name
+     docker-compose up
      ```
-     Adjust the port mapping (`-p host-port:container-port`) as needed.
+    - If you want to run the container in the background, run the following command:
+      ```bash
+        docker-compose up -d
+        ```
 
 3. **Access the Application:**
-   - Open a web browser and navigate to `http://localhost:8080` to access the running application.
+   - Open a web browser and navigate to [http://localhost:8000](http://localhost:8000) or [http://172.18.0.2:3000](http://172.18.0.2:3000) to access the running application.
 
-Note: Ensure that the application configuration (e.g., database connection settings) is suitable for running in a Dockerized environment.
+4. **Stop Docker Container:**
+    - To stop the Docker container, run the following command:
+      ```bash
+      docker-compose down
+      ```
 

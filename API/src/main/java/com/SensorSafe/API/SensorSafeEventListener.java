@@ -15,7 +15,7 @@ import javax.validation.OverridesAttribute.List;
 @Component
 public class SensorSafeEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(SensorSafeEventListener.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final RabbitMQHandler rabbitMQHandler;
 
