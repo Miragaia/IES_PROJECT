@@ -65,7 +65,7 @@ export default function SignUp() {
 
       const data = await response.json();
 
-      if (data && data.message === 'Login successful') {
+      if (data && data.message === 'Registration successful') {
         // Registration was successful
         console.log('Registration successful:', data.message);
         sessionStorage.setItem('Token: ', data.token);

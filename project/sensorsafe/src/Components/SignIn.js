@@ -75,7 +75,7 @@ export default function SignIn() {
       // Check the response structure and adjust accordingly
       if (data && data.message === 'Login successful') {
         // Registration was successful
-        console.log('Registration successful:', data.message);
+        console.log('Login successful:', data.message);
         sessionStorage.setItem('Token: ', data.token);
 
         login();
