@@ -275,8 +275,8 @@ Second, ensure that the following ports are available:
 If you have any of these ports in use, you can change them in the `docker-compose.yml` file.
 
 If you have MongoDB or RabbitMQ running in your machine, you will have to stop them:
-    - MongoDB: `sudo service mongod stop`
-    - RabbitMQ: `sudo rabbitmqctl stop`
+- MongoDB: `sudo service mongod stop`
+- RabbitMQ: `sudo rabbitmqctl stop`
 
 To run the application, follow these steps:
 
