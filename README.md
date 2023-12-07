@@ -113,7 +113,7 @@ System: The system will provide a user-friendly interface to set personalized au
 - [Report](reports/I2/IES_Project_Specification_ReportFinal.pdf)
 
 Running the application:
-- [API_Documentation](http://localhost:8080/swagger-ui/index.html)
+- [API_Documentation](http://172.18.0.3:8080/swagger-ui/index.html)
 
 ## Project Management Board
 
@@ -275,8 +275,8 @@ Second, ensure that the following ports are available:
 If you have any of these ports in use, you can change them in the `docker-compose.yml` file.
 
 If you have MongoDB or RabbitMQ running in your machine, you will have to stop them:
-- MongoDB: `sudo service mongod stop`
-- RabbitMQ: `sudo rabbitmqctl stop`
+* MongoDB: `sudo service mongod stop`
+* RabbitMQ: `sudo rabbitmqctl stop`
 
 To run the application, follow these steps:
 
