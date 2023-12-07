@@ -46,7 +46,7 @@ export default function SignUp() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch('http://172.18.0.3:8080/sensorsafe/register', {
+      const response = await fetch('http://localhost:8080/sensorsafe/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -22,6 +22,8 @@ services:
     depends_on:
       - mongo
       - rabbitmq
+    ports:
+      - 8080:8080
     networks:
       mongo-compose-network:
         ipv4_address: 172.18.0.3
