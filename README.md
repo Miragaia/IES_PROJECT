@@ -113,7 +113,7 @@ System: The system will provide a user-friendly interface to set personalized au
 - [Report](reports/I2/IES_Project_Specification_ReportFinal.pdf)
 
 Running the application:
-- [API_Documentation](http://172.18.0.3:8080/swagger-ui/index.html)
+- [API_Documentation](http://localhost:8080/swagger-ui/index.html)
 
 ## Project Management Board
 
@@ -299,7 +299,7 @@ To run the application, follow these steps:
         ```
 
 3. **Access the Application:**
-   - Open a web browser and navigate to [http://localhost:8000](http://localhost:8000) or [http://172.18.0.2:3000](http://172.18.0.2:3000) to access the running application.
+   - Open a web browser and navigate to [http://localhost:8000](http://localhost:8000) to access the running application.
 
 4. **Stop Docker Container:**
     - To stop the Docker container, run the following command:
