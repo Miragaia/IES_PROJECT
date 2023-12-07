@@ -273,7 +273,8 @@ Second, ensure that the following ports are available:
 - 3000: Web Application
 
 If you have any of these ports in use, you can change them in the `docker-compose.yml` file.
-If you have MongoDB or RabbitMQ running in your machine, you will have to stop them.
+
+If you have MongoDB or RabbitMQ running in your machine, you will have to stop them:
     - MongoDB: `sudo service mongod stop`
     - RabbitMQ: `sudo rabbitmqctl stop`
 
