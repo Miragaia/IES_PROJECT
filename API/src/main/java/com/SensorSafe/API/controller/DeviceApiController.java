@@ -65,89 +65,115 @@ public class DeviceApiController {
         this.middlewareHandler = middlewareHandler;
     }
 
-    // @ApiOperation(value = "Get all devices", response = Iterable.class)
-    // @GetMapping("/devices")
-    // public List<Device> getAllDevices() {
-    //     return deviceService.getAllDevices().stream()
-    //             .filter(device -> device.getRoomID() != null)
-    //             .filter(device -> { 
-    //                 Room room = roomService.getRoom(device.getRoomID());
-    //                 if (room == null) {
-    //                     return false;
-    //                 }
-    //                 return room.getUsers().contains(authHandler.getUsername());
-    //             })
-    //             .collect(java.util.stream.Collectors.toList());
-    // }
+    @ApiOperation(value = "Get all devices", response = Iterable.class)
+    @GetMapping("/devices")
+    public List<Device> getAllDevices() {
+        return deviceService.getAllDevices().stream()
+                .filter(device -> device.getRoomID() != null)
+                .filter(device -> { 
+                    Room room = roomService.getRoom(device.getRoomID());
+                    if (room == null) {
+                        return false;
+                    }
+                    return room.getUsers().contains(authHandler.getUsername());
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 
-    // @ApiOperation(value = "Create Sensor", response = Device.class)
-    // @PostMapping("/devices/create")
-    // public Response CreateSensor(@RequestBody Sensor sensor){
+    @ApiOperation(value = "Create Sensor", response = Device.class)
+    @PostMapping("/devices/create")
+    public Response CreateSensor(@RequestBody Sensor sensor){
 
-    //     sensorService.registerSensor(sensor);
+        sensorService.registerSensor(sensor);
 
-    //     Report report = Report.builder()
-    //             .reportId(null)
-    //             .name(authHandler.getUsername())
-    //             .type(ReportType.DEVICES)
-    //             .date(new java.util.Date())
-    //             .description("Device" + sensor.getName()+ " was created by" + authHandler.getUsername())
-    //             .build();
+        Report report = Report.builder()
+                .reportId(null)
+                .name(authHandler.getUsername())
+                .type(ReportType.DEVICES)
+                .date(new java.util.Date())
+                .description("Device" + sensor.getName()+ " was created by" + authHandler.getUsername())
+                .build();
 
-    //     reportService.saveReport(report);
+        reportService.saveReport(report);
 
-    //     return new Response("Sensor created successfully");
+        return new Response("Sensor created successfully");
 
-    // }
+    }
 
-    // @ApiOperation(value = "Get all sensors", response = Iterable.class)
-    // @GetMapping("/devices/sensors")
-    // public List<Sensor> getAllSensors() {
-    //     return sensorService.getAllSensors().stream()
-    //             .filter(sensor -> sensor.getRoomID() != null)
-    //             .filter(sensor -> { 
-    //                 Room room = roomService.getRoom(sensor.getRoomID());
-    //                 if (room == null) {
-    //                     return false;
-    //                 }
-    //                 return room.getUsers().contains(authHandler.getUsername());
-    //             })
-    //             .collect(java.util.stream.Collectors.toList());
-    // }
+    @ApiOperation(value = "Get all sensors", response = Iterable.class)
+    @GetMapping("/devices/sensors")
+    public List<Sensor> getAllSensors() {
+        return sensorService.getAllSensors().stream()
+                .filter(sensor -> sensor.getRoomID() != null)
+                .filter(sensor -> { 
+                    Room room = roomService.getRoom(sensor.getRoomID());
+                    if (room == null) {
+                        return false;
+                    }
+                    return room.getUsers().contains(authHandler.getUsername());
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
 
-    // @ApiOperation(value = "Get sensors by room", response = Iterable.class)
-    // @GetMapping("/devices/sensors/{roomId}")
-    // public List<Sensor> getSensorsByRoom(@PathVariable ObjectId roomId) {
-    //     if (!roomService.exists(roomId)) {
-    //         throw new UserNotFoundException("Room not found");
-    //     }
+    @ApiOperation(value = "Get sensors by room", response = Iterable.class)
+    @GetMapping("/devices/sensors/{roomId}")
+    public List<Sensor> getSensorsByRoom(@PathVariable ObjectId roomId) {
+        if (!roomService.exists(roomId)) {
+            throw new UserNotFoundException("Room not found");
+        }
 
-    //     Room room = roomService.getRoom(roomId);
+        Room room = roomService.getRoom(roomId);
 
-    //     if (!room.getUsers().contains(authHandler.getUsername())) {
-    //         throw new UserNotFoundException("Invalid Permissions");
-    //     }
+        if (!room.getUsers().contains(authHandler.getUsername())) {
+            throw new UserNotFoundException("Invalid Permissions");
+        }
 
-    //     return sensorService.getAllSensors().stream()
-    //             .filter(sensor -> sensor.getRoomID() != null)
-    //             .filter(sensor -> sensor.getRoomID().equals(roomId))
-    //             .collect(java.util.stream.Collectors.toList());
-    // }
+        return sensorService.getAllSensors().stream()
+                .filter(sensor -> sensor.getRoomID() != null)
+                .filter(sensor -> sensor.getRoomID().equals(roomId))
+                .collect(java.util.stream.Collectors.toList());
+    }
 
-    // @ApiOperation(value = "Get sensor by id", response = Sensor.class)
-    // @GetMapping("/devices/sensors/id/{sensorId}")
-    // public Sensor getSensorById(@PathVariable ObjectId sensorId) {
-    //     if (!sensorService.sensorExists(sensorId)) {
-    //         throw new UserNotFoundException("Unable to found sensor id");
-    //     }
+    @ApiOperation(value = "Get sensor by id", response = Sensor.class)
+    @GetMapping("/devices/sensors/id/{sensorId}")
+    public Sensor getSensorById(@PathVariable ObjectId sensorId) {
 
-    //     Sensor sensor = sensorService.getSensorById(sensorId);
+        if (sensorId == null) {
+            throw new UserNotFoundException("Please provide a sensor id");
+        }
 
-    //     if (!sensor.getRoomID().equals(roomService.getRoom(sensor.getRoomID()))) {
-    //         throw new UserNotFoundException("Invalid Permissions");
-    //     }
+        if (!sensorService.sensorExists(sensorId)) {
+            throw new UserNotFoundException("Unable to found sensor id");
+        }
 
-    //     return sensor;
-    // }
+        Sensor sensor = sensorService.getSensorById(sensorId);
+
+        if (sensor.getRoomID() == null || !roomService.exists(sensor.getRoomID())) {
+            throw new UserNotFoundException("Unable to found this room id: " + sensor.getRoomID());
+        }
+
+        Room room = roomService.getRoom(sensor.getRoomID());
+
+        if (!room.getUsers().contains(authHandler.getUsername())) {
+            throw new UserNotFoundException("Invalid Permissions");
+        }
+
+        return sensor;
+    }
+
+
+
+    @ApiOperation(value = "Get available devices", response = Iterable.class)
+    @GetMapping("/devices/available/{deviceId}")
+    public Response removeAvailableDevice(@PathVariable ObjectId deviceId) {
+        if (!availableDeviceService.availableDeviceExists(deviceId)) {
+            throw new UserNotFoundException("Device not found");
+        }
+
+        availableDeviceService.deleteAvailableDeviceById(deviceId);
+
+        return new Response("Device available removed successfully");
+    }
+
 }
 
