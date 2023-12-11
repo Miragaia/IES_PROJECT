@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import '../Css/AddDevice.css';
+import '../Css/CreateDevice.css';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -73,7 +73,7 @@ function AddDevice() {
     return (
         <div className='additem-page'>
         <div className='additem-modal'>
-          <h3>Add an Device</h3>
+          <h3>Create Device</h3>
           <form onSubmit={handleAddItem} encType="multipart/form-data">
             <div className='form-group-item'>
               <label htmlFor='foto_url'>Foto URL:</label>

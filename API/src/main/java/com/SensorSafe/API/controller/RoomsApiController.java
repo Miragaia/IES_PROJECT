@@ -58,10 +58,7 @@ public class RoomsApiController {
 
     @PostMapping("/rooms")
     @ApiOperation(value = "Create Room", notes = "Create a new room", response = Room.class)
-    public Room createRoom(@RequestBody Room room) {
-        if (roomService.exists(room.getRoomName()))
-            throw new DuplicateKeyException("Room already exists - invalid room name");
-
+    public Response createRoom(@RequestBody Room room) {        
         if (!room.isValid())
             throw new RoomNotFoundException("Invalid room data - invalid room");
 
@@ -74,7 +71,13 @@ public class RoomsApiController {
         if (room.getUsers() == null)        
             room.setUsers(new ArrayList<>());
 
-        return roomService.RegisteRoom(room);
+        try {
+            roomService.RegisteRoom(room);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException("Room already exists - invalid room name");
+        }
+
+        return new Response("Room as been created successfully");
     }
 
     @GetMapping("/rooms")
