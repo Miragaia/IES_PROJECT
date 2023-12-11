@@ -110,7 +110,14 @@ System: The system will provide a user-friendly interface to set personalized au
 
 ## Quick Links
 
-- [Report](reports/I2/IES_Project_Specification_ReportFinal.pdf)
+- Project Iterations:
+    - [Iteration 1.1](reports/I1.1)
+    - [Iteration 1.2](reports/I1.2)
+    - [Iteration 2](reports/I2)
+    - [Iteration 3](reports/I3)
+
+    
+- [Report](reports/I3/IES_Project_Specification_ReportFinal.pdf)
 
 Running the application:
 - [API_Documentation](http://localhost:8080/swagger-ui/index.html)
