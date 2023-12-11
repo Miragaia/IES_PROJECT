@@ -14,7 +14,6 @@ import RoomDetails from './Components/RoomDetails';
 import Dashboard from './Components/Dashboard';
 import EditProfile from './Components/EditProfile';
 import React from 'react';
-import { AuthProvider } from './Context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
@@ -23,7 +22,6 @@ function App() {
   return (
     <Router>
       <ToastContainer />
-      <AuthProvider>
         <Navbar />
           <Routes>
             <Route path="/aboutus" element={<AboutUs />} />
@@ -41,7 +39,6 @@ function App() {
             <Route path="/reports" element={<Dashboard />} />
           </Routes>
         <Navbar />
-      </AuthProvider>
     </Router>
   );
 }

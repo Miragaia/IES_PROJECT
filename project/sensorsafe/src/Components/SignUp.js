@@ -14,9 +14,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
-
-import { useAuth } from '../Context/AuthContext';
-
 import Toastify from './Toastify';
 
 
@@ -39,8 +36,6 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { login } = useAuth();
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -73,7 +68,6 @@ export default function SignUp() {
         Toastify.success('Registration successful');
         sessionStorage.setItem('Token:', data.token);
 
-        login();
         navigate('/devices');
       } else {
         // Registration failed, handle accordingly
