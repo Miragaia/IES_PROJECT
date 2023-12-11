@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('Bearer');
+    sessionStorage.removeItem('Token:');
     console.log("dentro",sessionStorage.getItem('Bearer'));
     logout()
     console.log("ola: ",isLoggedIn);

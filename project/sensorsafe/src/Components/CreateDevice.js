@@ -80,6 +80,8 @@ function AddDevice() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+              
             },
             body: JSON.stringify({
               name: formData.get('name'),
