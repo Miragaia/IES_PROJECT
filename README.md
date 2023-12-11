@@ -305,3 +305,7 @@ To run the application, follow these steps:
       ```bash
       docker-compose down
       ```
+
+## DataBase Access
+
+- mongosh --username root --password password
