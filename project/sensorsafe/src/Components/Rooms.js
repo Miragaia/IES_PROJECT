@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import DeviceCard from './Card';
-
+import { useNavigate } from 'react-router-dom';
 
 const Rooms = () => {
   const [devices, setDevices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState('devices');
+  const navigate = useNavigate();
 
   const handleItemClick = (itemName) => {
     setSelectedItem(itemName);
@@ -41,8 +42,8 @@ const handleAddItem = (itemName) => {
           <li id="bedroom" className={selectedItem === 'reports' ? 'active' : ''}>
             <Link onClick={() => handleItemClick('reports')}>Bedroom</Link>
           </li>
-          <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>
-            <Link onClick={() => handleAddItem('reports')}>Add Room +</Link>
+          <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>  
+            <Link to='/create_room'>Add Room +</Link>
           </li>
         </ul>
       </nav>
