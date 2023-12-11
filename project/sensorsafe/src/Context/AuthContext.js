@@ -6,7 +6,6 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-// ... restante do código
 
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(

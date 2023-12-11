@@ -18,7 +18,7 @@ const Card = ({ item }) => {
                     {/*<Link  to={`/detailproduct/${editedItem.id}`}>
                         {editedItem.nome}
                     </Link>*/}
-                    <Link  to={`/detail_device/1`}>
+                    <Link  to={`/detail_device`}>
                         Air Conditioning
                     </Link>
                 </h4>

@@ -11,6 +11,7 @@ import SignUp from './Components/SignUp';
 import DetailDevice from './Components/DetailDevice';
 import RoomDetails from './Components/RoomDetails';
 import Dashboard from './Components/Dashboard';
+import EditProfile from './Components/EditProfile';
 import React from 'react';
 import { AuthProvider } from './Context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -27,9 +28,10 @@ function App() {
             <Route path="/devices" element={<Devices />} />
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/create_device" element={<AddDevice/>}/>
-            <Route path="/detail_device/:id" element={<DetailDevice/>}/>
+            <Route path="/detail_device" element={<DetailDevice/>}/>
             <Route path="/signIn" element={<SignIn />} />
             <Route path="/roomdetails" element={<RoomDetails />} />
             <Route path="/reports" element={<Dashboard />} />
