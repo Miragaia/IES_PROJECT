@@ -84,7 +84,7 @@ public class DeviceApiController {
     }
 
     @ApiOperation(value = "Create Sensor", response = Device.class)
-    @PostMapping("/devices/create")
+    @PostMapping("/devices/sensor/create")
     public Response CreateSensor(@RequestBody Sensor sensor){
 
         sensorService.registerSensor(sensor);
@@ -102,6 +102,27 @@ public class DeviceApiController {
         return new Response("Sensor created successfully");
 
     }
+
+    @ApiOperation(value = "Create Device", response = Device.class)
+    @PostMapping("/devices/device/create")
+    public Response CreateDevice(@RequestBody Device device){
+
+        deviceService.registerDevice(device);
+
+        Report report = Report.builder()
+                .reportId(null)
+                .name(authHandler.getUsername())
+                .type(ReportType.DEVICES)
+                .date(new java.util.Date())
+                .description("Device" + device.getName()+ " was created by" + authHandler.getUsername())
+                .build();
+
+        reportService.saveReport(report);
+
+        return new Response("Device created successfully");
+
+    }
+
 
     @ApiOperation(value = "Get all sensors", response = Iterable.class)
     @GetMapping("/devices/sensors")
