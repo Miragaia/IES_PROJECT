@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import com.SensorSafe.API.model.report.ReportType;
+import com.SensorSafe.API.model.device.Device;
 import com.SensorSafe.API.model.report.Report;
 import com.SensorSafe.API.model.report.ReportSensorItem;
 import com.SensorSafe.API.repository.ReportRepository;
@@ -28,5 +29,9 @@ public class ReportService {
 
     public List<Report> getReportsByType(ReportType type){
         return reportRepository.findByType(type);
+    }
+
+    public Report getReportById(ObjectId id){
+        return reportRepository.findByReportId(id);
     }
 }

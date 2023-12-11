@@ -13,6 +13,6 @@ public class ReportAggregation {
     
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId sensorId;
-    private String sensorType;
+    private String sensorType;      //nao acho que estes 2 ultimos atributos sejam corretos
     private String sensorStatus;
 }
