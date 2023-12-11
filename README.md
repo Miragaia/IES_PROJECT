@@ -273,9 +273,10 @@ Second, ensure that the following ports are available:
 - 3000: Web Application
 
 If you have any of these ports in use, you can change them in the `docker-compose.yml` file.
-If you have MongoDB or RabbitMQ running in your machine, you will have to stop them.
-    - MongoDB: `sudo service mongod stop`
-    - RabbitMQ: `sudo rabbitmqctl stop`
+
+If you have MongoDB or RabbitMQ running in your machine, you will have to stop them:
+* MongoDB: `sudo service mongod stop`
+* RabbitMQ: `sudo rabbitmqctl stop`
 
 To run the application, follow these steps:
 
@@ -298,7 +299,7 @@ To run the application, follow these steps:
         ```
 
 3. **Access the Application:**
-   - Open a web browser and navigate to [http://localhost:8000](http://localhost:8000) or [http://172.18.0.2:3000](http://172.18.0.2:3000) to access the running application.
+   - Open a web browser and navigate to [http://localhost:8000](http://localhost:8000) to access the running application.
 
 4. **Stop Docker Container:**
     - To stop the Docker container, run the following command:
