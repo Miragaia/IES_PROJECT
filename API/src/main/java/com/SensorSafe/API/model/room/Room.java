@@ -12,9 +12,11 @@ import com.SensorSafe.API.model.device.Device;
 import javax.persistence.Id;
 import java.util.List;
 
+
+@Document(collection = "rooms")
 @Data
 @AllArgsConstructor
-@Document(collection = "rooms")
+
 public class Room {
 
     @Id

@@ -65,13 +65,13 @@ const Devices = () => {
           {selectedItem === 'humidity' ? (
             <>
               <div className="room-devices-cards-container">
-                {/*{Array.isArray(devices) ? (
+                {Array.isArray(devices) ? (
                   devices.map((item, index) => (
                       <Card key={index} item={item} />
                   ))
                 ) : (
                   <div>No products available.</div>
-                )}*/}
+                )}
                 <Card />
                 <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
                   <i className="animation"></i>Create device +<i className="animation"></i>

@@ -129,7 +129,7 @@ public class UsersApiController {
     public Response register(@RequestBody User user, HttpServletRequest request) {
 
         if (!user.isValid()) {
-            throw new UserNotFoundException("Invalid user");
+            throw new UserNotFoundException("Invalid Credentials (insert all!)");
         }
         
         try {
