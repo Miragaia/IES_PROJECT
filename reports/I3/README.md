@@ -6,3 +6,7 @@ Updates from Iteration I2
 - Updated the User Stories section.
 - Updated the Deployment section.
 - Updated DB Section.
+
+> IES_Project_Specification_ReportFinal
+
+- Updated the Architecture Diagram image.
