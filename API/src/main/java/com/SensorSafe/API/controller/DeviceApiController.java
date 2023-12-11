@@ -15,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.SensorSafe.API.exceptions.DeviceNotFoundException;
+import com.SensorSafe.API.exceptions.InvalidPermissionsException;
+import com.SensorSafe.API.exceptions.RoomNotFoundException;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.midleware.MiddlewareHandler;
 import com.SensorSafe.API.tokens.JwtRequest;
@@ -119,13 +122,13 @@ public class DeviceApiController {
     @GetMapping("/devices/sensors/{roomId}")
     public List<Sensor> getSensorsByRoom(@PathVariable ObjectId roomId) {
         if (!roomService.exists(roomId)) {
-            throw new UserNotFoundException("Room not found");
+            throw new RoomNotFoundException("Room not found");
         }
 
         Room room = roomService.getRoom(roomId);
 
         if (!room.getUsers().contains(authHandler.getUsername())) {
-            throw new UserNotFoundException("Invalid Permissions");
+            throw new InvalidPermissionsException("Invalid Permissions");
         }
 
         return sensorService.getAllSensors().stream()
@@ -139,23 +142,23 @@ public class DeviceApiController {
     public Sensor getSensorById(@PathVariable ObjectId sensorId) {
 
         if (sensorId == null) {
-            throw new UserNotFoundException("Please provide a sensor id");
+            throw new DeviceNotFoundException("Please provide a sensor id");
         }
 
         if (!sensorService.sensorExists(sensorId)) {
-            throw new UserNotFoundException("Unable to found sensor id");
+            throw new DeviceNotFoundException("Unable to found sensor id");
         }
 
         Sensor sensor = sensorService.getSensorById(sensorId);
 
         if (sensor.getRoomID() == null || !roomService.exists(sensor.getRoomID())) {
-            throw new UserNotFoundException("Unable to found this room id: " + sensor.getRoomID());
+            throw new RoomNotFoundException("Unable to found this room id: " + sensor.getRoomID());
         }
 
         Room room = roomService.getRoom(sensor.getRoomID());
 
         if (!room.getUsers().contains(authHandler.getUsername())) {
-            throw new UserNotFoundException("Invalid Permissions");
+            throw new InvalidPermissionsException("Invalid Permissions");
         }
 
         return sensor;
@@ -167,7 +170,7 @@ public class DeviceApiController {
     @GetMapping("/devices/available/{deviceId}")
     public Response removeAvailableDevice(@PathVariable ObjectId deviceId) {
         if (!availableDeviceService.availableDeviceExists(deviceId)) {
-            throw new UserNotFoundException("Device not found");
+            throw new DeviceNotFoundException("Device not found");
         }
 
         availableDeviceService.deleteAvailableDeviceById(deviceId);

@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.SensorSafe.API.exceptions.RoomNotFoundException;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 
 import com.SensorSafe.API.tokens.JwtRequest;
@@ -28,6 +29,7 @@ import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.model.room.RoomStats;
 import com.SensorSafe.API.repository.RoomRepository;
 import com.SensorSafe.API.services.RoomService;
+import com.SensorSafe.API.model.Response;
 import com.SensorSafe.API.model.device.AvailableDevice;
 import com.SensorSafe.API.model.device.Device;
 import com.SensorSafe.API.repository.DevicesRepository;
@@ -44,10 +46,14 @@ import com.SensorSafe.API.services.AvailableDeviceService;
 public class RoomsApiController {
 
     private final RoomService roomService;
+    private final DeviceService deviceService;
+    private final AvailableDeviceService availabledeviceService;
 
     @Autowired
-    public RoomsApiController(RoomService roomService) {
+    public RoomsApiController(RoomService roomService, DeviceService deviceService, AvailableDeviceService availabledeviceService) {
         this.roomService = roomService;
+        this.deviceService = deviceService;
+        this.availabledeviceService = availabledeviceService;
     }
 
     @PostMapping("/rooms")
@@ -57,7 +63,7 @@ public class RoomsApiController {
             throw new DuplicateKeyException("Room already exists - invalid room name");
 
         if (!room.isValid())
-            throw new UserNotFoundException("Invalid room data - invalid room");
+            throw new RoomNotFoundException("Invalid room data - invalid room");
 
         if (room.getRoomId() == null)
             room.setRoomId(new ObjectId());
@@ -79,25 +85,26 @@ public class RoomsApiController {
 
     @DeleteMapping("/rooms/{roomId}")
     @ApiOperation(value = "Delete Room", notes = "Delete a room by ID")
-    public void deleteRoom(@PathVariable Room roomId) {  
+    public Response deleteRoom(@PathVariable Room roomId) {  
         if (!roomService.exists(roomId.getRoomId()))
-            throw new UserNotFoundException("Room not found - invalid room ID");
+            throw new RoomNotFoundException("Room not found - invalid room ID");
         
         Room room = roomService.getRoom(roomId.getRoomId());
 
         if (room.getDevices() != null)
             for (Device device : room.getDevices()) {
-                // tornar o device available
-                // DeviceService.deleteByDeviceId(device.getDeviceId());
-                // AvailableDevice newAvailableDevice = new AvailableDevice(device.getDeviceId(), "Device " + device.getDeviceId(), device.getCategory());
-                // AvailableDeviceService.registerAvailableDevice(newAvailableDevice);
+                
+                deviceService.deleteByDeviceId(device.getDeviceId());
+                AvailableDevice newAvailableDevice = new AvailableDevice(device.getDeviceId(), "Device " + device.getDeviceId(), device.getCategory());
+                availabledeviceService.registerAvailableDevice(newAvailableDevice);
+
             }
                 
 
 
         roomService.deleteRoom(roomId);
 
-        // return new MessageResponse("Room deleted successfully"); //perceber como mandar msg de resposta 
+        return new Response("Room deleted successfully"); //perceber como mandar msg de resposta 
     }
     
     @GetMapping("/room-automatized/{roomId}")
