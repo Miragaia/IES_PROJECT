@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../Css/CreateRoom.css';
 import { useNavigate } from 'react-router-dom';
+import Toastify from './Toastify';
 
 
 function CreateRoom() {
@@ -28,32 +29,35 @@ function CreateRoom() {
             automatized: selectedCategory
           }),
         });
+
         
-        const data = await response.json();
-        console.log("Olha ela",data);
+        
         if (!response.ok) {
+          console.log(response);
+          Toastify.warning('Room creation failed, try again');
           throw new Error('Network response was not ok');
         }
-        
-        
-        
-        if (response.status === 200) {
-          console.log('Item adicionado com sucesso');
-          document.body.classList.add('modal-open');
-          const successModal = document.getElementById("success-modal");
-          successModal.style.display = "block";
+  
+        const data = await response.json();
+  
+        if (data && data.message === 'Room as been successfully created') {
+          console.log(response);
 
-          
-          setTimeout(() => {
-              
-              document.body.classList.remove('modal-open');
-              navigate('/devices');
-          }, 3000);
+          // Registration was successful
+          Toastify.success('Room as been created successfully');
+          sessionStorage.setItem('Bearer ', data.token);
+
+          navigate('/rooms');
         } else {
-          console.error('Erro ao adicionar o item');
+          console.log(response);
+          // Registration failed, handle accordingly
+          Toastify.error('Room creation failed, try again. Error: ' + data.message);
         }
+        
       } catch (error) {
-        console.error('Erro ao adicionar o item:', error);
+        console.log(error);
+        Toastify.info('Error connecting to server');
+        console.log('Error in auth/signup post', error);
       }
     };
 
