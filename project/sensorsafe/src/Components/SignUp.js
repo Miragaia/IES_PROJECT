@@ -68,7 +68,7 @@ export default function SignUp() {
       if (data && data.message === 'Registration successful') {
         // Registration was successful
         console.log('Registration successful:', data.message);
-        sessionStorage.setItem('Token: ', data.token);
+        sessionStorage.setItem('Bearer ', data.token);
 
         login();
         navigate('/devices');
