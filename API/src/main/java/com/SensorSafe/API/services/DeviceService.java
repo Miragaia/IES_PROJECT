@@ -30,7 +30,7 @@ public class DeviceService {
         return devicesRepository.findAll();
     }
 
-    public void deletDevicebyId(ObjectId id){
+    public void deleteByDeviceId(ObjectId id){
         devicesRepository.deleteByDeviceId(id);
     }
 

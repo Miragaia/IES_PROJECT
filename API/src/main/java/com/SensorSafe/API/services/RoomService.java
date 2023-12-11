@@ -3,6 +3,8 @@ package com.SensorSafe.API.services;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.SensorSafe.API.exceptions.RoomNotFoundException;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.repository.RoomRepository;
@@ -30,7 +32,7 @@ public class RoomService {
         if (room.getDevices() == null)
             room.setDevices(new ArrayList<>());
         
-        if (room.getUsers() == null)
+        if (room.getUsers() == null)        
             room.setUsers(new ArrayList<>());
     
         roomRepository.save(room);    
@@ -68,10 +70,17 @@ public class RoomService {
     }
 
     public boolean roomIsAutomatized(ObjectId roomId){
-        return roomRepository.existsByAutomatized(roomId);
+        return roomRepository.isAutomatized(roomId);
     }
 
     public RoomStats getRoomStatistics(ObjectId roomId){
+        if (!roomRepository.existsByRoomId(roomId))
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+        
+        Room room = roomRepository.findByRoomId(roomId);
+
+        //ver resto do Trigo
+
         return roomRepository.getStatsByRoomId(roomId);
     }
 

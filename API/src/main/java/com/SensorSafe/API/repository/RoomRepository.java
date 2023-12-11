@@ -13,9 +13,9 @@ public interface RoomRepository extends MongoRepository<Room, Long>{
     boolean existsByRoomId(ObjectId roomId);
     boolean existsByRoomName(String roomName);
     
-    boolean existsByAutomatized(ObjectId roomId);
+    boolean isAutomatized(ObjectId roomId);
 
-    RoomStats getStatsByRoomId(ObjectId roomId);
+    RoomStats getStatsByRoomId(ObjectId roomId);  //capaz de estar mal (faltam RoomStatsRepository e RoomStatsService)
 
     void deleteByRoomId(ObjectId roomId);
 }
