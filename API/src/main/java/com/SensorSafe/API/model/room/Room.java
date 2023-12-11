@@ -1,5 +1,6 @@
 package com.SensorSafe.API.model.room;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 
 public class Room {
+
+    @JsonCreator
+    public Room() {
+    }
 
     @Id
     @Field(value = "_id")

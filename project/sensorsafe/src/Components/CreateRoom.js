@@ -19,39 +19,43 @@ function CreateRoom() {
       const formData = new FormData(e.currentTarget);
     
       try {
-        const response = await fetch('http://localhost:8080/sensorsafe/rooms', {
+        const response = await fetch('http://localhost:8080/api/rooms', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+            
           },
           body: JSON.stringify({
             roomName: formData.get('roomName'),
-            automatized: selectedCategory
+            automatized: selectedCategory,
+            stats: {
+              temperature: 0,
+              humidity: 0,
+              smoke: false,
+            },
+              
           }),
         });
 
         
-        
         if (!response.ok) {
-          console.log(response);
-          Toastify.warning('Room creation failed, try again');
+          Toastify.error('Room creation failed, try again');
           throw new Error('Network response was not ok');
         }
   
         const data = await response.json();
-  
-        if (data && data.message === 'Room as been successfully created') {
-          console.log(response);
 
-          // Registration was successful
+
+
+        if (data && data.message === 'Room as been created successfully') {
+
           Toastify.success('Room as been created successfully');
-          sessionStorage.setItem('Bearer ', data.token);
 
           navigate('/rooms');
         } else {
-          console.log(response);
-          // Registration failed, handle accordingly
-          Toastify.error('Room creation failed, try again. Error: ' + data.message);
+
+          Toastify.error('Error: ' + data.message);
         }
         
       } catch (error) {
