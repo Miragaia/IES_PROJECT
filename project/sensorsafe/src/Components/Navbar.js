@@ -16,6 +16,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem('Bearer');
+    console.log("dentro",sessionStorage.getItem('Bearer'));
     logout()
     console.log("ola: ",isLoggedIn);
     setSelectedItem('');
