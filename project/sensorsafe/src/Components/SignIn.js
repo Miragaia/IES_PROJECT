@@ -16,7 +16,7 @@ import {useEffect, useRef} from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
+import Toastify from './Toastify';
 import { useAuth } from '../Context/AuthContext';
 
 
@@ -67,6 +67,7 @@ export default function SignIn() {
       });
   
       if (!response.ok) {
+        Toastify.error('Login failed');
         throw new Error('Network response was not ok');
       }
   
@@ -75,19 +76,19 @@ export default function SignIn() {
       // Check the response structure and adjust accordingly
       if (data && data.message === 'Login successful') {
         // Registration was successful
-        console.log('Login successful:', data.message);
+        Toastify.success('Login successful');
         sessionStorage.setItem('Bearer ', data.token);
 
         login();
         navigate('/devices');
         } else {
-        // Registration failed, handle accordingly
-        console.log('Login failed:', data.message);
+        Toastify.error('Login failed, try again. Error: ' + data.message);
+        
 
         // Perform additional actions if needed
       }
     } catch (error) {
-      console.error('Error in registration post', error);
+        Toastify.info('Error connecting to server');
       // Perform additional error handling if needed
     }
   };

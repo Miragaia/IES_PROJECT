@@ -15,11 +15,13 @@ import EditProfile from './Components/EditProfile';
 import React from 'react';
 import { AuthProvider } from './Context/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
   return (
     <Router>
+      <ToastContainer />
       <AuthProvider>
         <Navbar />
           <Routes>

@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../Context/AuthContext';
 
+import Toastify from './Toastify';
+
 
 function Copyright(props) {
   return (
@@ -60,6 +62,7 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
+        Toastify.warning('Registration failed, try again');
         throw new Error('Network response was not ok');
       }
 
@@ -67,17 +70,18 @@ export default function SignUp() {
 
       if (data && data.message === 'Registration successful') {
         // Registration was successful
-        console.log('Registration successful:', data.message);
+        Toastify.success('Registration successful');
         sessionStorage.setItem('Bearer ', data.token);
 
         login();
         navigate('/devices');
       } else {
         // Registration failed, handle accordingly
-        console.log('Registration failed:', data.message);
+        Toastify.error('Registration failed, try again. Error: ' + data.message);
       }
       
     } catch (error) {
+      Toastify.info('Error connecting to server');
       console.log('Error in auth/signup post', error);
     }
   };

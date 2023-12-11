@@ -70,7 +70,10 @@ public class RoomService {
     }
 
     public boolean roomIsAutomatized(ObjectId roomId){
-        return roomRepository.isAutomatized(roomId);
+        if (!roomRepository.existsByRoomId(roomId))
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+        
+        return roomRepository.existsByRoomIdAndAutomatized(roomId);
     }
 
     public RoomStats getRoomStatistics(ObjectId roomId){
