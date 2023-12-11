@@ -13,6 +13,7 @@ const Devices = () => {
   
     const handleItemClick = (itemName) => {
       setSelectedItem(itemName);
+      console.log(sessionStorage.getItem('Bearer '));
     };
   
   

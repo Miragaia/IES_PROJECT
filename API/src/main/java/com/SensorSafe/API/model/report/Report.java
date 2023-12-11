@@ -1,5 +1,6 @@
 package com.SensorSafe.API.model.report;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 public class Report {
+
 
     @Id
     @JsonSerialize(using = ToStringSerializer.class)

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../Css/CreateRoom.css';
 import { useNavigate } from 'react-router-dom';
+import Toastify from './Toastify';
 
 
 function CreateRoom() {
@@ -18,42 +19,49 @@ function CreateRoom() {
       const formData = new FormData(e.currentTarget);
     
       try {
-        const response = await fetch('http://localhost:8080/sensorsafe/rooms', {
+        const response = await fetch('http://localhost:8080/api/rooms', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+            
           },
           body: JSON.stringify({
             roomName: formData.get('roomName'),
-            automatized: selectedCategory
+            automatized: selectedCategory,
+            stats: {
+              temperature: 0,
+              humidity: 0,
+              smoke: false,
+            },
+              
           }),
         });
+
         
-        const data = await response.json();
-        console.log("Olha ela",data);
         if (!response.ok) {
+          Toastify.error('Room creation failed, try again');
           throw new Error('Network response was not ok');
         }
-        
-        
-        
-        if (response.status === 200) {
-          console.log('Item adicionado com sucesso');
-          document.body.classList.add('modal-open');
-          const successModal = document.getElementById("success-modal");
-          successModal.style.display = "block";
+  
+        const data = await response.json();
 
-          
-          setTimeout(() => {
-              
-              document.body.classList.remove('modal-open');
-              navigate('/devices');
-          }, 3000);
+
+
+        if (data && data.message === 'Room as been created successfully') {
+
+          Toastify.success('Room as been created successfully');
+
+          navigate('/rooms');
         } else {
-          console.error('Erro ao adicionar o item');
+
+          Toastify.error('Error: ' + data.message);
         }
+        
       } catch (error) {
-        console.error('Erro ao adicionar o item:', error);
+        console.log(error);
+        Toastify.info('Error connecting to server');
+        console.log('Error in auth/signup post', error);
       }
     };
 

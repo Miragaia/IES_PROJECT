@@ -41,7 +41,7 @@ import com.SensorSafe.API.services.AvailableDeviceService;
 
 
 @RestController
-@RequestMapping("/sensorsafe")
+@RequestMapping("/api")
 @Api(value = "Rooms API", description = "Operations pertaining to rooms", tags = "Rooms" )
 public class RoomsApiController {
 

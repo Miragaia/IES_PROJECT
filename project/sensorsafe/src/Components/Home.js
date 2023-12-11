@@ -4,6 +4,7 @@ import foto from '../businessman.png';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    console.log(sessionStorage.getItem('Bearer '));
     const navigate = useNavigate();
 
   return (

@@ -77,7 +77,7 @@ export default function SignIn() {
       if (data && data.message === 'Login successful') {
         // Registration was successful
         Toastify.success('Login successful');
-        sessionStorage.setItem('Bearer ', data.token);
+        sessionStorage.setItem('Token:', data.token);
 
         login();
         navigate('/devices');

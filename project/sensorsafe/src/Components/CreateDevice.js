@@ -1,112 +1,150 @@
 import React, {useState, useEffect} from 'react';
 import '../Css/CreateDevice.css';
 import { useNavigate } from 'react-router-dom';
-
+import Toastify from './Toastify';
 
 function AddDevice() {
     const navigate = useNavigate();
 
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedType, setSelectedType] = useState('');
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
-      };
-
-    const [productData, setProductData] = useState({
-        foto_url: null,
-        name: '',
-        description: '',
-        category: '',
-      });
-
-      useEffect(() => {
-        console.log(productData); // Isso irá mostrar o valor atualizado de foto_url
-      }, [productData]);
+    };
     
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setProductData({ ...productData, [name]: value });
-      };
-
-      const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setProductData({ ...productData, foto_url: file });
-
-      };
+    const handleTypeClick = (type) => {
+      setSelectedType(type);
+    };
     
-      const handleAddItem = async (e) => {
-        e.preventDefault();
-      
-        const formData = new FormData();
-        formData.append('name', productData.name);
-        formData.append('foto_url', productData.foto_url);
-        formData.append('description', productData.description);
-        formData.append('category', productData.category);
-      
-        try {
-          const response = await fetch('http://localhost:5000/api/insertitems', {
-            method: 'POST',
-            body: formData,
-          });
-      
-          if (response.status === 200) {
-            console.log('Item adicionado com sucesso');
-            document.body.classList.add('modal-open');
-            const successModal = document.getElementById("success-modal");
-            successModal.style.display = "block";
+    const handleAddDevice = async (e) => {
+
+      e.preventDefault();
   
-            
-            setTimeout(() => {
-                
-                document.body.classList.remove('modal-open');
-                navigate('/devices');
-            }, 3000);
-          } else {
-            console.error('Erro ao adicionar o item');
-          }
-        } catch (error) {
-          console.error('Erro ao adicionar o item:', error);
-        }
-      };
+      const formData = new FormData(e.currentTarget);
+     
 
+      if (selectedType === '') {
+        Toastify.warning('Please select a type');
+        return;
+      }
+
+      if (selectedType === 'device') {
+    
+        try {
+          const response = await fetch('http://localhost:8080/api/devices/device/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.get('name'),
+              category: selectedCategory
+            }),
+          });
+
+          
+          
+          if (!response.ok) {
+            console.log(response);
+            Toastify.warning('Room creation failed, try again');
+            throw new Error('Network response was not ok');
+          }
+    
+          const data = await response.json();
+    
+          if (data && data.message === 'Device created successfully') {
+            console.log(response);
+
+            // Registration was successful
+            Toastify.success('Device created successfully');
+
+            navigate('/devices');
+          } else {
+            console.log(response);
+            // Registration failed, handle accordingly
+            Toastify.error('Device creation failed, try again. Error: ' + data.message);
+          }
+          
+        } catch (error) {
+          console.log(error);
+          Toastify.info('Error connecting to server');
+          console.log('Error in /device post', error);
+        }
+      }
+
+      if (selectedType === 'sensor') {
+    
+        try {
+          const response = await fetch('http://localhost:8080/api/devices/sensor/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.get('name'),
+              category: selectedCategory
+            }),
+          });
+
+          
+          
+          if (!response.ok) {
+            Toastify.warning('Room creation failed, try again');
+            throw new Error('Network response was not ok');
+          }
+    
+          const data = await response.json();
+    
+          if (data && data.message === 'Sensor created successfully') {
+
+            // Registration was successful
+            Toastify.success('Sensor created successfully');
+
+            navigate('/devices');
+          } else {
+            // Registration failed, handle accordingly
+            Toastify.error('Sensor creation failed, try again. Error: ' + data.message);
+          }
+          
+        } catch (error) {
+          Toastify.info('Error connecting to server');
+          console.log('Error in /sensor post', error);
+        }
+      }
+    };
 
     return (
         <div className='additem-page'>
         <div className='additem-modal'>
           <h3>Create Device</h3>
-          <form onSubmit={handleAddItem} encType="multipart/form-data">
+          <form onSubmit={handleAddDevice} encType="multipart/form-data">
             <div className='form-group-item'>
-              <label htmlFor='foto_url'>Foto URL:</label>
-              <input
-                type='file'
-                name='foto_url'
-                onChange={handleFileChange}
-                required 
-                />
+              <label htmlFor='type'>Type:</label>
+              <div className='category-options'>
+                <span
+                  className={`category-option ${selectedType === 'device' ? 'active' : ''}`}
+                  onClick={() => handleTypeClick('device')}
+                >
+                  Device
+                </span>
+                <span
+                  className={`category-option ${selectedType === 'sensor' ? 'active' : ''}`}
+                  onClick={() => handleTypeClick('sensor')}
+                >
+                  Sensor
+                </span>
+              </div>
             </div>
             <div className='form-group-item'>
               <label htmlFor='name'>Name:</label>
               <input
                 type='text'
                 name='name'
-                value={productData.name}
-                onChange={handleInputChange}
+                id='name'
                 required
               />
             </div>
-            <div className='form-group-item'>
-                <label htmlFor='description'>Description:</label>
-                <textarea
-                    id='description'
-                    name='description'
-                    value={productData.description}
-                    onChange={handleInputChange}
-                    rows='6'
-                    cols='54'
-                    required
-                ></textarea>
-            </div>
-
             <div className='category-selection'>
                 <h2>Select Category</h2>
                 <div className='category-options'>
