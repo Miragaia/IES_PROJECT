@@ -29,10 +29,8 @@ const Navbar = () => {
     setSelectedItem(selectedItemFromPath);
 
     const storedToken = sessionStorage.getItem('Token:');
-    console.log('TokenZIIIIII: ', storedToken);
     if (storedToken) {
       setToken(storedToken);
-      console.log('TokenZEEEEEEE: ', storedToken);
     }
 
   }, [location.pathname]);

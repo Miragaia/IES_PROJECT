@@ -27,6 +27,11 @@ public class AvailableDeviceService {
         return availableDeviceRepository.findAll();
     }
 
+    public List<AvailableDevice> getAllAvailableDevicesByUsername(String userDeviceName){
+        return availableDeviceRepository.findByUserDeviceName(userDeviceName);
+    }
+
+
     public AvailableDevice getAvailableDeviceById(ObjectId id){
         return availableDeviceRepository.findByDeviceId(id);
     }

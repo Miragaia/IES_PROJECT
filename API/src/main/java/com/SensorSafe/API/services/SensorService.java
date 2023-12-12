@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.SensorSafe.API.model.room.Room;
+import com.SensorSafe.API.auth.AuthHandler;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.model.device.AvailableDevice;
 import com.SensorSafe.API.model.device.Sensor;
@@ -16,12 +17,15 @@ public class SensorService {
     private final SensorRepository sensorRepository;
     private final RoomService roomService;
     private final AvailableDeviceService availableDeviceService;
+    private final AuthHandler authHandler;
+
 
     @Autowired
-    public SensorService(SensorRepository sensorRepository, RoomService roomService, AvailableDeviceService availableDeviceService){
+    public SensorService(SensorRepository sensorRepository, RoomService roomService, AvailableDeviceService availableDeviceService, AuthHandler authHandler){
         this.sensorRepository = sensorRepository;
         this.roomService = roomService;
         this.availableDeviceService = availableDeviceService;
+        this.authHandler = authHandler;
     }
     
     public void registerSensor(Sensor sensor){
@@ -38,7 +42,7 @@ public class SensorService {
                 // adiciona aos dispositivos disponiveis
                 sensor.setRoomID(null);
                 // transforma o sensor em availbel device
-                AvailableDevice availableDevice = new AvailableDevice(sensor.getDeviceId(),sensor.getName(),sensor.getCategory());
+                AvailableDevice availableDevice = new AvailableDevice(sensor.getDeviceId(),sensor.getName(),sensor.getCategory(), authHandler.getUsername());
                 availableDeviceService.registerAvailableDevice(availableDevice);
                 
             }

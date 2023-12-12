@@ -199,5 +199,11 @@ public class DeviceApiController {
         return new Response("Device available removed successfully");
     }
 
+
+    @ApiOperation(value = "Get all available devices by username", response = Iterable.class)
+    @GetMapping("/devices/available")
+    public List<AvailableDevice> getAllAvailableDevices() {
+        return availableDeviceService.getAllAvailableDevicesByUsername(authHandler.getUsername());
+    }
 }
 

@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.SensorSafe.API.auth.AuthHandler;
 import com.SensorSafe.API.exceptions.RoomNotFoundException;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 
@@ -48,12 +49,14 @@ public class RoomsApiController {
     private final RoomService roomService;
     private final DeviceService deviceService;
     private final AvailableDeviceService availabledeviceService;
+    private final AuthHandler authHandler;
 
     @Autowired
-    public RoomsApiController(RoomService roomService, DeviceService deviceService, AvailableDeviceService availabledeviceService) {
+    public RoomsApiController(RoomService roomService, DeviceService deviceService, AvailableDeviceService availabledeviceService, AuthHandler authHandler) {
         this.roomService = roomService;
         this.deviceService = deviceService;
         this.availabledeviceService = availabledeviceService;
+        this.authHandler = authHandler;
     }
 
     @PostMapping("/rooms")
@@ -68,8 +71,10 @@ public class RoomsApiController {
         if (room.getDevices() == null)
             room.setDevices(new ArrayList<>());
 
-        if (room.getUsers() == null)        
+        if (room.getUsers() == null)  {      
             room.setUsers(new ArrayList<>());
+            // adicionar o user que criou a sala
+            room.getUsers().add(authHandler.getUsername());}
 
         try {
             roomService.RegisteRoom(room);
@@ -98,7 +103,7 @@ public class RoomsApiController {
             for (Device device : room.getDevices()) {
                 
                 deviceService.deleteByDeviceId(device.getDeviceId());
-                AvailableDevice newAvailableDevice = new AvailableDevice(device.getDeviceId(), "Device " + device.getDeviceId(), device.getCategory());
+                AvailableDevice newAvailableDevice = new AvailableDevice(device.getDeviceId(), "Device " + device.getDeviceId(), device.getCategory(), authHandler.getUsername());
                 availabledeviceService.registerAvailableDevice(newAvailableDevice);
 
             }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import Card from './Card';
@@ -34,6 +34,80 @@ const Devices = () => {
   const handleAddItem = (itemName) => {
     
   }
+
+  useEffect(() => {
+    // Fetch rooms data when the component mounts
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/devices/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+  
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(data);
+        setDevices(data);
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+      }
+    }
+    fetchData();
+
+    const fetchData2 = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/devices/sensors', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+  
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(data);
+        // adiciona ao set de devices
+        setDevices(data);
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+      }
+    }
+    fetchData2();
+
+    const fetchData3 = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/devices/available', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+  
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log(data);
+        // adiciona ao set de devices
+        setDevices(data);
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+      }
+    }
+    fetchData3();
+  }, []);
   
     return (
       <div className="Rooms"> 

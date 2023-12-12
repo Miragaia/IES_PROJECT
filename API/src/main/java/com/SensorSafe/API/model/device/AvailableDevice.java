@@ -11,8 +11,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @ToString(callSuper = true)
 public class AvailableDevice extends AbstractDevice {
-    public AvailableDevice(ObjectId deviceId, String name, DeviceCategory category) {
+    private String userDeviceName;
+
+    public AvailableDevice(ObjectId deviceId, String name, DeviceCategory category, String userDeviceName) {
         super(deviceId, name, category);
+        this.userDeviceName = userDeviceName;
     }
 
 }
