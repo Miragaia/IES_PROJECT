@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
+import com.SensorSafe.API.model.device.AvailableDevice;
 import com.SensorSafe.API.model.device.Sensor;
 import com.SensorSafe.API.repository.SensorRepository;
 
@@ -14,11 +15,13 @@ public class SensorService {
 
     private final SensorRepository sensorRepository;
     private final RoomService roomService;
+    private final AvailableDeviceService availableDeviceService;
 
     @Autowired
-    public SensorService(SensorRepository sensorRepository, RoomService roomService){
+    public SensorService(SensorRepository sensorRepository, RoomService roomService, AvailableDeviceService availableDeviceService){
         this.sensorRepository = sensorRepository;
         this.roomService = roomService;
+        this.availableDeviceService = availableDeviceService;
     }
     
     public void registerSensor(Sensor sensor){
@@ -32,7 +35,12 @@ public class SensorService {
                 roomService.updateRoom(room);
             }
             else{
-                throw new UserNotFoundException("Invalid room data - invalid room");
+                // adiciona aos dispositivos disponiveis
+                sensor.setRoomID(null);
+                // transforma o sensor em availbel device
+                AvailableDevice availableDevice = new AvailableDevice(sensor.getDeviceId(),sensor.getName(),sensor.getCategory());
+                availableDeviceService.registerAvailableDevice(availableDevice);
+                
             }
         }
 

@@ -24,30 +24,35 @@ function AddDevice() {
       const formData = new FormData(e.currentTarget);
      
 
-      if (selectedType === '') {
+      if (selectedCategory === '') {
         Toastify.warning('Please select a type');
         return;
       }
 
-      if (selectedType === 'device') {
-    
+      if (selectedCategory !== 'OTHERS' && selectedType === '') {
+        Toastify.warning('Please select a type');
+        return;
+      }
+
+      
+      if (selectedCategory === 'OTHERS') {
+        console.log('OTHERS');
         try {
           const response = await fetch('http://localhost:8080/api/devices/device/create', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+              
             },
             body: JSON.stringify({
               name: formData.get('name'),
-              category: selectedCategory
+              category: selectedCategory,
             }),
           });
 
           
-          
           if (!response.ok) {
-            console.log(response);
-            Toastify.warning('Room creation failed, try again');
             throw new Error('Network response was not ok');
           }
     
@@ -61,19 +66,17 @@ function AddDevice() {
 
             navigate('/devices');
           } else {
-            console.log(response);
-            // Registration failed, handle accordingly
-            Toastify.error('Device creation failed, try again. Error: ' + data.message);
+            Toastify.error('Device creation failed. Error: ' + data.message);
           }
           
         } catch (error) {
-          console.log(error);
           Toastify.info('Error connecting to server');
           console.log('Error in /device post', error);
         }
       }
 
-      if (selectedType === 'sensor') {
+      else {
+        console.log('sensor');
     
         try {
           const response = await fetch('http://localhost:8080/api/devices/sensor/create', {
@@ -85,14 +88,14 @@ function AddDevice() {
             },
             body: JSON.stringify({
               name: formData.get('name'),
-              category: selectedCategory
+              category: selectedCategory,
+              sensorStatus: selectedType === 'On' ? true : false
             }),
           });
 
-          
+          console.log(response);
           
           if (!response.ok) {
-            Toastify.warning('Room creation failed, try again');
             throw new Error('Network response was not ok');
           }
     
@@ -106,7 +109,7 @@ function AddDevice() {
             navigate('/devices');
           } else {
             // Registration failed, handle accordingly
-            Toastify.error('Sensor creation failed, try again. Error: ' + data.message);
+            Toastify.error('Sensor creation failed. Error: ' + data.message);
           }
           
         } catch (error) {
@@ -122,23 +125,6 @@ function AddDevice() {
           <h3>Create Device</h3>
           <form onSubmit={handleAddDevice} encType="multipart/form-data">
             <div className='form-group-item'>
-              <label htmlFor='type'>Type:</label>
-              <div className='category-options'>
-                <span
-                  className={`category-option ${selectedType === 'device' ? 'active' : ''}`}
-                  onClick={() => handleTypeClick('device')}
-                >
-                  Device
-                </span>
-                <span
-                  className={`category-option ${selectedType === 'sensor' ? 'active' : ''}`}
-                  onClick={() => handleTypeClick('sensor')}
-                >
-                  Sensor
-                </span>
-              </div>
-            </div>
-            <div className='form-group-item'>
               <label htmlFor='name'>Name:</label>
               <input
                 type='text'
@@ -150,12 +136,24 @@ function AddDevice() {
             <div className='category-selection'>
                 <h2>Select Category</h2>
                 <div className='category-options'>
-                    <span className={`category-option ${selectedCategory === 'Smoke' ? 'active' : ''}`} onClick={() => handleCategoryClick('Smoke')}>Smoke</span>
-                    <span className={`category-option ${selectedCategory === 'Humidity' ? 'active' : ''}`} onClick={() => handleCategoryClick('Humidity')}>Humidity</span>
-                    <span className={`category-option ${selectedCategory === 'Temperature' ? 'active' : ''}`} onClick={() => handleCategoryClick('Temperature')}>Temperature</span>
-                    <span className={`category-option ${selectedCategory === 'Others' ? 'active' : ''}`} onClick={() => handleCategoryClick('Others')}>Others</span>
+                    <span className={`category-option ${selectedCategory === 'SMOKE' ? 'active' : ''}`} onClick={() => handleCategoryClick('SMOKE')}>SMOKE</span>
+                    <span className={`category-option ${selectedCategory === 'HUMIDITY' ? 'active' : ''}`} onClick={() => handleCategoryClick('HUMIDITY')}>HUMIDITY</span>
+                    <span className={`category-option ${selectedCategory === 'TEMPERATURE' ? 'active' : ''}`} onClick={() => handleCategoryClick('TEMPERATURE')}>TEMPERATURE</span>
+                    <span className={`category-option ${selectedCategory === 'OTHERS' ? 'active' : ''}`} onClick={() => handleCategoryClick('OTHERS')}>OTHERS</span>
                 </div>
             </div>
+            {selectedCategory === 'OTHERS' ? ( 
+                <div></div>
+               ) : (
+                <div className='category-selection'>
+                <h2>Select Sensor Status</h2>
+                <div className='category-options'>
+                        <span className={`type-option-green ${selectedType === 'On' ? 'active' : ''}`} onClick={() => handleTypeClick('On')}>On</span>
+                        <span className={`type«-option-red ${selectedType === 'Off' ? 'active' : ''}`} onClick={() => handleTypeClick('Off')}>Off</span>
+                    </div>
+                </div>
+            
+            )}
             <button className='btn edit-button additem' type='submit'><i className="animation"></i>Add device<i className="animation"></i></button>
           </form>
         </div>
