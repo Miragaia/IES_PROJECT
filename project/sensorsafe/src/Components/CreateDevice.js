@@ -149,7 +149,7 @@ function AddDevice() {
                 <h2>Select Sensor Status</h2>
                 <div className='category-options'>
                         <span className={`type-option-green ${selectedType === 'On' ? 'active' : ''}`} onClick={() => handleTypeClick('On')}>On</span>
-                        <span className={`type«-option-red ${selectedType === 'Off' ? 'active' : ''}`} onClick={() => handleTypeClick('Off')}>Off</span>
+                        <span className={`type-option-red ${selectedType === 'Off' ? 'active' : ''}`} onClick={() => handleTypeClick('Off')}>Off</span>
                     </div>
                 </div>
             

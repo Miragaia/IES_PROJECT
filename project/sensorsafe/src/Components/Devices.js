@@ -142,16 +142,20 @@ const Devices = () => {
         {/* Renderização condicional do conteúdo */}
         <div className="content">
           {selectedItem === 'humidity' ? (
-            <>
+            <>«
               <div className="room-devices-cards-container">
-                {Array.isArray(devices) ? (
+                {Array.isArray(devices) && devices.length > 0 ? (
                   devices.map((item, index) => (
-                      <Card key={index} item={item} />
+                    <Card key={index} item={item} />
                   ))
                 ) : (
-                  <div>No products available.</div>
+                  <div>
+                    
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No products available to display.</div>
+                  </div>
                 )}
-                <Card />
+              
+               
                 <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
                   <i className="animation"></i>Create device +<i className="animation"></i>
                 </button>

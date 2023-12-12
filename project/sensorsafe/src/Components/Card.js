@@ -11,7 +11,7 @@ const Card = ({ item }) => {
     return (
         <div className={`card`}>
             <div className="product-tumb">
-                <img src={foto} className="Item-foto" alt="foto" />
+                <img src={item.foto} className="Item-foto" alt="foto" />
             </div>
             <div className="product-details">
                 <h4>
@@ -19,7 +19,7 @@ const Card = ({ item }) => {
                         {editedItem.nome}
                     </Link>*/}
                     <Link  to={`/detail_device`}>
-                        Air Conditioning
+                        {item.nome}
                     </Link>
                 </h4>
             </div>
