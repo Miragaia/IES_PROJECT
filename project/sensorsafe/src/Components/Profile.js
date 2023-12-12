@@ -1,6 +1,5 @@
 import React from 'react';
 import '../Css/Profile.css';
-import { useAuth } from '../Context/AuthContext';
 
 const Profile = () => {
     

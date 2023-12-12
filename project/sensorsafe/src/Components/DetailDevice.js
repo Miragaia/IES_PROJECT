@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import "../Css/DetailDevice.css";
-import { useAuth } from "../Context/AuthContext";
 import { useParams } from 'react-router-dom';
 import foto from '../extrator.jpg';
 
@@ -9,7 +8,6 @@ import foto from '../extrator.jpg';
 const DetailDevice = () => {
   const { id } = useParams();
   const [product, setProduct] = useState();
-  const { userInfo, isLoggedIn } = useAuth();
   const [loading, setLoading] = useState(true);
   const [reviews,setReviews] = useState([]);
   const [reviewText, setReviewText] = useState('');
@@ -48,7 +46,7 @@ const DetailDevice = () => {
     e.preventDefault();
     try {
       const reviewData = {
-        userId: userInfo.id, 
+        
         productId: id, 
         reviewText: reviewText,
         rating: rating,

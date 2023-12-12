@@ -1,31 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import "../Css/Navbar.css";
 
 
-
 const Navbar = () => {
-  const [token, setToken] = useState('');
   const [selectedItem, setSelectedItem] = useState('');
-  const navigate = useNavigate(); // Utilize useNavigate para realizar a navegação
+  const navigate = useNavigate(); 
   const location = useLocation();
+  const [token, setToken] = useState('');
 
   const handleItemClick = (itemName) => {
     setSelectedItem(itemName);
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('Token:');
-    setToken('');
-    setSelectedItem('');
+    
+    sessionStorage.removeItem('Token:');   
+    setToken(''); 
     navigate('/');
   };
 
   useEffect(() => {
-
     const pathname = location.pathname;
-    const selectedItemFromPath = pathname.split('/').filter(Boolean)[0]; // Pega a primeira parte do pathname (excluindo barras extras)
-
+    const selectedItemFromPath = pathname.split('/').filter(Boolean)[0];
     setSelectedItem(selectedItemFromPath);
 
     const storedToken = sessionStorage.getItem('Token:');
@@ -34,7 +31,6 @@ const Navbar = () => {
       setToken(storedToken);
       console.log('TokenZEEEEEEE: ', storedToken);
     }
-
   }, [location.pathname]);
 
   return (
