@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
-import Card from './Card';
+import Card from './CardDevices';
 import { useNavigate } from 'react-router-dom';
+import Toastify from './Toastify';
 
 
 const Devices = () => {
+    const [device, setDevice] = useState([]);
+    const [sensor, setSensor] = useState([]); 
+    const [available, setAvailable] = useState([]);
+
     const [devices, setDevices] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedItem, setSelectedItem] = useState('humidity');
+    const [selectedItem, setSelectedItem] = useState('HUMIDITY');
     const navigate = useNavigate();
   
     const handleItemClick = (itemName) => {
@@ -46,19 +51,24 @@ const Devices = () => {
             'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
           },
         });
-  
-        const data = await response.json();
-        
+
+        const data_f1 = await response.json();
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.log(data);
-        setDevices(data);
+
+        setDevice(data_f1); // Add new elements to the existing list
+
       } catch (error) {
+        Toastify.warning('Error fetching devices:', error);
         console.error('Error fetching devices:', error);
       }
     }
     fetchData();
+  }, []);
+  
+  useEffect(() => {
 
     const fetchData2 = async () => {
       try {
@@ -70,20 +80,22 @@ const Devices = () => {
           },
         });
   
-        const data = await response.json();
-        
+        const data_f2 = await response.json();
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.log(data);
-        // adiciona ao set de devices
-        setDevices(data);
+        
+        setSensor(data_f2); // Add new elements to the existing list
       } catch (error) {
+        Toastify.warning('Error fetching devices:', error);
         console.error('Error fetching devices:', error);
       }
     }
     fetchData2();
+  
+  }, []);
 
+  useEffect(() => {
     const fetchData3 = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/devices/available', {
@@ -94,36 +106,45 @@ const Devices = () => {
           },
         });
   
-        const data = await response.json();
+        const data_f3 = await response.json();
+        
         
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.log(data);
-        // adiciona ao set de devices
-        setDevices(data);
+        
+        setAvailable(data_f3); // Add new elements to the existing list
       } catch (error) {
+        Toastify.warning('Error fetching devices:', error);
         console.error('Error fetching devices:', error);
       }
     }
     fetchData3();
   }, []);
-  
+
+  useEffect(() => {
+    // Combine device, sensor, and available data
+    const combinedData = [...device, ...sensor, ...available];
+    
+    // Atualiza o estado 'devices' com os dados combinados
+    setDevices(combinedData);
+  }, [device, sensor, available]);
+
     return (
       <div className="Rooms"> 
        <nav id="nav1">
           <ul className="nav-links-Rooms">
-            <li id="humidity" className={selectedItem === 'humidity' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('humidity')}>Humidity</Link>
+            <li id="HUMIDITY" className={selectedItem === 'HUMIDITY' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('HUMIDITY')}>HUMIDITY</Link>
             </li>
-            <li id="temperature" className={selectedItem === 'temperature' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('temperature')}>Temperature</Link>
+            <li id="TEMPERATURE" className={selectedItem === 'TEMPERATURE' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('TEMPERATURE')}>TEMPERATURE</Link>
             </li>
-            <li id="smoke" className={selectedItem === 'smoke' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('smoke')}>Smoke</Link>
+            <li id="SMOKE" className={selectedItem === 'SMOKE' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('SMOKE')}>SMOKE</Link>
             </li>
-            <li id="others" className={selectedItem === 'others' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('others')}>Others</Link>
+            <li id="OTHERS" className={selectedItem === 'OTHERS' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('OTHERS')}>OTHERS</Link>
             </li>
           </ul>
         </nav>
@@ -139,23 +160,30 @@ const Devices = () => {
               </div>
         </div>
   
-        {/* Renderização condicional do conteúdo */}
+        
         <div className="content">
-          {selectedItem === 'humidity' ? (
-            <>«
+          {selectedItem === 'HUMIDITY' ? (
+            <>
               <div className="room-devices-cards-container">
-                {console.log(devices)}
-                {Array.isArray(devices) && devices.length > 0 ? (
-                  devices.map((item, index) => (
-                    <Card key={index} item={item} />
-                  ))
+                {devices.length > 0 ? (
+                  devices.some(device => device.category === 'HUMIDITY') ? (
+                    devices
+                          .filter(device => device.category === 'HUMIDITY')
+                          .map((device) => (
+                            console.log(device),
+                            <Card key={device.deviceId} item={device} />
+                          ))
+                  ) : (              
+                    <div>                  
+                      <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No devices available to display in this category.</div>
+                    </div>
+                  )
                 ) : (
-                  <div>
-                    
-                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No products available to display.</div>
+                  <div style={{marginjustifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to create a new device.</div>
                   </div>
                 )}
-              
                
                 <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
                   <i className="animation"></i>Create device +<i className="animation"></i>
@@ -164,18 +192,98 @@ const Devices = () => {
               </div>
               
             </>
-          ) : selectedItem === 'temperature' ? (
+          ) : selectedItem === 'TEMPERATURE' ? (
             <>
-              {/* Conteúdo para a opção 'rooms' */}
+              <div className="room-devices-cards-container">
+                {devices.length > 0 ? (
+                  devices.some(device => device.category === 'TEMPERATURE') ? (
+                    devices
+                          .filter(device => device.category === 'TEMPERATURE')
+                          .map((device) => (
+                            console.log(device),
+                            <Card key={device.deviceId} item={device} />
+                          ))
+                  ) : (              
+                    <div>                  
+                      <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No devices available to display in this category.</div>
+                    </div>
+                  )
+                ) : (
+                  
+                  <div style={{marginjustifyContent: 'center', alignItems: 'center', wdeviceIdth: '100%', marginLeft: '20px'}}>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to create a new device.</div>
+                  </div>
+                  
+                )}
+               
+                <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
+                  <i className="animation"></i>Create device +<i className="animation"></i>
+                </button>
+  
+              </div>
+              
             </>
-          ) : selectedItem === 'smoke' ? (
+          ) : selectedItem === 'SMOKE' ? (
             <>
-              {/* Conteúdo para a opção 'reports' */}
+              <div className="room-devices-cards-container">
+                {devices.length > 0 ? (
+                  devices.some(device => device.category === 'SMOKE') ? (
+                    devices
+                          .filter(device => device.category === 'SMOKE')
+                          .map((device) => (
+                            console.log(device),
+                            <Card key={device.deviceId} item={device} />
+                          ))
+                  ) : (              
+                    <div>                  
+                      <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No devices available to display in this category.</div>
+                    </div>
+                  )
+                ) : (
+                  <div style={{marginjustifyContent: 'center', alignItems: 'center', wdeviceIdth: '100%', marginLeft: '20px'}}>
+                  <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                  <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to create a new device.</div>
+                </div>
+                )}
+               
+                <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
+                  <i className="animation"></i>Create device +<i className="animation"></i>
+                </button>
+  
+              </div>
+              
             </>
           ) : (
             <>
-              {/* Conteúdo padrão caso nenhuma opção selecionada */}
-            </>
+            <div className="room-devices-cards-container">
+              {devices.length > 0 ? (
+                devices.some(device => device.category === 'OTHERS') ? (
+                  devices
+                        .filter(device => device.category === 'OTHERS')
+                        .map((device) => (
+                          console.log(device),
+                          <Card key={device.id} item={device} />
+                        ))
+                ) : (              
+                  <div>                  
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}>No devices available to display in this category.</div>
+                  </div>
+                )
+              ) : (
+                <div style={{marginjustifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
+                <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to create a new device.</div>
+              </div>
+              )}
+             
+              <button className="btn edit-button add-product" onClick={() => (navigate('/create_device'))}>
+                <i className="animation"></i>Create device +<i className="animation"></i>
+              </button>
+
+            </div>
+            
+          </>
           )}
         </div>
   
