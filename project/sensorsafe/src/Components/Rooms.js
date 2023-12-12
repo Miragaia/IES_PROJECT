@@ -2,14 +2,27 @@ import React, { useState, useEffect } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import DeviceCard from './Card';
+import { Modal, Box, Typography, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Toastify from './Toastify';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
+  const [availableDevicees, setAvailableDevices] = useState([])
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState('devices');
   const navigate = useNavigate();
+
+  const [AddDevice, setOpenAddDevice] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenAddDevice(true);
+  }
+
+  const handleCloseModal = () => {
+    setOpenAddDevice(false);
+  }
 
   const handleItemClick = (itemName) => {
     setSelectedItem(itemName);
@@ -29,6 +42,33 @@ const handleSearch = async () => {
 const handleAddItem = (itemName) => {
 
 }
+
+useEffect (() =>{
+    const acessibleData = async ()=> {
+      try{
+      const response = await fetch('http://localhost:8080/api/devices/available', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+        },
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      setAvailableDevices(data);
+    } catch (error) {
+      Toastify.warning('Error fetching rooms:', error)
+      console.error('Error fetching rooms:', error);
+    }
+  };
+    acessibleData();
+  }, []);
+
 
 useEffect(() => {
   // Fetch rooms data when the component mounts
@@ -50,12 +90,25 @@ useEffect(() => {
 
       setRooms(data);
     } catch (error) {
+      Toastify.warning('Error fetching rooms:', error)
       console.error('Error fetching rooms:', error);
     }
   };
 
   fetchData();
 }, []);
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
   return (
     <div className="Rooms"> 
@@ -103,26 +156,52 @@ useEffect(() => {
                 <div>No products available.</div>
               )}*/}
               <DeviceCard />
-              <button className="btn edit-button add-product">
+              <button className="btn edit-button add-product" onClick={handleOpenModal}>
                 <i className="animation"></i>Add Device +<i className="animation"></i>
               </button>
 
             </div>
             
           </>
-        ) : selectedItem === 'rooms' ? (
-          <>
-            {/* Conteúdo para a opção 'rooms' */}
-          </>
-        ) : selectedItem === 'reports' ? (
-          <>
-            {/* Conteúdo para a opção 'reports' */}
-          </>
-        ) : (
-          <>
-            {/* Conteúdo padrão caso nenhuma opção selecionada */}
-          </>
-        )}
+         ) : (null) 
+         //selectedItem === 'rooms' ? (
+        //   <>
+        //     {/* Conteúdo para a opção 'rooms' */}
+        //   </>
+        // ) : selectedItem === 'reports' ? (
+        //   <>
+        //     {/* Conteúdo para a opção 'reports' */}
+        //   </>
+        // ) : (
+        //   <>
+        //     {/* Conteúdo padrão caso nenhuma opção selecionada */}
+        //   </>
+      };
+      
+      <Modal
+      open={AddDevice}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <IconButton
+          aria-label="close"
+          onClick={handleCloseModal}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+          }}
+        >
+         x
+        </IconButton>
+        <Typography id="modal-modal-title" variant="h6" component="h5">
+          Select Device to add to selected room
+        </Typography>
+        
+
+      </Box>
+    </Modal>
       </div>
 
     </div>
