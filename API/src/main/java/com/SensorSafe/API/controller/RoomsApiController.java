@@ -86,9 +86,9 @@ public class RoomsApiController {
     }
 
     @GetMapping("/rooms")
-    @ApiOperation(value = "Get All Rooms", notes = "Get a list of all rooms", response = Iterable.class)
+    @ApiOperation(value = "Get All Rooms by user", notes = "Get a list of all rooms", response = Iterable.class)
     public Iterable<Room> getAllRooms() {
-        return roomService.getAllRooms();
+        return roomService.getRoomsByUser(authHandler.getUsername());
     }
 
     @DeleteMapping("/rooms/{roomId}")

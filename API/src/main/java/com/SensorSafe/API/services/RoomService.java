@@ -43,7 +43,10 @@ public class RoomService {
     public Room getRoom(ObjectId roomId) {
         return roomRepository.findByRoomId(roomId);
     }
-
+        
+    public List<Room> getRoomsByUser(String username){
+        return roomRepository.findRoomByUsers(username);
+    }
     public List<Room> getAllRooms(){
         return roomRepository.findAll();
     }
