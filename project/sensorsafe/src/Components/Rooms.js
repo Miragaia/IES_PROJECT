@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import DeviceCard from './Card';
-import { Modal, Box, Typography, IconButton } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Toastify from './Toastify';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -54,13 +55,13 @@ useEffect (() =>{
         },
       });
 
-      const data = await response.json();
+      const acess_data = await response.json();
       
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
-      setAvailableDevices(data);
+      setAvailableDevices(acess_data);
     } catch (error) {
       Toastify.warning('Error fetching rooms:', error)
       console.error('Error fetching rooms:', error);
@@ -110,6 +111,48 @@ const style = {
   p: 4,
 };
 
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+
+const [selectedDevices, setSelectedDevices] = useState([]);
+
+const handleDeviceToggle = (device) => {
+    // Verifica se o dispositivo já existe no array de dispositivos selecionados
+
+    const deviceIndex = selectedDevices.findIndex((item) => item.deviceId === device.deviceId);
+
+    // Se o dispositivo não existir no array, adiciona ele
+    if (deviceIndex === -1) {
+      setSelectedDevices([...selectedDevices, device]);
+    } else {
+      // Se o dispositivo existir no array, remove ele
+      const filteredDevices = selectedDevices.filter((item) => item.deviceId !== device.deviceId);
+      setSelectedDevices(filteredDevices);
+    }
+
+
+};
+
+const handleAddDevices = () => {
+//caso não tenha nenhum dispositivo selecionado
+  if (selectedDevices.length === 0){ 
+    Toastify.warning('Please select at least one device');
+    return;
+  }
+  // separa em dois arrays consoante a categoria se for OTHERS é um dispostivo, senao sensor
+
+  const device_others = selectedDevices.filter((device) => device.category === 'OTHERS');
+  const device_sensors = selectedDevices.filter((device) => device.category !== 'OTHERS');
+
+  // se tiver dispositivos OTHERS
+  if (device_others.length > 0) {}
+
+  // se tiver dispositivos sensors
+  if (device_sensors.length > 0) {}
+
+  handleCloseModal();
+
+};
   return (
     <div className="Rooms"> 
      <nav id="nav1">
@@ -183,22 +226,39 @@ const style = {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <IconButton
-          aria-label="close"
-          onClick={handleCloseModal}
-          sx={{
+ <Box sx={{ borderRadius:'5px', width: 500, p: 1, backgroundColor: 'white', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>        
+
+         <CloseIcon    onClick={handleCloseModal}
+         sx={{
             position: 'absolute',
             top: 0,
             right: 0,
-          }}
-        >
-         x
-        </IconButton>
+            margin: 1,
+            cursor: 'pointer',
+            
+          }}/>
         <Typography id="modal-modal-title" variant="h6" component="h5">
-          Select Device to add to selected room
+          Select devices to add to selected room:
         </Typography>
-        
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+            {availableDevicees.map((device) => (
+              <div style={{margin:'2px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Switch {...label} color="warning" onChange={() => handleDeviceToggle(device)}/>
+                <Typography>{device.name}</Typography>
+                </div>
+                <Typography>{device.category}</Typography>
+              </div>
+            ))}
+          </div>
+          
+          </Typography>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '5px' }}>
+          <button style={{ margin: '10px',borderRadius:'5px', backgroundColor:"green" }} onClick={handleAddDevices}>Add Devices</button>
+          <button style={{ margin: '10px', borderRadius:'5px'}} onClick={handleCloseModal}>Cancel</button>
+        </div>
 
       </Box>
     </Modal>
