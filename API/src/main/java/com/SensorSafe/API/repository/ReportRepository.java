@@ -13,4 +13,5 @@ import com.SensorSafe.API.model.report.ReportSensorItem;
 public interface ReportRepository extends MongoRepository<Report, Long> {
 
     List<Report> findByType(ReportType type);
+    Report findByReportId(ObjectId id);
 }

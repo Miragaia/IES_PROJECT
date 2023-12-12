@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
 import DeviceCard from './Card';
 import { useNavigate } from 'react-router-dom';
 
 const Rooms = () => {
+  const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState('devices');
@@ -29,20 +30,40 @@ const handleAddItem = (itemName) => {
 
 }
 
+useEffect(() => {
+  // Fetch rooms data when the component mounts
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/rooms/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      setRooms(data);
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
+
+  fetchData();
+}, []);
+
   return (
     <div className="Rooms"> 
      <nav id="nav1">
         <ul className="nav-links-Rooms">
-          <li id="bath" className={selectedItem === 'devices' ? 'active' : ''}>
-            <Link onClick={() => handleItemClick('devices')}>Bathroom</Link>
-          </li>
-          <li id="kitchen" className={selectedItem === 'rooms' ? 'active' : ''}>
-            <Link onClick={() => handleItemClick('rooms')}>Kitchen</Link>
-          </li>
-          <li id="bedroom" className={selectedItem === 'reports' ? 'active' : ''}>
-            <Link onClick={() => handleItemClick('reports')}>Bedroom</Link>
-          </li>
-          <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>  
+          {rooms.map((room) => (
+            <li key={room.roomid} className={selectedItem === room.name ? 'active' : ''}>
+              <Link onClick={() => handleItemClick(room.name)}>{room.roomName}</Link>
+            </li>
+          ))}
+          <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>
             <Link to='/create_room'>Add Room +</Link>
           </li>
         </ul>

@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Toastify from './Toastify';
-import { useAuth } from '../Context/AuthContext';
+
 
 
 function Copyright(props) {
@@ -41,7 +41,6 @@ export default function SignIn() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const adminCodeRef = useRef(null); 
-  const { login, isLoggedIn } = useAuth();
   const [redirect, setRedirect] = useState(false);
   const navigate = useNavigate();
 
@@ -78,8 +77,6 @@ export default function SignIn() {
         // Registration was successful
         Toastify.success('Login successful');
         sessionStorage.setItem('Token:', data.token);
-
-        login();
         navigate('/devices');
         } else {
         Toastify.error('Login failed, try again. Error: ' + data.message);
@@ -93,11 +90,6 @@ export default function SignIn() {
     }
   };
 
-  useEffect(() => {
-    if (redirect && isLoggedIn) {
-      console.log("alo: ",isLoggedIn);
-      navigate('/devices');    }
-  }, [redirect, isLoggedIn]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

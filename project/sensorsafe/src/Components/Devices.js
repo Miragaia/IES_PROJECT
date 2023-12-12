@@ -13,7 +13,11 @@ const Devices = () => {
   
     const handleItemClick = (itemName) => {
       setSelectedItem(itemName);
-      console.log(sessionStorage.getItem('Bearer '));
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        const value = sessionStorage.getItem(key);
+        console.log(`Key: ${key}, Value: ${value}`);
+      }
     };
   
   
