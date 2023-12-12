@@ -144,6 +144,7 @@ const Devices = () => {
           {selectedItem === 'humidity' ? (
             <>«
               <div className="room-devices-cards-container">
+                {console.log(devices)}
                 {Array.isArray(devices) && devices.length > 0 ? (
                   devices.map((item, index) => (
                     <Card key={index} item={item} />
