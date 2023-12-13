@@ -259,3 +259,22 @@ min-width: 200px;
   color: #fff;
 }
 
+#AddDeviceRoom {
+  background-color: rgb(0, 190, 0);
+  color: #fff;
+  
+}
+
+#AddDeviceRoom:hover{
+  background: rgb(46, 139, 0);
+  color: #fff;
+}
+
+.empty-room {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: 200px;
+  width: 100%;
+}

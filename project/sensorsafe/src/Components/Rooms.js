@@ -10,9 +10,11 @@ import CloseIcon from '@mui/icons-material/Close';
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
+  const [sensors, setSensors] = useState([]);
+  const [roomDevices, setRoomDevices] = useState([]);
   const [availableDevicees, setAvailableDevices] = useState([])
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState('devices');
+  const [selectedItem, setSelectedItem] = useState('');
   const navigate = useNavigate();
 
   const [AddDevice, setOpenAddDevice] = useState(false);
@@ -38,6 +40,7 @@ const Rooms = () => {
     setSelectedItem(roomId);
   };
 
+  console.log(selectedItem)
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -100,7 +103,6 @@ const handleDeleteRoom = async (roomId) => {
 
     const acess_data = await response.json();
 
-    console.log("OLHA: ",acess_data)
     
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -151,7 +153,69 @@ useEffect (() =>{
   }, []);
 
 
-  // Fetch rooms data when the component mounts
+  useEffect(() => {
+    if (selectedItem !== '') {
+      const fetchDevices = async () => {
+        try {
+          const response = await fetch(`http://localhost:8080/api/devices/sensors/${selectedItem}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+            },
+          });
+
+          const data = await response.json();
+
+          setSensors(data);
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          console.log(data)
+        } catch (error) {
+          Toastify.warning('Error fetching devices:', error)
+          console.error('Error fetching devices:', error);
+        }
+      };
+
+      fetchDevices();
+
+      const fetchDevices2 = async () => {
+        try {
+          const response = await fetch(`http://localhost:8080/api/devices/${selectedItem}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+            },
+          });
+
+          const data = await response.json();
+
+          setDevices(data);
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          console.log(data)
+        } catch (error) {
+          Toastify.warning('Error fetching devices:', error)
+          console.error('Error fetching devices:', error);
+        }
+      }
+
+      fetchDevices2();
+    }
+  }, [selectedItem]);
+
+  useEffect(() => {
+    if (selectedItem !== '') {
+      const combinedData = [...devices, ...sensors];
+
+      setRoomDevices(combinedData);
+    }
+  }, [devices, sensors]);
 
 
 const style = {
@@ -222,6 +286,8 @@ const handleAddDevices = () => {
           </li>
         </ul>
       </nav>
+      {selectedItem === '' ? (
+          null) :(
       <div className="search-bar">
         <div className='room-buttons'>  
             <div className='room-details-button'>
@@ -269,6 +335,7 @@ const handleAddDevices = () => {
               </Modal>
             </div>
         </div>
+
         <div className="search-bar-content">
             <input
                 type="text"
@@ -278,11 +345,21 @@ const handleAddDevices = () => {
                 onKeyPress={handleKeyPress}
             />
         </div>
+ 
       </div>
-
+     )}
       {/* Renderização condicional do conteúdo */}
       <div className="content">
-        {selectedItem === 'devices' ? (
+
+
+
+        {selectedItem === '' ? (
+          
+          //cria me uma div centrada no meio da pagina que vai listar txto no centro da pagina
+          <div className="empty-room">
+            <h1 style={{fontWeight:"bold"}}>Select a room to view details</h1>
+          </div>
+        ) :(
           <>
             <div className="room-devices-cards-container">
               {/*{Array.isArray(devices) ? (
@@ -300,19 +377,8 @@ const handleAddDevices = () => {
             </div>
             
           </>
-         ) : (null) 
-         //selectedItem === 'rooms' ? (
-        //   <>
-        //     {/* Conteúdo para a opção 'rooms' */}
-        //   </>
-        // ) : selectedItem === 'reports' ? (
-        //   <>
-        //     {/* Conteúdo para a opção 'reports' */}
-        //   </>
-        // ) : (
-        //   <>
-        //     {/* Conteúdo padrão caso nenhuma opção selecionada */}
-        //   </>
+         )
+ 
       };
       
       <Modal
@@ -350,8 +416,8 @@ const handleAddDevices = () => {
           
           </Typography>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '5px' }}>
-          <button style={{ margin: '10px',borderRadius:'5px', backgroundColor:"green" }} onClick={handleAddDevices}>Add Devices</button>
-          <button style={{ margin: '10px', borderRadius:'5px'}} onClick={handleCloseModal}>Cancel</button>
+          <button className="btn-confirmation-delRooms" id="AddDeviceRoom" style={{ margin: '10px',borderRadius:'5px', backgroundColor:"green !important" }} onClick={handleAddDevices}>Add Devices</button>
+          <button className="btn-confirmation-delRooms" id="delRoomYes" style={{ margin: '10px', borderRadius:'5px'}} onClick={handleCloseModal}>Cancel</button>
         </div>
 
       </Box>

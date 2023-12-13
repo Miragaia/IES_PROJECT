@@ -158,6 +158,25 @@ public class DeviceApiController {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+    @ApiOperation(value = "Get devices by room", response = Iterable.class)
+    @GetMapping("/devices/{roomId}")
+    public List<Device> getDevicesByRoom(@PathVariable ObjectId roomId) {
+        if (!roomService.exists(roomId)) {
+            throw new RoomNotFoundException("Room not found");
+        }
+
+        Room room = roomService.getRoom(roomId);
+
+        if (!room.getUsers().contains(authHandler.getUsername())) {
+            throw new InvalidPermissionsException("Invalid Permissions");
+        }
+
+        return deviceService.getAllDevices().stream()
+                .filter(device -> device.getRoomID() != null)
+                .filter(device -> device.getRoomID().equals(roomId))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     @ApiOperation(value = "Get sensor by id", response = Sensor.class)
     @GetMapping("/devices/sensors/id/{sensorId}")
     public Sensor getSensorById(@PathVariable ObjectId sensorId) {
