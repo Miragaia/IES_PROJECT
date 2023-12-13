@@ -1,0 +1,33 @@
+/* Dashboard.css or your main CSS file */
+
+.room-selector-container {
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+  
+  .room-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .room-option {
+    padding: 10px;
+    background-color: #007BFF; /* You can customize the color */
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .room-option.active {
+    background-color: rgb(216, 131, 12); /* Customize the active state color */
+  }
+  
+  .select-title {
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
