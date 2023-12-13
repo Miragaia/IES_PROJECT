@@ -23,7 +23,7 @@
     margin-top: 10px;
   }
   
-  button {
+  .status-control-button, .apply {
     outline: 0;
     display: inline-flex;
     align-items: center;

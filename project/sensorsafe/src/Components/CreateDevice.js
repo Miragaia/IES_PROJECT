@@ -136,9 +136,9 @@ function AddDevice() {
             <div className='category-selection'>
                 <h2>Select Category</h2>
                 <div className='category-options'>
-                    <span className={`category-option ${selectedCategory === 'SMOKE' ? 'active' : ''}`} onClick={() => handleCategoryClick('SMOKE')}>SMOKE</span>
                     <span className={`category-option ${selectedCategory === 'HUMIDITY' ? 'active' : ''}`} onClick={() => handleCategoryClick('HUMIDITY')}>HUMIDITY</span>
                     <span className={`category-option ${selectedCategory === 'TEMPERATURE' ? 'active' : ''}`} onClick={() => handleCategoryClick('TEMPERATURE')}>TEMPERATURE</span>
+                    <span className={`category-option ${selectedCategory === 'SMOKE' ? 'active' : ''}`} onClick={() => handleCategoryClick('SMOKE')}>SMOKE</span>
                     <span className={`category-option ${selectedCategory === 'OTHERS' ? 'active' : ''}`} onClick={() => handleCategoryClick('OTHERS')}>OTHERS</span>
                 </div>
             </div>

@@ -47,17 +47,14 @@ const Navbar = () => {
                 </Link>
               </div>
               <ul className="nav-links">
+                <li className={selectedItem === 'reports' ? 'active' : ''}>
+                  <Link to="/reports" onClick={() => handleItemClick('reports')}>Reports</Link>
+                </li>
                 <li className={selectedItem === 'devices' ? 'active' : ''}>
                   <Link to="/devices" onClick={() => handleItemClick('devices')}>Devices</Link>
                 </li>
                 <li className={selectedItem === 'rooms' ? 'active' : ''}>
                   <Link to="/rooms" onClick={() => handleItemClick('rooms')}>Rooms</Link>
-                </li>
-                <li className={selectedItem === 'reports' ? 'active' : ''}>
-                  <Link to="/reports" onClick={() => handleItemClick('reports')}>Reports</Link>
-                </li>
-                <li className={selectedItem === 'about' ? 'active' : ''}>
-                  <Link to="/aboutus" onClick={() => handleItemClick('about')}>About Us</Link>
                 </li>
                 <li className={selectedItem === 'profile' ? 'active' : ''}>
                   <Link to="/profile" className="login-button" onClick={() => handleItemClick('profile')}>Profile</Link>

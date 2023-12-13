@@ -36,13 +36,13 @@ const Dashboard = () => {
 
       {/* Toggle Sections */}
       <div className="toggle-buttons">
-        <button onClick={toggleReports} data-action={showReports ? 'Hide' : 'Show'}>
+        <button id="hideRep" onClick={toggleReports} data-action={showReports ? 'Hide' : 'Show'}>
           {showReports ? 'Hide Reports' : 'Show Reports'}
         </button>
-        <button onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
+        <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
           {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
         </button>
-        <button onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
+        <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
           {showGraphicSection ? 'Hide Graphic Section' : 'Show Graphic Section'}
         </button>
       </div>

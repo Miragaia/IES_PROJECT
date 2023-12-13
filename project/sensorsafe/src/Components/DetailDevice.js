@@ -39,46 +39,8 @@ const DetailDevice = () => {
         setLoading(false);
       });
   }, [id]);
+
   
-
-
-  const handleAddReview = async (e) => {
-    e.preventDefault();
-    try {
-      const reviewData = {
-        
-        productId: id, 
-        reviewText: reviewText,
-        rating: rating,
-      };
-
-      const response = await fetch('http://localhost:5000/api/addreview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reviewData),
-      });
-
-      if (response.status === 200) {
-      
-        const updatedReviews = [...reviews, reviewData];
-        setReviews(updatedReviews);
-        setReviewText('');
-        setRating(0);
-        window.location.reload();
-      
-      } else {
-        alert('Erro ao adicionar a avaliação. Verifique os dados e tente novamente.');
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar a avaliação:', error);
-    }
-  };
-
-
-  console.log(reviews)
-
   return (
     <div className="DetailProductPage">
       <h2 className='detailproduct-title'>Detailed Product</h2>

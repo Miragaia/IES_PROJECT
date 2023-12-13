@@ -205,5 +205,12 @@ public class DeviceApiController {
     public List<AvailableDevice> getAllAvailableDevices() {
         return availableDeviceService.getAllAvailableDevicesByUsername(authHandler.getUsername());
     }
+
+    @DeleteMapping("/devices/available/{deviceId}")
+    @ApiOperation(value = "Delete Device", notes = "Delete a Device by ID")
+    public Response deleteByDeviceId(@PathVariable ObjectId deviceId) {
+        deviceService.deleteByDeviceId(deviceId);
+        return new Response("Device successfully removed.");
+    }
 }
 

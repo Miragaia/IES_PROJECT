@@ -93,11 +93,11 @@ public class RoomsApiController {
 
     @DeleteMapping("/rooms/{roomId}")
     @ApiOperation(value = "Delete Room", notes = "Delete a room by ID")
-    public Response deleteRoom(@PathVariable Room roomId) {  
-        if (!roomService.exists(roomId.getRoomId()))
+    public Response deleteRoom(@PathVariable ObjectId roomId) {  
+        if (!roomService.exists(roomId))
             throw new RoomNotFoundException("Room not found - invalid room ID");
         
-        Room room = roomService.getRoom(roomId.getRoomId());
+        Room room = roomService.getRoom(roomId);
 
         if (room.getDevices() != null)
             for (Device device : room.getDevices()) {

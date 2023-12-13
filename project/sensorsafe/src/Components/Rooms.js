@@ -16,6 +16,7 @@ const Rooms = () => {
   const navigate = useNavigate();
 
   const [AddDevice, setOpenAddDevice] = useState(false);
+  const [DeleteRoom, setOpenDeleteRoom] = useState(false);
 
   const handleOpenModal = () => {
     setOpenAddDevice(true);
@@ -25,8 +26,16 @@ const Rooms = () => {
     setOpenAddDevice(false);
   }
 
-  const handleItemClick = (itemName) => {
-    setSelectedItem(itemName);
+  const handleOpenModalRoom = () => {
+    setOpenDeleteRoom(true);
+  }
+
+  const handleCloseModalRoom = () => {
+    setOpenDeleteRoom(false);
+  }
+
+  const handleItemClick = (roomId) => {
+    setSelectedItem(roomId);
   };
 
 
@@ -43,6 +52,73 @@ const handleSearch = async () => {
 const handleAddItem = (itemName) => {
 
 }
+
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/api/rooms/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    setRooms(data);
+
+    // if (data.length > 0) {
+    //   setSelectedItem(data[0].roomId);
+    // }
+  } catch (error) {
+    Toastify.warning('Error fetching rooms:', error)
+    console.error('Error fetching rooms:', error);
+  }
+};
+useEffect(() => {
+  fetchData();
+}, []);
+
+const handleDeleteRoom = async (roomId) => {
+
+  console.log("ALO: ",roomId);
+  
+  
+    try{
+      const response = await fetch(`http://localhost:8080/api/rooms/${roomId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+        },
+        
+    });
+
+    const acess_data = await response.json();
+
+    console.log("OLHA: ",acess_data)
+    
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    if (acess_data.message === 'Room deleted successfully'){
+      Toastify.success('Room deleted successfully');
+      setOpenDeleteRoom(false);
+
+      fetchData();
+    }
+
+  } catch (error) {
+    Toastify.warning('Error fetching rooms:', error)
+    console.error('Error fetching rooms:', error);
+  }
+}
+  
+
 
 useEffect (() =>{
     const acessibleData = async ()=> {
@@ -70,34 +146,13 @@ useEffect (() =>{
     acessibleData();
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-useEffect(() => {
+
   // Fetch rooms data when the component mounts
-  const fetchData = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/rooms/', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
-        },
-      });
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      setRooms(data);
-    } catch (error) {
-      Toastify.warning('Error fetching rooms:', error)
-      console.error('Error fetching rooms:', error);
-    }
-  };
-
-  fetchData();
-}, []);
 
 const style = {
   position: 'absolute',
@@ -158,8 +213,8 @@ const handleAddDevices = () => {
      <nav id="nav1">
         <ul className="nav-links-Rooms">
           {rooms.map((room) => (
-            <li key={room.roomid} className={selectedItem === room.name ? 'active' : ''}>
-              <Link onClick={() => handleItemClick(room.name)}>{room.roomName}</Link>
+            <li key={room.roomId} className={selectedItem === room.roomId ? 'active' : ''}>
+              <Link onClick={() => handleItemClick(room.roomId)}>{room.roomName}</Link>
             </li>
           ))}
           <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>
@@ -168,6 +223,7 @@ const handleAddDevices = () => {
         </ul>
       </nav>
       <div className="search-bar">
+        <div className='room-buttons'>  
             <div className='room-details-button'>
                 <Link to="/roomdetails" onClick={() => handleItemClick('roomdetails')}>
                     <button className='btn-room-details'>
@@ -175,15 +231,53 @@ const handleAddDevices = () => {
                     </button>
                 </Link>
             </div>
-            <div className="search-bar-content">
-                <input
-                    type="text"
-                    placeholder="&#128269;  Search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                />
+            <div className='deleteRoom-button'>
+              <button className='btn-other deleteRoom-button' onClick={() => handleOpenModalRoom()}>
+                Delete Room
+              </button>
+              <Modal
+                open={DeleteRoom}
+                aria-labelledby="modal-modal-title-delRooms"
+                aria-describedby="modal-modal-description-delRooms"
+              >
+                <Box sx={style}>
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleCloseModalRoom}
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                    }}
+                  >
+                  x
+                  </IconButton>
+                  <Typography id="modal-modal-title-delRooms" variant="h6" component="h5">
+                    Are you sure you want to delete this room?
+                  </Typography>
+                  <div className="modal-buttons-delRooms">
+                    <button id="delRoomYes" className="btn-confirmation-delRooms" onClick={() => handleDeleteRoom(selectedItem)}>
+                      Yes
+                    </button>
+                    <button id ="delRoomNo" className="btn-confirmation-delRooms" onClick={handleCloseModalRoom}>
+                      No
+                    </button>
+                  </div>
+                  
+
+                </Box>
+              </Modal>
             </div>
+        </div>
+        <div className="search-bar-content">
+            <input
+                type="text"
+                placeholder="&#128269;  Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+            />
+        </div>
       </div>
 
       {/* Renderização condicional do conteúdo */}

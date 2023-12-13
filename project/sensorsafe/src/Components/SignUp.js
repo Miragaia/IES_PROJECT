@@ -68,7 +68,7 @@ export default function SignUp() {
         Toastify.success('Registration successful');
         sessionStorage.setItem('Token:', data.token);
 
-        navigate('/devices');
+        navigate('/reports');
       } else {
         // Registration failed, handle accordingly
         Toastify.error('Registration failed, try again. Error: ' + data.message);

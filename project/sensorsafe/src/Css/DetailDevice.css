@@ -1,6 +1,6 @@
 .DetailProductPage{
-    height: 100vh;
-    background-color: #131418;
+    height: 100%;
+
     display: flex;
     font-family: 'Lato', sans-serif;
     display: grid;
@@ -25,12 +25,12 @@
   
 
 .productdetail-card h2 {
-    color:#01939c;
+    color:orange;
     font-size:36px;
     font-weight:bold;
     letter-spacing: 1px;
     white-space: nowrap;
-    padding-bottom: 6rem;
+    padding-bottom: 3rem;
     margin-top: 4rem;
     display: flex;
     align-items: center;
@@ -45,28 +45,28 @@
     margin-left: 2rem;
 }
 
-.productdetail-card h3 {
-    font-size: 18px;
-    color: #626262;
-    font-weight: 600;
-    margin-bottom: 18px;
-    margin-top: 4rem;
-    margin-left: 18rem;
+.category-label {
+  font-weight: 700;
+  text-transform: uppercase;
+
 }
 
-.productdetail-card h4 {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #ccc;
-    margin-bottom: 18px;
-    margin-left: 2rem;
+.productdetail-card p {
+  display: block;
+  font-size: 16px;
+  font-weight: normal;
+  text-transform: lowercase;
+  margin-bottom: 18px;
+  margin-left: 2rem;
+  color:rgb(0, 0, 0);
 }
+
+
+
 
 .detailproduct-image {
-    width: 500px; /* Defina a largura desejada */
-    height: 500px; /* Defina a altura desejada */
+    width: 500px; 
+    height: 500px; 
     object-fit: cover;
 }
   
@@ -85,7 +85,6 @@
 
 .detailproduct-title{
     text-align: center; 
-    margin-top: 10rem;
 }
 
 
@@ -215,4 +214,15 @@
 .no-reviews{
   padding-bottom: 2rem;
 }
+
+#btnEditDevice{
+  margin-right: 20px;
+  margin-bottom: 30px;
+}
   
+#btnDeleteDevice{
+  width: 180px;
+}
+.button-container {
+  display: flex;
+}

@@ -1,11 +1,12 @@
 // RoomSelector.jsx
 
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Css/RoomSelector.css'; // Import the CSS file
+import Toastify from './Toastify';
 
 const RoomSelector = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [rooms, setRooms] = useState([]);
 
   const handleRoomSelection = (room) => {
     setSelectedRoom(room);
@@ -13,35 +14,50 @@ const RoomSelector = () => {
     console.log(`Selected room: ${room}`);
   };
 
+  useEffect(() => {
+    // Fetch rooms data when the component mounts
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/rooms/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+  
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+  
+        setRooms(data);
+  
+        if (data.length > 0) {
+          setSelectedRoom(data[0].roomId);
+        }
+      } catch (error) {
+        Toastify.warning('Error fetching rooms:', error)
+        console.error('Error fetching rooms:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   return (
     <div className="room-selector-container">
       <h3 className='select-title'>Select Room</h3>
       <div className="room-options">
+      {rooms.map((room) => (
         <span
-          className={`room-option ${selectedRoom === 'Kitchen' ? 'active' : ''}`}
-          onClick={() => handleRoomSelection('Kitchen')}
+          className={`room-option ${selectedRoom === room.roomId ? 'active' : ''}`}
+          onClick={() => handleRoomSelection(room.roomId)}
         >
-          Kitchen
+          {room.roomName}
         </span>
-        <span
-          className={`room-option ${selectedRoom === 'Bathroom' ? 'active' : ''}`}
-          onClick={() => handleRoomSelection('Bathroom')}
-        >
-          Bathroom
-        </span>
-        <span
-          className={`room-option ${selectedRoom === 'Living Room' ? 'active' : ''}`}
-          onClick={() => handleRoomSelection('Living Room')}
-        >
-          Living Room
-        </span>
-        <span
-          className={`room-option ${selectedRoom === 'Bedroom' ? 'active' : ''}`}
-          onClick={() => handleRoomSelection('Bedroom')}
-        >
-          Bedroom
-        </span>
-        {/* Add more room options as needed */}
+      ))}
       </div>
     </div>
   );

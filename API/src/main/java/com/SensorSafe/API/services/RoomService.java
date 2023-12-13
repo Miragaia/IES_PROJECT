@@ -59,8 +59,8 @@ public class RoomService {
         return roomRepository.existsByRoomName(roomName);
     }
 
-    public void deleteRoom(Room roomId){
-        roomRepository.deleteByRoomId(roomId.getRoomId());
+    public void deleteRoom(ObjectId roomId){
+        roomRepository.deleteByRoomId(roomId);
     }
 
     public void saveRoom(Room room){

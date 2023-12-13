@@ -77,7 +77,7 @@ export default function SignIn() {
         // Registration was successful
         Toastify.success('Login successful');
         sessionStorage.setItem('Token:', data.token);
-        navigate('/devices');
+        navigate('/reports');
         } else {
         Toastify.error('Login failed, try again. Error: ' + data.message);
         
@@ -129,6 +129,7 @@ export default function SignIn() {
               id="password"
               label="Password"
               name="password"
+              type="password"
               autoComplete="off"
               autoFocus
               inputRef={passwordRef}

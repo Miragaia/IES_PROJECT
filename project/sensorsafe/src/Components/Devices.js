@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
-import Card from './CardDevices';
+import CardDevices from './CardDevices';
 import { useNavigate } from 'react-router-dom';
 import Toastify from './Toastify';
 
@@ -171,7 +171,7 @@ const Devices = () => {
                           .filter(device => device.category === 'HUMIDITY')
                           .map((device) => (
                             console.log(device),
-                            <Card key={device.deviceId} item={device} />
+                            <CardDevices key={device.deviceId} item={device} />
                           ))
                   ) : (              
                     <div>                  
@@ -201,7 +201,7 @@ const Devices = () => {
                           .filter(device => device.category === 'TEMPERATURE')
                           .map((device) => (
                             console.log(device),
-                            <Card key={device.deviceId} item={device} />
+                            <CardDevices key={device.deviceId} item={device} />
                           ))
                   ) : (              
                     <div>                  
@@ -233,7 +233,7 @@ const Devices = () => {
                           .filter(device => device.category === 'SMOKE')
                           .map((device) => (
                             console.log(device),
-                            <Card key={device.deviceId} item={device} />
+                            <CardDevices key={device.deviceId} item={device} />
                           ))
                   ) : (              
                     <div>                  
@@ -263,7 +263,7 @@ const Devices = () => {
                         .filter(device => device.category === 'OTHERS')
                         .map((device) => (
                           console.log(device),
-                          <Card key={device.id} item={device} />
+                          <CardDevices key={device.id} item={device} />
                         ))
                 ) : (              
                   <div>                  
