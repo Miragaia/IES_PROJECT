@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "../Css/Rooms.css"; // Importe o arquivo CSS
 import { Link } from 'react-router-dom'; // Importe useNavigate do 'react-router-dom'
-import DeviceCard from './Card';
+import DeviceCard from './CardDevices';
 import { Modal, Box, Typography, IconButton, Switch } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Toastify from './Toastify';
@@ -175,6 +175,7 @@ useEffect (() =>{
           console.error('Error fetching devices:', error);
         }
       };
+      console.log('Sensor', sensors);
 
       fetchDevices();
 
@@ -203,6 +204,8 @@ useEffect (() =>{
       }
 
       fetchDevices2();
+
+      console.log('Devices', devices);
     }
   }, [selectedItem]);
 
@@ -210,7 +213,7 @@ useEffect (() =>{
     if (selectedItem !== '') {
       const combinedData = [...devices, ...sensors];
 
-      setRoomDevices(combinedData);
+      setRoomDevices(devices);
     }
   }, [devices, sensors]);
   console.log('acessible devices ',availableDevicees);
@@ -250,6 +253,7 @@ const handleDeviceToggle = (device) => {
 };
 
 const handleAddDevices = () => {
+  console.log('selected devices', selectedDevices);
   if (selectedDevices.length === 0){ 
     Toastify.warning('Please select at least one device');
     return;
@@ -265,11 +269,16 @@ const handleAddDevices = () => {
     device_others.forEach(async (device) => {
       try {
         const response = await fetch(`http://localhost:8080/api/devices/add-accessible-to-room/${selectedItem}`, {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
           },
+          body: JSON.stringify({
+            deviceId: device.deviceId,
+            name: device.name,
+            category: device.category,
+          }),
         });
 
         const data = await response.json();
@@ -278,8 +287,13 @@ const handleAddDevices = () => {
           throw new Error('Network response was not ok');
         }
 
-        Toastify.success('Device added successfully');
-        handleCloseModal();
+        if (data.message === 'Device successfully added to room'){
+          Toastify.success('Device added successfully');
+          handleCloseModal();
+        }
+        else{
+          Toastify.error('Error adding device:', data.message)
+        }
       } catch (error) {
         Toastify.warning('Error adding device:', error)
         console.error('Error adding device:', error);
@@ -289,7 +303,42 @@ const handleAddDevices = () => {
   }
 
   // se tiver dispositivos sensors
-  if (device_sensors.length > 0) {}
+  if (device_sensors.length > 0) {
+    // o device sensors vai ser um array de objetos com o deviceId, e quero fazer fetch a cada um deles
+    device_sensors.forEach(async (device) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/devices/sensors/add-accessible-to-room/${selectedItem}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+          body: JSON.stringify({
+            deviceId: device.deviceId,
+            name: device.name,
+            category: device.category,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        if (data.message === 'Sensor successfully added to room'){
+          Toastify.success('Sensor successfully added to room');
+          handleCloseModal();
+        }
+        else{
+          Toastify.error('Error adding sensor:', data.message)
+        }
+      } catch (error) {
+        Toastify.warning('Error adding device:', error)
+        console.error('Error adding device:', error);
+      }
+    });
+  }
 
   handleCloseModal();
 
@@ -384,7 +433,21 @@ const handleAddDevices = () => {
         ) :(
           <>
             <div className="room-devicesandsensors-cards-container">
-              {roomDevices.length > 0 ? (null
+              {roomDevices.length > 0 ? (
+                  // quero agora que compares o roomDevicces.id com o selecteditem e caso os idss sejam iguais renderizas o card senao da a mensagem de erro
+                roomDevices.some((roomDevice) => roomDevice.roomID === selectedItem) ? (
+                  roomDevices
+                    .filter((roomDevice) => roomDevice.roomID === selectedItem)
+                    .map((roomDevice) => (
+         
+                      <DeviceCard key={roomDevice.deviceId} item={roomDevice} />
+                    ))         
+                  ) : (
+                    <div style={{justifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
+                        <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                        <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to add a new acessible device.</div>
+                      </div>
+                  )
               ) : (
                 <div style={{justifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
                     <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
