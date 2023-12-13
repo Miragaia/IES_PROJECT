@@ -124,7 +124,7 @@ const Devices = () => {
 
   useEffect(() => {
     // Combine device, sensor, and available data
-    const combinedData = [...device, ...sensor, ...available];
+    const combinedData = [...sensor, ...available];
     
     // Atualiza o estado 'devices' com os dados combinados
     setDevices(combinedData);
@@ -170,7 +170,7 @@ const Devices = () => {
                     devices
                           .filter(device => device.category === 'HUMIDITY')
                           .map((device) => (
-                            console.log(device),
+                           
                             <CardDevices key={device.deviceId} item={device} />
                           ))
                   ) : (              
