@@ -179,7 +179,7 @@ const Devices = () => {
                     </div>
                   )
                 ) : (
-                  <div style={{marginjustifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
+                  <div style={{justifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
                     <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
                     <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to create a new device.</div>
                   </div>

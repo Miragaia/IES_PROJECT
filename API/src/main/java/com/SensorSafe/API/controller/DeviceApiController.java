@@ -231,5 +231,64 @@ public class DeviceApiController {
         deviceService.deleteByDeviceId(deviceId);
         return new Response("Device successfully removed.");
     }
+
+    @PostMapping("/devices/add-accessible-to-room/{roomId}")
+    @ApiOperation(value = "Add accessible device to room", notes = "Add accessible device to room")
+    public Response addAccessibleDeviceToRoom(@PathVariable ObjectId roomId, @RequestBody Device device) {
+        if (!roomService.exists(roomId)) {
+            throw new RoomNotFoundException("Room not found");
+        }
+
+        Room room = roomService.getRoom(roomId);
+
+        if (!room.getUsers().contains(authHandler.getUsername())) {
+            throw new InvalidPermissionsException("Invalid Permissions");
+        }
+
+        if (!availableDeviceService.availableDeviceExists(device.getDeviceId())) {
+            throw new DeviceNotFoundException("Device is not available");
+        }
+
+        Device deviceToBeAdded = new Device(device.getDeviceId(), device.getName(), device.getCategory(), roomId);
+
+        deviceService.registerDevice(deviceToBeAdded);
+        availableDeviceService.deleteAvailableDeviceById(device.getDeviceId());
+
+        room.getDevices().add(deviceToBeAdded);
+        roomService.updateRoom(room);
+
+
+        return new Response("Device successfully added to room");
+    }
+
+    @PostMapping("/devices/sensors/add-accessible-to-room/{roomId}")
+    @ApiOperation(value = "Add accessible sensor to room", notes = "Add accessible sensor to room")
+    public Response addAccessibleSensorToRoom(@PathVariable ObjectId roomId, @RequestBody Sensor sensor) {
+        if (!roomService.exists(roomId)) {
+            throw new RoomNotFoundException("Room not found");
+        }
+
+        Room room = roomService.getRoom(roomId);
+
+        if (!room.getUsers().contains(authHandler.getUsername())) {
+            throw new InvalidPermissionsException("Invalid Permissions");
+        }
+
+        if (!availableDeviceService.availableDeviceExists(sensor.getDeviceId())) {
+            throw new DeviceNotFoundException("Sensor is not available");
+        }
+
+        Sensor sensorToBeAdded = new Sensor(sensor.getDeviceId(), sensor.getName(), sensor.getCategory(), roomId, true, 0);
+
+        sensorService.registerSensor(sensorToBeAdded);
+
+        availableDeviceService.deleteAvailableDeviceById(sensor.getDeviceId());
+
+        room.getDevices().add(sensorToBeAdded);
+        roomService.updateRoom(room);
+
+        return new Response("Sensor successfully added to room");
+    }
+
 }
 

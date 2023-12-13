@@ -131,6 +131,13 @@ border: 1px solid black;
   align-items: center;
 }
 
+.room-devicesandsensors-cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  margin-top: 50px;
+}
+
 .add-product{
 height: 100px;
 min-width: 200px;

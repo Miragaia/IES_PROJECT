@@ -40,7 +40,6 @@ const Rooms = () => {
     setSelectedItem(roomId);
   };
 
-  console.log(selectedItem)
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -88,7 +87,6 @@ useEffect(() => {
 
 const handleDeleteRoom = async (roomId) => {
 
-  console.log("ALO: ",roomId);
   
   
     try{
@@ -172,7 +170,6 @@ useEffect (() =>{
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          console.log(data)
         } catch (error) {
           Toastify.warning('Error fetching devices:', error)
           console.error('Error fetching devices:', error);
@@ -198,7 +195,7 @@ useEffect (() =>{
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          console.log(data)
+          
         } catch (error) {
           Toastify.warning('Error fetching devices:', error)
           console.error('Error fetching devices:', error);
@@ -216,8 +213,8 @@ useEffect (() =>{
       setRoomDevices(combinedData);
     }
   }, [devices, sensors]);
-
-
+  console.log('acessible devices ',availableDevicees);
+  console.log('room vevices ',roomDevices);
 const style = {
   position: 'absolute',
   top: '50%',
@@ -253,7 +250,6 @@ const handleDeviceToggle = (device) => {
 };
 
 const handleAddDevices = () => {
-//caso não tenha nenhum dispositivo selecionado
   if (selectedDevices.length === 0){ 
     Toastify.warning('Please select at least one device');
     return;
@@ -264,7 +260,33 @@ const handleAddDevices = () => {
   const device_sensors = selectedDevices.filter((device) => device.category !== 'OTHERS');
 
   // se tiver dispositivos OTHERS
-  if (device_others.length > 0) {}
+  if (device_others.length > 0) {
+    // o device others vai ser um array de objetos com o deviceId, e quero fazer fetch a cada um deles
+    device_others.forEach(async (device) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/devices/add-accessible-to-room/${selectedItem}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        Toastify.success('Device added successfully');
+        handleCloseModal();
+      } catch (error) {
+        Toastify.warning('Error adding device:', error)
+        console.error('Error adding device:', error);
+      }
+    });
+
+  }
 
   // se tiver dispositivos sensors
   if (device_sensors.length > 0) {}
@@ -361,15 +383,14 @@ const handleAddDevices = () => {
           </div>
         ) :(
           <>
-            <div className="room-devices-cards-container">
-              {/*{Array.isArray(devices) ? (
-                devices.map((item, index) => (
-                    <DeviceCard key={index} item={item} />
-                ))
+            <div className="room-devicesandsensors-cards-container">
+              {roomDevices.length > 0 ? (null
               ) : (
-                <div>No products available.</div>
-              )}*/}
-              <DeviceCard />
+                <div style={{justifyContent: 'center', alignItems: 'center', width: '100%', marginLeft: '20px'}}>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> No devices to display.</div>
+                    <div style={{ textAlign: 'center', fontWeight: 'bold' }}> Click on the button below to add a new acessible device.</div>
+                  </div>
+              )}
               <button className="btn edit-button add-product" onClick={handleOpenModal}>
                 <i className="animation"></i>Add Device +<i className="animation"></i>
               </button>
