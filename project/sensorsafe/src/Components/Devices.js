@@ -124,7 +124,7 @@ const Devices = () => {
 
   useEffect(() => {
     // Combine device, sensor, and available data
-    const combinedData = [...device, ...available];
+    const combinedData = [...sensor, ...available];
     
     // Atualiza o estado 'devices' com os dados combinados
     setDevices(combinedData);
