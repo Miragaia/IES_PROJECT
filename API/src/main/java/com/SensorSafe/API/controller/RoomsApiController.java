@@ -27,6 +27,7 @@ import com.SensorSafe.API.tokens.JwtUserDetailsService;
 import com.SensorSafe.API.tokens.JwtTokenUtil;
 
 import com.SensorSafe.API.model.room.Room;
+import com.SensorSafe.API.model.room.RoomAutomation;
 import com.SensorSafe.API.model.room.RoomStats;
 import com.SensorSafe.API.repository.RoomRepository;
 import com.SensorSafe.API.services.RoomService;
@@ -76,6 +77,13 @@ public class RoomsApiController {
             // adicionar o user que criou a sala
             room.getUsers().add(authHandler.getUsername());}
 
+        if (room.getAutomatized() == null){
+            room.setAutomatized(new RoomAutomation());
+            room.getAutomatized().setAutomatizedTemperature(false);
+            room.getAutomatized().setAutomatizedHumidity(false);
+            room.getAutomatized().setAutomatizedSmoke(false);
+        }
+       
         try {
             roomService.RegisteRoom(room);
         } catch (DuplicateKeyException e) {
@@ -114,11 +122,29 @@ public class RoomsApiController {
 
         return new Response("Room deleted successfully"); //perceber como mandar msg de resposta 
     }
+
+    @GetMapping("/rooms/{roomId}")
+    @ApiOperation(value = "Get Room by ID", notes = "Get a room by ID", response = Room.class)
+    public Room getRoom(@PathVariable ObjectId roomId) {
+        if (!roomService.exists(roomId))
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+        
+        return roomService.getRoom(roomId);
+    }
     
-    @GetMapping("/room-automatized/{roomId}")
-    @ApiOperation(value = "Get Room Automatized", notes = "Get if a room is automatized by ID", response = Boolean.class)
-    public Boolean getRoomAutomatized(@PathVariable ObjectId roomId) {
-        return roomService.roomIsAutomatized(roomId);
+    @PostMapping("/room-automatized/{roomId}")
+    @ApiOperation(value = "Alter Room automation", notes = "Alter all automation of one room ", response = Boolean.class)
+    public Response alterRoomAutomation(@PathVariable ObjectId roomId, @RequestBody RoomAutomation automation) {
+        if (!roomService.exists(roomId))
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+        
+        Room room = roomService.getRoom(roomId);
+
+        room.setAutomatized(automation);
+
+        roomService.saveRoom(room);
+
+        return new Response("Room automation altered successfully");
     }
 
 
