@@ -6,5 +6,5 @@ public enum TriggerType {
     ON_VALUE_LESS_THAN,
     ON_VALUE_SIMILIAR_TO,
     ON_VALUE_DIFFERENT_THAN,
-    ON_VALUE_BETWEEN
+   
 }

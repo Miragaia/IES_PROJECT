@@ -24,62 +24,68 @@ public class MiddlewareHandler {
         this.sensorService = sensorService;
     }
 
-    // public void updateRoomStats(ObjectId roomId) {
-    //     Room room = roomService.getRoomById(roomId);
-    //     RoomStats roomStats = room.getRoomStats();
-    //     roomStats.setTemperature(getRoomTemperature(roomId));
-    //     roomStats.setHumidity(getRoomHumidity(roomId));
-    //     roomStats.setLight(getRoomLight(roomId));
-    //     roomStats.setAirQuality(getRoomAirQuality(roomId));
-    //     roomService.updateRoom(room);
-    // }
+    public RoomStats calculateRoomStats(ObjectId roomId){
+        double temperature = 0;
+        double humidity = 0;
+        double smoke = 0;
 
-    // public double getRoomTemperature(ObjectId roomId) {
-    //     double temperature = 0;
-    //     int count = 0;
-    //     for (Device device : sensorService.getSensorsByRoomId(roomId)) {
-    //         if (device.getCategory() == DeviceCategory.TEMPERATURE_SENSOR) {
-    //             temperature += ((Sensor) device).getValue();
-    //             count++;
-    //         }
-    //     }
-    //     return temperature / count;
-    // }
+        int tempSensors, humSensors, smokeSensors;
 
-    // public double getRoomHumidity(ObjectId roomId) {
-    //     double humidity = 0;
-    //     int count = 0;
-    //     for (Device device : sensorService.getSensorsByRoomId(roomId)) {
-    //         if (device.getCategory() == DeviceCategory.HUMIDITY_SENSOR) {
-    //             humidity += ((Sensor) device).getValue();
-    //             count++;
-    //         }
-    //     }
-    //     return humidity / count;
-    // }
+        if (!roomService.exists(roomId)){
+            return null;
+        }
 
-    // public double getRoomLight(ObjectId roomId) {
-    //     double light = 0;
-    //     int count = 0;
-    //     for (Device device : sensorService.getSensorsByRoomId(roomId)) {
-    //         if (device.getCategory() == DeviceCategory.LIGHT_SENSOR) {
-    //             light += ((Sensor) device).getValue();
-    //             count++;
-    //         }
-    //     }
-    //     return light / count;
-    // }
+        Room room = roomService.getRoom(roomId);
 
-    // public double getRoomAirQuality(ObjectId roomId) {
-    //     double airQuality = 0;
-    //     int count = 0;
-    //     for (Device device : sensorService.getSensorsByRoomId(roomId)) {
-    //         if (device.getCategory() == DeviceCategory.AIR_QUALITY_SENSOR) {
-    //             airQuality += ((Sensor) device).getValue();
-    //             count++;
-    //         }
-    //     }
-    //     return airQuality / count;
-    // }
-    
+        for (Device device : room.getDevices()){
+            if (device == null){
+                continue;
+            }
+
+            if (!sensorService.sensorExists(device.getDeviceId())){
+                continue;
+            }
+
+            Sensor sensor = sensorService.getSensorById(device.getDeviceId());
+
+            if (sensor == null){
+                continue;
+            }
+
+            if (sensor.isSensorStatus() == false){
+                continue;
+            }
+
+            switch (sensor.getCategory()) {
+                case TEMPERATURE:
+                    temperature += sensor.getValue();
+                    break;
+                case HUMIDITY:
+                    humidity += sensor.getValue();
+                    break;
+                case SMOKE:
+                    smoke += sensor.getValue();
+                    break;
+                case OTHERS:
+                    break;
+                }
+            }
+            tempSensors = (int) room.getDevices().stream().filter(d -> d.getCategory() == DeviceCategory.TEMPERATURE).count();
+            humSensors = (int) room.getDevices().stream().filter(d -> d.getCategory() == DeviceCategory.HUMIDITY).count();
+            smokeSensors = (int) room.getDevices().stream().filter(d -> d.getCategory() == DeviceCategory.SMOKE).count();
+
+            double roomTemperature = tempSensors > 0 ? temperature / tempSensors : temperature;
+            double roomHumidity = humSensors > 0 ? humidity / humSensors : humidity;
+            double roomSmoke = smokeSensors > 0 ? smoke / smokeSensors : smoke;
+
+            RoomStats roomStats = new RoomStats(roomTemperature, roomHumidity, roomSmoke);
+
+            room.setStats(roomStats);
+            roomService.updateRoom(room);
+
+            
+        return roomStats;
+        
+
+    }
 }
