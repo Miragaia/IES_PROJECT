@@ -362,7 +362,7 @@ const handleAddDevices = () => {
       <div className="search-bar">
         <div className='room-buttons'>  
             <div className='room-details-button'>
-                <Link to="/roomdetails" onClick={() => handleItemClick('roomdetails')}>
+                <Link to={`/roomdetails/${selectedItem}`} onClick={() => handleItemClick('roomdetails')}>
                     <button className='btn-room-details'>
                       Room Details
                     </button>

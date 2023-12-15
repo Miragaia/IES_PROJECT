@@ -9,6 +9,7 @@ import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.repository.RoomRepository;
 import com.SensorSafe.API.model.room.RoomStats;
+import com.SensorSafe.API.model.room.RoomAutomation;
 
 
 import java.util.ArrayList;
@@ -72,11 +73,17 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-    public boolean roomIsAutomatized(ObjectId roomId){
+    public Room updateRoomAutomation (ObjectId roomId, RoomAutomation automation){
         if (!roomRepository.existsByRoomId(roomId))
             throw new RoomNotFoundException("Room not found - invalid room ID");
         
-        return roomRepository.existsByRoomIdAndAutomatized(roomId);
+        Room room = roomRepository.findByRoomId(roomId);
+
+        room.setAutomatized(automation);
+
+        roomRepository.save(room);
+
+        return room;
     }
 
     public RoomStats getRoomStatistics(ObjectId roomId){
