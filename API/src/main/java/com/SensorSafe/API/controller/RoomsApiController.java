@@ -142,7 +142,7 @@ public class RoomsApiController {
 
         room.setAutomatized(automation);
 
-        roomService.saveRoom(room);
+        roomService.updateRoom(room);
 
         return new Response("Room automation altered successfully");
     }

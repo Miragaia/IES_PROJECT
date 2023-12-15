@@ -9,6 +9,7 @@ import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.repository.RoomRepository;
 import com.SensorSafe.API.model.room.RoomStats;
+import com.SensorSafe.API.model.room.RoomAutomation;
 
 
 import java.util.ArrayList;

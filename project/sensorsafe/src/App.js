@@ -35,7 +35,7 @@ function App() {
             <Route path="/create_room" element={<CreateRoom/>}/>
             <Route path="/detail_device" element={<DetailDevice/>}/> 
             <Route path="/signIn" element={<SignIn />} />
-            <Route path="/roomdetails" element={<RoomDetails />} />
+            <Route path="/roomdetails/:roomId" element={<RoomDetails />} />
             <Route path="/reports" element={<Dashboard />} />
           </Routes>
         <Navbar />
