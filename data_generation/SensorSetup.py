@@ -1,56 +1,64 @@
 import pika
-import json
-import time
-import random
+import os
+import time 
+import requests
+from bson import ObjectId
+from multiprocessing import Process
+from apiHandler import ApiHandler
 
-# Configuração do RabbitMQ
-rabbitmq_host ='rabbitmq_sensorsafe'  # Substitua pelo host do seu RabbitMQ
-rabbitmq_port = 5672
-rabbitmq_username = 'test'
-rabbitmq_password = 'test'
-exchange_name = 'spring_exchange'
-queue_name = 'SensorSafe'
+process_list = []
+id_list = []
 
-# Conexão com o RabbitMQ
-credentials = pika.PlainCredentials(rabbitmq_username, rabbitmq_password)
-parameters = pika.ConnectionParameters(rabbitmq_host, rabbitmq_port, '/', credentials)
-connection = pika.BlockingConnection(parameters)
-channel = connection.channel()
-# Declaração da exchange e da fila
-channel.exchange_declare(exchange=exchange_name, exchange_type='direct', durable=True)
-channel.queue_declare(queue=queue_name, durable=True)
-channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key=queue_name)
+def main():
 
-# Função para simular a leitura do sensor e enviar para o RabbitMQ
-def send_sensor_data():
+    devices=ApiHandler().getSensors()
+    if devices is not None:
+
+        for device in devices:
+            if device['category'] == 'TEMPERATURE':
+               type = 'tempSensor'
+               p = Process(target=startSensor, args=(device['deviceId'], type))
+            elif device['category'] == 'HUMIDITY':
+                type = 'humSensor'
+                p = Process(target=startSensor, args=(device['deviceId'], type))
+            elif device['category'] == 'SMOKE':
+                type = 'smokeSensor'
+                p = Process(target=startSensor, args=(device['deviceId'], type))
+
+            p.start()
+            process_list.append(p)
+            id_list.append(device['deviceId'])
+
     while True:
-        type = ['temperature', 'humidity', 'pressure']
-        
-        # Adiciona 'smoke' em 10% das vezes
-        smoke = 'smoke' if random.randint(1, 10) == 1 else 'no smoke'
+        time.sleep(60)
 
-        # Simula a leitura do sensor
-        sensor_data = {
-            'sensor_id': type[random.randint(1, 3)-1],
-            'smoke': smoke,
-            'value': random.uniform(0, 20),
-            'timestamp': int(time.time())
-        }
+        devices=ApiHandler().getSensors()
 
-        # Envia os dados para o RabbitMQ
-        channel.basic_publish(
-            exchange=exchange_name,
-            routing_key=queue_name,
-            body=json.dumps(sensor_data),
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # torna a mensagem persistente
-            )
-        )
+        if devices is not None:
+            for device in devices:
+                if device['category'] == 'TEMPERATURE':
+                    if device['deviceId'] not in id_list:
+                        type = 'tempSensor'
+                        p = Process(target=startSensor, args=(device['deviceId'], type))
+                        
+                elif device['category'] == 'HUMIDITY':
+                    if      device['deviceId'] not in id_list:
+                        type = 'humSensor'
+                        p = Process(target=startSensor, args=(device['deviceId'], type))
+                        
+                elif device['category'] == 'SMOKE':
+                    if      device['deviceId'] not in id_list:
+                        type = 'smokeSensor'
+                        p = Process(target=startSensor, args=(device['deviceId'], type))
+                        
+                p.start()
+                process_list.append(p)
+                id_list.append(device['deviceId'])
 
-        print(f"Sent sensor data: {sensor_data}")
 
-        # Aguarda um intervalo de tempo (por exemplo, 5 segundos) antes de enviar o próximo conjunto de dados
-        time.sleep(5)
 
-# Chama a função para enviar dados do sensor
-send_sensor_data()
+def startSensor(id, type):
+    os.system("python3 " + type + ".py " + id)
+
+if __name__ == '__main__':
+    main()

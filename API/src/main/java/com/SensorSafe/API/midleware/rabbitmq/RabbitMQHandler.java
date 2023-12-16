@@ -91,11 +91,5 @@ public class RabbitMQHandler {
         
         return connection != null && connection.isOpen();
     }
-
-    @RabbitListener(queues = "SensorSafe")
-    public void receiveMessage(String message) {
-        logger.info("Received message from RabbitMQ: " + message);
-        // Adicione aqui a lógica para processar a mensagem recebida
-    }
 }
 
