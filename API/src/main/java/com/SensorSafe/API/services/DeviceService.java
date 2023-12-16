@@ -65,4 +65,5 @@ public class DeviceService {
         devicesRepository.deleteByDeviceId(device.getDeviceId());
         devicesRepository.save(device);
     }
+    
 }

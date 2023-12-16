@@ -228,7 +228,22 @@ public class DeviceApiController {
     @DeleteMapping("/devices/available/{deviceId}")
     @ApiOperation(value = "Delete Device", notes = "Delete a Device by ID")
     public Response deleteByDeviceId(@PathVariable ObjectId deviceId) {
+
+        if(availableDeviceService.availableDeviceExists(deviceId)){
+            availableDeviceService.deleteAvailableDeviceById(deviceId);
+            deviceService.deleteByDeviceId(deviceId);
+            return new Response("Device successfully removed.");
+        }
+        
+
+        Device device = deviceService.getDeviceById(deviceId);
+        Room room = roomService.getRoom(device.getRoomID());
+        
+        room.getDevices().removeIf(dev -> dev.getDeviceId().equals(deviceId));
+        roomService.updateRoom(room);
+
         deviceService.deleteByDeviceId(deviceId);
+        
         return new Response("Device successfully removed.");
     }
 
@@ -283,12 +298,75 @@ public class DeviceApiController {
         sensorService.registerSensor(sensorToBeAdded);
 
         availableDeviceService.deleteAvailableDeviceById(sensor.getDeviceId());
+        deviceService.deleteByDeviceId(sensor.getDeviceId());
 
         room.getDevices().add(sensorToBeAdded);
         roomService.updateRoom(room);
 
         return new Response("Sensor successfully added to room");
     }
+
+
+    @PutMapping("/devices/device/edit/{deviceId}")
+    @ApiOperation(value = "Edit a device", notes = "Edit a device")
+    public Response editDevice(@PathVariable ObjectId deviceId, @RequestBody Device updatedDevice) {
+        Device device = deviceService.getDeviceById(deviceId);
+        AvailableDevice availableDevice = availableDeviceService.getAvailableDeviceById(deviceId);
+
+        
+        if (device == null) {
+            // Se o dispositivo não for encontrado, pode retornar uma resposta de dispositivo não encontrado
+            return new Response("Device not found");
+        }
+
+        // Atualize os campos que deseja alterar
+        device.setName(updatedDevice.getName());
+        device.setCategory(updatedDevice.getCategory());
+
+        // Salve as alterações
+        deviceService.updateDevice(device);
+
+        if(availableDevice != null){
+            availableDevice.setName(updatedDevice.getName());
+            availableDevice.setCategory(updatedDevice.getCategory());
+            availableDeviceService.updateAvailableDevice(availableDevice);
+        }
+
+
+        return new Response("Device updated successfully");
+    }
+
+    @PutMapping("/devices/device/remove-room/{deviceId}")
+    @ApiOperation(value = "Remove room ID from a device", notes = "Remove room ID from a device")
+    public Response removeRoomFromDevice(@PathVariable ObjectId deviceId) {
+        Device device = deviceService.getDeviceById(deviceId);
+
+        if (device == null) {
+            return new Response("Device not found");
+        }
+
+        Room room = roomService.getRoom(device.getRoomID());
+        room.getDevices().removeIf(dev -> dev.getDeviceId().equals(deviceId));
+        roomService.updateRoom(room);
+
+        device.setRoomID(null);
+
+        deviceService.updateDevice(device);
+        Device device1 = deviceService.getDeviceById(deviceId);
+        deviceService.deleteByDeviceId(deviceId);
+        deviceService.registerDevice(device1);
+
+        
+        
+
+        
+
+        return new Response("Room ID removed from the device successfully");
+    }
+
+
+
+
 
 }
 

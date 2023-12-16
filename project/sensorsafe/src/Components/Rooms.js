@@ -81,9 +81,7 @@ const fetchData = async () => {
     console.error('Error fetching rooms:', error);
   }
 };
-useEffect(() => {
-  fetchData();
-}, []);
+
 
 const handleDeleteRoom = async (roomId) => {
 
@@ -107,9 +105,10 @@ const handleDeleteRoom = async (roomId) => {
     }
     if (acess_data.message === 'Room deleted successfully'){
       Toastify.success('Room deleted successfully');
+      window.location.reload();
       setOpenDeleteRoom(false);
 
-      fetchData();
+      
     }
 
   } catch (error) {
@@ -289,7 +288,9 @@ const handleAddDevices = () => {
 
         if (data.message === 'Device successfully added to room'){
           Toastify.success('Device added successfully');
+          window.location.reload();
           handleCloseModal();
+          
         }
         else{
           Toastify.error('Error adding device:', data.message)

@@ -49,4 +49,9 @@ public class AvailableDeviceService {
             throw new UserNotFoundException("Invalid device data with id: " + id + " - invalid device");
         }
     }
+
+    public void updateAvailableDevice(AvailableDevice availableDevice){
+        availableDeviceRepository.deleteByDeviceId(availableDevice.getDeviceId());
+        availableDeviceRepository.save(availableDevice);
+    }
 }
