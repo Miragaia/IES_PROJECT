@@ -70,4 +70,20 @@ public class ReportsApiController {
     public Report getReportById(@PathVariable("id") ObjectId id) {
         return reportsService.getReportById(id);
     }
+
+    @GetMapping("/generate-report")
+    @ApiOperation(value = "Generate report", notes = "Generate a new report", response = Response.class)
+    public Response generateReport() {
+        try {
+            // Add logic to generate the report
+            // You can call a service method to handle the report generation
+            reportsService.generateReport(authHandler.getUsername());
+
+            //perceber se quando dou generate report tenho de associar a uma variavel para depois receber o report, ou eles vem por outro lado do rabbitmq
+
+            return new Response("Report generated successfully");
+        } catch (Exception e) {
+            return new Response("Error generating report: " + e.getMessage());
+        }
+    }
 }
