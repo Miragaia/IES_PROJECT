@@ -7,7 +7,7 @@ import os
 
 class tempSensor:
 
-    def __init__(self, id, start_humi = None, spleep_time = 30):
+    def __init__(self, id, start_humi = None, spleep_time = 60):
         self.rabbit_adrress = 'rabbitmq_sensorsafe'
         self.rabbit_port = 5672
         self.rabbit_user = 'test'

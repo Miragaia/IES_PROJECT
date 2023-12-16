@@ -38,48 +38,12 @@ class ApiHandler:
         response = requests.get(self.url + '/middleware/sensors', headers=self.headers)
 
         if response.status_code == 200:
-            return response
+            return response.json()
         elif response.status_code == 401:
             self.login()
             return None
         else:
             print("getSensors failed, status code: {}".format(response.status_code))
-            return None
-        
-    def getAvailableSensors(self):
-        response = requests.get(self.url + '/middleware/sensors/available', headers=self.headers)
-
-        if response.status_code == 200:
-            return response
-        elif response.status_code == 401:
-            self.login()
-            return None
-        else:
-            print("getAvailableSensors failed, status code: {}".format(response.status_code))
-            return None
-        
-    def addAvailableSensor(self, sensor):
-        response = requests.post(self.url + '/middleware/sensors/available', headers=self.headers, json=sensor)
-
-        if response.status_code == 200:
-            return response
-        elif response.status_code == 401:
-            self.login()
-            return None
-        else:
-            print("addAvailableSensor failed, status code: {}".format(response.status_code))
-            return None
-        
-    def getAutomationRules(self):
-        response = requests.get(self.url + '/middleware/automation/rules', headers=self.headers)
-
-        if response.status_code == 200:
-            return response
-        elif response.status_code == 401:
-            self.login()
-            return None
-        else:
-            print("getAutomationRules failed, status code: {}".format(response.status_code))
             return None
         
     
