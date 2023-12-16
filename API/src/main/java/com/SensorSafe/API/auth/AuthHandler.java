@@ -16,6 +16,6 @@ public final class AuthHandler {
     }
 
     public boolean isAdmin() {
-        return getAuthentication().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        return getAuthentication().getName().equals("admin");
     }
 }

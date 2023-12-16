@@ -18,11 +18,13 @@ public class ReportSensorItem extends Report {
     private ObjectId sensorId;
     private String sensorType;
     private String sensorStatus;
+    private double sensorValue;
 
-    public ReportSensorItem(ObjectId reportId, String name, ReportType type, Date date, String description, ObjectId sensorId, String sensorType, String sensorStatus) {
+    public ReportSensorItem(ObjectId reportId, String name, ReportType type, Date date, String description, ObjectId sensorId, String sensorType, String sensorStatus, double sensorValue) {
         super(reportId, name, type, date, description);
         this.sensorId = sensorId;
         this.sensorType = sensorType;
         this.sensorStatus = sensorStatus;
+        this.sensorValue = sensorValue;
     }
 }
