@@ -37,6 +37,7 @@ import com.SensorSafe.API.repository.DevicesRepository;
 import com.SensorSafe.API.services.DeviceService;
 
 import com.SensorSafe.API.services.AvailableDeviceService;
+import java.util.List;
 
 
 
@@ -91,6 +92,15 @@ public class RoomsApiController {
         return roomService.getRoomsByUser(authHandler.getUsername());
     }
 
+    @GetMapping("/rooms/{roomId}")
+    @ApiOperation(value = "Get Room by ID", notes = "Get a room by ID", response = Room.class)
+    public Room getRoomById(@PathVariable ObjectId roomId) {
+        if (!roomService.exists(roomId))
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+
+        return roomService.getRoom(roomId);
+    }
+
     @DeleteMapping("/rooms/{roomId}")
     @ApiOperation(value = "Delete Room", notes = "Delete a room by ID")
     public Response deleteRoom(@PathVariable ObjectId roomId) {  
@@ -98,15 +108,22 @@ public class RoomsApiController {
             throw new RoomNotFoundException("Room not found - invalid room ID");
         
         Room room = roomService.getRoom(roomId);
-
-        if (room.getDevices() != null)
+        List<Device> devicesToDelete = new ArrayList<>();
+        
+        if (room.getDevices() != null) {
             for (Device device : room.getDevices()) {
-                
-                deviceService.deleteByDeviceId(device.getDeviceId());
-                AvailableDevice newAvailableDevice = new AvailableDevice(device.getDeviceId(), "Device " + device.getDeviceId(), device.getCategory(), authHandler.getUsername());
-                availabledeviceService.registerAvailableDevice(newAvailableDevice);
-
+                System.out.println("Olha o device: " + device);
+                device.setRoomID(null);
+                deviceService.updateDevice(device);
+                devicesToDelete.add(device);
             }
+    
+            for (Device device : devicesToDelete) {
+                Device deviceFromService = deviceService.getDeviceById(device.getDeviceId());
+                deviceService.deleteByDeviceId(device.getDeviceId());
+                deviceService.registerDevice(deviceFromService);
+            }
+        }
                 
 
 

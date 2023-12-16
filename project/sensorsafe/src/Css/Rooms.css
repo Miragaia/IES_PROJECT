@@ -249,6 +249,31 @@ min-width: 200px;
 
 }
 
+.btn-no-delRooms {
+
+  align-items: center;
+  background-color: green;
+  width: 150px;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+  box-sizing: border-box;
+  padding: 16px 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-left: 40px;
+  text-decoration: none;
+  transition: background-color 0.3s; 
+
+}
+
 /* Estilo para o botão 'Sim' (perigoso) */
 #delRoomYes:hover{
   background: rgb(146, 2, 2);
