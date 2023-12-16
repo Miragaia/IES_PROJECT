@@ -1,8 +1,11 @@
 package com.SensorSafe.API.services;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.SensorSafe.API.model.report.ReportType;
 import com.SensorSafe.API.model.device.Device;
@@ -10,13 +13,26 @@ import com.SensorSafe.API.model.report.Report;
 import com.SensorSafe.API.model.report.ReportSensorItem;
 import com.SensorSafe.API.repository.ReportRepository;
 
+import com.SensorSafe.API.model.report.Report;
+import com.SensorSafe.API.midleware.rabbitmq.RabbitMQHandler;
+import com.SensorSafe.API.midleware.rabbitmq.RabbitMQNotificationReact;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class ReportService {
     
     private final ReportRepository reportRepository;
+    private final RabbitMQHandler rabbitMQHandler;
 
-    public ReportService(ReportRepository reportRepository){
+    @Autowired
+    public ReportService(ReportRepository reportRepository, RabbitMQHandler rabbitMQHandler) {
         this.reportRepository = reportRepository;
+        this.rabbitMQHandler = rabbitMQHandler;
     }
 
     public Report saveReport(Report report){
@@ -33,5 +49,87 @@ public class ReportService {
 
     public Report getReportById(ObjectId id){
         return reportRepository.findByReportId(id);
+    }
+
+    public void generateReport(String username) throws IOException {
+        // Trigger the Python script
+        Process pythonProcess = triggerPythonScript(username);
+
+        // Note: The actual report generation logic may happen asynchronously in the Python script
+
+        // For demonstration purposes, let's assume the Python script generates a report file
+        // You might need to wait for the Python script to finish before proceeding
+
+        // Example: Wait for the Python script to finish (you might need to implement a more robust mechanism)
+        waitForPythonScriptToFinish(pythonProcess);
+
+        // Fetch the generated report from Python (you need to implement this)
+        byte[] reportData = fetchReportFromPython(pythonProcess);
+
+        // Save the report to the database
+        Report report = new Report();
+        report.setName(username);   //ns se preciso
+        report.setType(ReportType.DEVICES); // Set the appropriate report type
+        reportRepository.save(report);
+
+        // Publish the report to RabbitMQ
+        rabbitMQHandler.publish("SensorSafe", new String(reportData));
+
+    }
+
+    // Method to trigger the Python script
+    private Process triggerPythonScript(String username) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("python", "path/to/generate_report.py", username);
+            return processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+            // Handle the exception as needed
+        }
+    }
+
+    // Example: Wait for the Python script to finish (you might need to implement a more robust mechanism)
+    private void waitForPythonScriptToFinish(Process process) {
+        try {
+            // Wait for the Python script to finish (you might want to specify a timeout)
+            boolean completed = process.waitFor(2, TimeUnit.MINUTES);
+
+            if (!completed) {
+                // Handle the case where the Python script didn't finish within the specified time
+                throw new RuntimeException("Python script did not finish within the expected time.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            // Handle the interruption as needed
+        }
+    }
+
+    // Example: Fetch the generated report from Python (you need to implement this)
+    private byte[] fetchReportFromPython(Process process) {
+        try {
+            // Get the input stream of the Python process (assuming the report is generated as standard output)
+            InputStream inputStream = process.getInputStream();
+
+            // Read the output of the Python script
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            StringBuilder reportContent = new StringBuilder();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                reportContent.append(line).append("\n");
+            }
+
+            // Close the reader
+            reader.close();
+
+            // Convert the report content to bytes (adjust this based on your actual report format)
+            return reportContent.toString().getBytes(StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+            return null;
+        }
     }
 }
