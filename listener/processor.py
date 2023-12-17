@@ -88,7 +88,7 @@ def main():
         rabbit_port = 5672
         rabbit_user = 'test'
         rabbit_pass = 'test'
-        qeue_name = "SensorSafe"
+        qeue_name = 'SensorSafe'
 
         credentials = pika.PlainCredentials(rabbit_user, rabbit_pass)
         parameters = pika.ConnectionParameters(rabbit_adrress, rabbit_port, '/', credentials)

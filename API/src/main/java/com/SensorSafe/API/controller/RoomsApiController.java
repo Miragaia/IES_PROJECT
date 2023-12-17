@@ -140,14 +140,6 @@ public class RoomsApiController {
         return new Response("Room deleted successfully"); //perceber como mandar msg de resposta 
     }
 
-    @GetMapping("/rooms/{roomId}")
-    @ApiOperation(value = "Get Room by ID", notes = "Get a room by ID", response = Room.class)
-    public Room getRoom(@PathVariable ObjectId roomId) {
-        if (!roomService.exists(roomId))
-            throw new RoomNotFoundException("Room not found - invalid room ID");
-        
-        return roomService.getRoom(roomId);
-    }
     
     @PostMapping("/room-automatized/{roomId}")
     @ApiOperation(value = "Alter Room automation", notes = "Alter all automation of one room ", response = Boolean.class)

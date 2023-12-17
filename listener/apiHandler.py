@@ -5,7 +5,7 @@ class ApiHandler:
 
     def __init__(self):
         self.token = ''
-        self.url = 'http://localhost:8080'
+        self.url = 'http://172.18.0.3:8080'
         self.headers = {'Authorization': 'Bearer ' + self.token, 'Content-Type': 'application/json'}
         self.tries = 0
         self.username = 'admin'
