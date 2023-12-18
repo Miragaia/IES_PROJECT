@@ -1,6 +1,8 @@
 package com.SensorSafe.API.midleware;
 
 
+import java.util.Date;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,19 +11,26 @@ import com.SensorSafe.API.model.room.RoomStats;
 import com.SensorSafe.API.model.device.Device;
 import com.SensorSafe.API.model.device.DeviceCategory;
 import com.SensorSafe.API.model.device.Sensor;
+import com.SensorSafe.API.model.report.ReportType;
 import com.SensorSafe.API.services.RoomService;
 import com.SensorSafe.API.services.SensorService;
+import com.SensorSafe.API.services.ReportService;
+import com.SensorSafe.API.model.report.Report;
+import com.SensorSafe.API.model.report.ReportType;
+import org.bson.types.ObjectId;
 
 @Component  
 public class MiddlewareHandler {
 
     private final RoomService roomService;
     private final SensorService sensorService;
+    private final ReportService reportService;
 
     @Autowired
-    public MiddlewareHandler(RoomService roomService, SensorService sensorService) {
+    public MiddlewareHandler(RoomService roomService, SensorService sensorService, ReportService reportService) {
         this.roomService = roomService;
         this.sensorService = sensorService;
+        this.reportService = reportService;
     }
 
     public RoomStats calculateRoomStats(ObjectId roomId){
@@ -87,5 +96,76 @@ public class MiddlewareHandler {
         return roomStats;
         
 
+    }
+
+    public void calculateRoomAutomation(ObjectId roomId, ObjectId sensorId){
+        Room room = roomService.getRoom(roomId);
+        Sensor sensor = sensorService.getSensorById(sensorId);
+
+        if (sensor == null){
+            System.out.println("Sensor not found");
+        }
+
+        if (room == null){
+            System.out.println("Room not found");
+        }
+
+        boolean automationTemperature = room.getAutomatized().isAutomatizedHumidity();
+        boolean automationHumidity = room.getAutomatized().isAutomatizedHumidity();
+        boolean automationSmoke = room.getAutomatized().isAutomatizedSmoke();
+        double maxValueAutomation = 0.0;
+        double minValueAutomation = 0.0;
+
+        if (automationTemperature){
+            if (sensor.getCategory() == DeviceCategory.TEMPERATURE){
+                maxValueAutomation = room.getAutomatized().getMaxTemperature();
+                minValueAutomation = room.getAutomatized().getMinTemperature();
+                
+                if (sensor.getValue() > maxValueAutomation){
+                    System.out.println("Temperature is too high - " + sensor.getValue());
+                    Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Temperature is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
+                    reportService.saveReport(report);  
+                } 
+                if (sensor.getValue() < minValueAutomation){
+                    System.out.println("Temperature is too low - " + sensor.getValue());
+                    Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Temperature is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
+                    reportService.saveReport(report);                      
+                }
+            }
+        }
+        if (automationHumidity){
+            if (sensor.getCategory() == DeviceCategory.HUMIDITY){
+                maxValueAutomation = room.getAutomatized().getMaxHumidity();
+                minValueAutomation = room.getAutomatized().getMinHumidity();
+
+                if (sensor.getValue() > maxValueAutomation){
+                    System.out.println("Humidity is too high - " + sensor.getValue());
+                    Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Humidity is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
+                    reportService.saveReport(report);  
+                }
+
+                if (sensor.getValue() < minValueAutomation){
+                    System.out.println("Humidity is too low - " + sensor.getValue());
+                    Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Humidity is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
+                    reportService.saveReport(report);  
+                }
+
+            }
+        }
+
+        if (automationSmoke){
+            if (sensor.getCategory() == DeviceCategory.SMOKE){
+                maxValueAutomation = room.getAutomatized().getMaxSmoke();
+                
+                if (sensor.getValue() > maxValueAutomation){
+                    System.out.println("Smoke is too high - " + sensor.getValue());
+                    Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
+                    reportService.saveReport(report);  
+                }
+                
+            }
+        }
+
+        return;
     }
 }
