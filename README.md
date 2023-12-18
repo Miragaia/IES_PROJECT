@@ -30,6 +30,10 @@
 
 - ### [Architecture Explanation](reports/Documentation/Architecture.md)
 
+# Database
+
+![Database](reports/I4/Database_UML.png)
+- ### [Database Explanation](reports/Documentation/Database.md)
 
 # Personas and Scenarios
 
