@@ -75,9 +75,9 @@ function CreateRoom() {
             roomName: formData.get('roomName'),
 
             automatized: {
-              automatizedHumidity: !showHumidityInputs,
-              automatizedSmoke: !showSmokeInputs,
-              automatizedTemperature: !showTemperatureInputs,
+              automatizedHumidity: showHumidityInputs,
+              automatizedSmoke: showSmokeInputs,
+              automatizedTemperature: showTemperatureInputs,
               maxHumidity: parseInt(maxHumidityValue),
               maxSmoke: parseInt(maxSmokeValue),
               maxTemperature: parseInt(maxTemperatureValue),
