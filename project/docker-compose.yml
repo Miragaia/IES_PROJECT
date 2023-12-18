@@ -15,6 +15,19 @@ services:
       mongo-compose-network:
         ipv4_address: 172.18.0.2
 
+  frontend_listener:
+    build:
+      context: ./frontend_listener
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - react
+    ports:
+      - 3001:3001
+    networks:
+      mongo-compose-network:
+        ipv4_address: 172.18.0.10
+
   api:
     build:
       context: ../API

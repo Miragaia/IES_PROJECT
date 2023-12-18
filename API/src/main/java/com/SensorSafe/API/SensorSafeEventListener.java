@@ -33,6 +33,7 @@ public class SensorSafeEventListener {
     public void runAfterStartup() {
         try {
             rabbitMQHandler.connect(username, password, "/");
+            rabbitMQHandler.setup("rabbitmq_sensorsafe");
             logger.info("Connected to RabbitMQ");
 
         } catch (Exception e) {
