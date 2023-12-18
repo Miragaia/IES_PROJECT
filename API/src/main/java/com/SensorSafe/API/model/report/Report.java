@@ -24,6 +24,7 @@ public class Report {
     @Id
     @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId reportId;
+    
     private String name;
     private ReportType type;
     private Date date;

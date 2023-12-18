@@ -9,6 +9,7 @@ import com.SensorSafe.API.model.report.ReportSensorItem;
 
     public interface SensorReportRepository extends MongoRepository<ReportSensorItem, Long>
     {
-
+        ReportSensorItem findBySensorId(ObjectId sensorId);
+        ReportSensorItem findByReportId(ObjectId reportId);
     }    
 
