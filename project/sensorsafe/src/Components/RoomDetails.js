@@ -231,8 +231,12 @@ const RoomDetailsPage = () => {
       setModalConfirm(false);
     }
     fetchData();
+
   
 };
+
+
+
 
 
   return (
@@ -245,9 +249,9 @@ const RoomDetailsPage = () => {
         {/* Temperature Control */}
         <div className='control-section'>
           <h3 className='Title-Section'>Temperature Control</h3>
-          <p className='status-control'>Status: {temperatureControl ? 'Activated' : 'Deactivated'}</p>
-          <button className={`status-control-button ${temperatureControl ? 'activate' : 'deactivate'}`} onClick={() => toggleControl('temperature')}>
-            {temperatureControl ? 'Deactivate' : 'Activate'}
+          <p className='status-control'>Status: {!temperatureControl ? 'Activated' : 'Deactivated'}</p>
+          <button className={`status-control-button ${!temperatureControl ? 'activate' : 'deactivate'}`} onClick={() => toggleControl('temperature')}>
+            {!temperatureControl ? 'Deactivate' : 'Activate'}
           </button>
 
           {/* Min and Max Temperature Fields */}
@@ -279,9 +283,9 @@ const RoomDetailsPage = () => {
         {/* Humidity Control */}
         <div className="control-section">
           <h3 className='Title-Section'>Humidity Control</h3>
-          <p className='status-control'>Status: {humidityControl ? 'Activated' : 'Deactivated'}</p>
-          <button className={`status-control-button ${humidityControl ? 'activate' : 'deactivate'}`} onClick={() => toggleControl('humidity')}>
-            {humidityControl ? 'Deactivate' : 'Activate'}
+          <p className='status-control'>Status: {!humidityControl ? 'Activated' : 'Deactivated'}</p>
+          <button className={`status-control-button ${!humidityControl ? 'activate' : 'deactivate'}`} onClick={() => toggleControl('humidity')}>
+            {!humidityControl ? 'Deactivate' : 'Activate'}
           </button>
 
           {/* Min and Max Humidity Fields */}
@@ -315,7 +319,7 @@ const RoomDetailsPage = () => {
           <h3 className='Title-Section'>Smoke Control</h3>
           <p className='status-control'>Status: {smokeControl ? 'Activated' : 'Deactivated'}</p>
           <button className={`status-control-button ${smokeControl ? 'activate' : 'deactivate'}`} onClick={() => toggleControl('smoke')}>
-            {smokeControl ? 'Deactivate' : 'Activate'}
+            {!smokeControl ? 'Deactivate' : 'Activate'}
           </button>
 
           {/* Min and Max Smoke Fields */}
