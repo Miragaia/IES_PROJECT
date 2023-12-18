@@ -46,6 +46,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.9.11-management
     container_name: rabbitmq_sensorsafe
+    hostname: rabbitmq_sensorsafe
     build:
       context: ./rabbitmq
       dockerfile: Dockerfile

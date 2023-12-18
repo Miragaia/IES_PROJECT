@@ -1,3 +1,3 @@
 #!/bin/bash
-sleep 35
+sleep 60
 exec python3 processor.py

@@ -177,6 +177,7 @@ public class MiddlewareApiController {
 
         Sensor oldSensor = sensorService.getSensorById(sensor.getDeviceId());
         
+        System.out.println("Getting update to old sensor: " + oldSensor + "in date: "+ new Date());
 
         oldSensor.setSensorStatus(sensor.isSensorStatus());
         oldSensor.setValue(sensor.getValue());
@@ -185,7 +186,8 @@ public class MiddlewareApiController {
 
         ReportSensorItem reportSensorItem = new ReportSensorItem(null,authHandler.getUsername(), ReportType.DEVICES, new Date(), String.format("Sensor %s of type %s update the value to %f.",sensor.getDeviceId(),sensor.getCategory(), oldSensor.getValue()), sensor.getDeviceId(), sensor.getCategory().toString(), sensor.isSensorStatus() ? "ON" : "OFF", sensor.getValue());
         reportSensorService.registerReportSensor(reportSensorItem);
-
+        
+        System.out.println("Getting updated to old sensor: " + oldSensor + "in date: "+ new Date());
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
 
         return new Response("Sensor updated successfully");

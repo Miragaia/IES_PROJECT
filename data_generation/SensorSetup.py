@@ -22,22 +22,28 @@ def main():
                 p.start()
                 process_list.append(p)
                 id_list.append(device['deviceId'])
+                print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                time.sleep(5)
             elif device["category"] == "HUMIDITY":
                 type = 'humSensor'
                 p = Process(target=startSensor, args=(device['deviceId'], type))
                 p.start()
                 process_list.append(p)
                 id_list.append(device['deviceId'])
+                print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                time.sleep(5)
             elif device["category"] == "SMOKE":
                 type = 'smokeSensor'
                 p = Process(target=startSensor, args=(device['deviceId'], type))
                 p.start()
                 process_list.append(p)
                 id_list.append(device['deviceId'])
+                print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                time.sleep(5)
 
 
     while True:
-        time.sleep(300)
+        time.sleep(30)
 
         devices=ApiHandler().getSensors()
 
@@ -51,18 +57,24 @@ def main():
                             p.start()
                             process_list.append(p)
                             id_list.append(device['deviceId'])
+                            print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                            time.sleep(5)
                     elif device['category'] == 'HUMIDITY':
                             type = 'humSensor'
                             p = Process(target=startSensor, args=(device['deviceId'], type))
                             p.start()
                             process_list.append(p)
                             id_list.append(device['deviceId'])
+                            print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                            time.sleep(5)
                     elif device['category'] == 'SMOKE':
                             type = 'smokeSensor'
                             p = Process(target=startSensor, args=(device['deviceId'], type))
                             p.start()
                             process_list.append(p)
                             id_list.append(device['deviceId'])
+                            print("Starting "+ device['deviceId'] +"sensor: " + device['deviceId']+ " " + type)
+                            time.sleep(5)
                     
 
 

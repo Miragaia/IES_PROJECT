@@ -3,6 +3,7 @@ import pika
 import json
 import concurrent.futures
 import sys
+import datetime
 
 units = {'TEMPERATURE': '°C', 'HUMIDITY': '%', 'SMOKE': '%'}
 token = None
@@ -11,7 +12,7 @@ api = ApiHandler()
 
 def callback(ch, method, properties, body):
     try:
-        print(" [x] Received %r" % body.decode())
+        print(" [x] Received ",  body.decode()," date: ", str(datetime.datetime.now()))
 
         data = json.loads(body.decode())
         validate_and_process(data)
@@ -35,7 +36,7 @@ def validate_and_process(data):
     sensor = get_sensor(sensor_id, "sensor")
 
     if sensor:
-        print(" [x] Updating sensor state")
+        print(" [x] Updating sensor state in database, date: ", str(datetime.datetime.now()))
         update_state(sensor, sensor_value)
 
     else:
@@ -83,6 +84,7 @@ def update_state(sensor, value):
         print(" [x] Error updating sensor state:", str(e))
 
 def main():
+    print(" [x] Starting processor")
     try:
         rabbit_adrress = 'rabbitmq_sensorsafe'
         rabbit_port = 5672
@@ -95,6 +97,7 @@ def main():
         connection = pika.BlockingConnection(parameters)
 
         channel = connection.channel()
+        print(" [x] Connected to RabbitMQ")
 
         channel.queue_declare(queue=qeue_name, durable=True)
         print(' [*] Waiting for messages. To exit press CTRL+C')
@@ -106,12 +109,19 @@ def main():
             executor.submit(channel.start_consuming)
 
     except KeyboardInterrupt or SystemExit:
+        print(" [x] Exiting processor")
         pass
+
+    except Exception as e:
+        print(" [x] Error starting processor:", str(e))
+        sys.exit(1)
 
     finally:
         channel.stop_consuming()
         connection.close()
         print(" [*] Connection closed")
+
+    print(" [x] Processor stopped")
 
 if __name__ == '__main__':
     main()
