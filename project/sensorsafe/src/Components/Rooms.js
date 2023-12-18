@@ -408,15 +408,6 @@ const handleAddDevices = () => {
             </div>
         </div>
 
-        <div className="search-bar-content">
-            <input
-                type="text"
-                placeholder="&#128269;  Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-            />
-        </div>
  
       </div>
      )}
