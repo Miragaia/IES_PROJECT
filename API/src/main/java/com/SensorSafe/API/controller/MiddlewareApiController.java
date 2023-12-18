@@ -70,7 +70,7 @@ public class MiddlewareApiController {
         this.sensorService = sensorService;
         this.availableSensorService = availableSensorService;
         this.reportSensorService = reportSensorService;
-    }
+            }
 
     @GetMapping("/sensors")
     @ApiOperation(value = "Get all sensors", notes = "Returns a list of all sensors")
@@ -205,14 +205,15 @@ public class MiddlewareApiController {
         reportSensorService.save(reportSensorItem);
 
         
-        Room room = roomService.getRoom(sensor.getRoomID());
+        Room room = roomService.getRoom(oldSensor.getRoomID());
+        System.out.println("Getting room: " + room + "in date: "+ new Date());
         if (room != null && roomService.exists(room.getRoomId())) {
             middlewareHandler.calculateRoomAutomation(room.getRoomId(), sensor.getDeviceId());
             RoomStats roomStats = middlewareHandler.calculateRoomStats(room.getRoomId());
-        }
+                            }
 
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
-
+        
         return new Response("Sensor updated successfully");
     }
 
