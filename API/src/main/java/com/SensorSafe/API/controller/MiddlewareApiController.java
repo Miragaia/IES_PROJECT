@@ -204,6 +204,13 @@ public class MiddlewareApiController {
             value);
         reportSensorService.save(reportSensorItem);
 
+        
+        Room room = roomService.getRoom(sensor.getRoomID());
+        if (room != null && roomService.exists(room.getRoomId())) {
+            middlewareHandler.calculateRoomAutomation(room.getRoomId(), sensor.getDeviceId());
+            RoomStats roomStats = middlewareHandler.calculateRoomStats(room.getRoomId());
+        }
+
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
 
         return new Response("Sensor updated successfully");
