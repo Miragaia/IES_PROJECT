@@ -169,25 +169,41 @@ public class MiddlewareApiController {
         if (!authHandler.isAdmin())
             throw new InvalidPermissionsException();
 
-        if (!sensorService.sensorExists(sensor.getDeviceId()))
+        if (sensor.getDeviceId() == null || sensor.getCategory() == null )
             throw new DeviceNotFoundException("Invalid sensor data with id: " + sensor.getDeviceId() + " - invalid sensor");
 
         if (!sensorService.sensorExists(sensor.getDeviceId()))
+            throw new DeviceNotFoundException("Invalid sensor data with id: " + sensor.getDeviceId() + " - invalid sensor");
+
+        Double value = sensor.getValue();
+        if (value == null)
             throw new DeviceNotFoundException("Invalid sensor data with id: " + sensor.getDeviceId() + " - invalid sensor");
 
         Sensor oldSensor = sensorService.getSensorById(sensor.getDeviceId());
         
-        System.out.println("Getting update to old sensor: " + oldSensor + "in date: "+ new Date());
+        System.out.println("\n Getting old sensor: " + oldSensor + "in date: "+ new Date());
+        System.out.println("Getting new sensor: " + sensor + "in date: "+ new Date());
 
         oldSensor.setSensorStatus(sensor.isSensorStatus());
-        oldSensor.setValue(sensor.getValue());
+        oldSensor.setValue(value);
 
         sensorService.updateSensor(oldSensor);
 
-        ReportSensorItem reportSensorItem = new ReportSensorItem(null,authHandler.getUsername(), ReportType.DEVICES, new Date(), String.format("Sensor %s of type %s update the value to %f.",sensor.getDeviceId(),sensor.getCategory(), oldSensor.getValue()), sensor.getDeviceId(), sensor.getCategory().toString(), sensor.isSensorStatus() ? "ON" : "OFF", sensor.getValue());
-        reportSensorService.registerReportSensor(reportSensorItem);
-        
-        System.out.println("Getting updated to old sensor: " + oldSensor + "in date: "+ new Date());
+        System.out.println("Updating sensor to: " + sensorService.getSensorById(sensor.getDeviceId()) + "in date: "+ new Date());
+
+
+        ReportSensorItem reportSensorItem = new ReportSensorItem(
+            null,
+            authHandler.getUsername(), 
+            ReportType.DEVICES, 
+            new Date(),
+            String.format("Sensor %s of type %s update the value to %f.",sensor.getDeviceId(),sensor.getCategory(), value), 
+            sensor.getDeviceId(), 
+            sensor.getCategory().toString(), 
+            oldSensor.isSensorStatus() ? "ON" : "OFF", 
+            value);
+        reportSensorService.save(reportSensorItem);
+
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
 
         return new Response("Sensor updated successfully");
