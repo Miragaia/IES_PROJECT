@@ -42,11 +42,13 @@ public class ReportsApiController {
 
     private final ReportService reportsService;
     private final AuthHandler authHandler;
+    private final ReportSensorService reportSensorService;
 
     @Autowired
-    public ReportsApiController(ReportService reportsService, AuthHandler authHandler) {
+    public ReportsApiController(ReportService reportsService, AuthHandler authHandler, ReportSensorService reportSensorService) {
         this.reportsService = reportsService;
         this.authHandler = authHandler;
+        this.reportSensorService = reportSensorService;
     }
 
     @GetMapping("/reports_sensors")
@@ -61,6 +63,14 @@ public class ReportsApiController {
     @ApiOperation(value = "Get all reports by type", notes = "Get all reports by type", response = Report.class)
     public List<Report> getAllReportSensorsByType(@PathVariable("ReportType") ReportType reportType) {
         return reportsService.getReportsByType(reportType).stream()
+                .filter(report -> report.getName().equals(authHandler.getUsername()))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/reports_sensors/{ReportId}")
+    @ApiOperation(value = "Get all reports by id", notes = "Get all reports by id", response = Report.class)
+    public List<ReportSensorItem> getAllReportSensorsById(@PathVariable("ReportId") ObjectId reportId) {
+        return reportSensorService.getReportSensorBySensorId(reportId).stream()
                 .filter(report -> report.getName().equals(authHandler.getUsername()))
                 .collect(Collectors.toList());
     }
