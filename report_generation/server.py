@@ -12,6 +12,13 @@ CORS(app)
 SECRET_KEY = "palavra_passe_ultra_secreta"
 app.config['SECRET_KEY'] = SECRET_KEY
 
+
+#function to clear the current directory but only the report.pdf
+def clear_dir():
+    for filename in os.listdir("./"):
+        if filename != "report.pdf":
+            os.remove(filename)
+
 @app.route('/sensorsafe/generate_report', methods=['POST'])
 def generate_report():
     auth = request.headers.get('Authorization')
@@ -32,6 +39,10 @@ def generate_report():
 
     if not report_type:
         return jsonify({"error": "Report type not provided"}), 400
+    
+    # Clear the temporary directory
+    clear_dir()
+    time.sleep(10)
 
     # Run the appropriate Python script based on the report type
     if report_type == 'stats':
@@ -51,14 +62,17 @@ def generate_report():
     else:
         return jsonify({"error": "Invalid report type"}), 400
 
-    return reportData
+    # Return the report data
+    return reportData, 200
 
 def startReport(report_type, stats):
     print("Starting report: " + report_type)
     os.system("python3 generate_report_" + report_type + ".py ")
+    time.sleep(10)
+
     # Assuming the report is generated in the same directory with the name 'report.pdf'
-    with open("report.pdf", 'rb') as file:
-        report_data = file.read()
+    with open("report.pdf", "rb") as pdf_file:
+        report_data = pdf_file.read()
     return report_data
 
 if __name__ == '__main__':

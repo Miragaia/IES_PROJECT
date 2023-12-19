@@ -1,3 +1,4 @@
+import time
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import random
@@ -186,17 +187,19 @@ def generate_maintenance_report(file_path):
 
     # Save the PDF
     pdf_canvas.save()
-
+    time.sleep(10)
     # Save the PDF as bytes
-    with open("report.pdf", "rb") as pdf_file:
+    with open("./temp_reports/report.pdf", "rb") as pdf_file:
         report_data = pdf_file.read()
 
     return report_data
 
 
 if __name__ == "__main__":
+    
+
     # Output file path
-    output_file_path = "maintenance_report.pdf"
+    output_file_path = "report.pdf"
 
     # Generate PDF maintenance report
     generate_maintenance_report(output_file_path)
