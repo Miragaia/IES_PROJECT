@@ -3,6 +3,9 @@ from reportlab.pdfgen import canvas
 import random
 
 def generate_maintenance_report(file_path):
+
+    # print("Generating maintenance report...")
+
     # Create a PDF document
     pdf_canvas = canvas.Canvas(file_path, pagesize=letter)
     
@@ -184,6 +187,12 @@ def generate_maintenance_report(file_path):
     # Save the PDF
     pdf_canvas.save()
 
+    # Save the PDF as bytes
+    with open("report.pdf", "rb") as pdf_file:
+        report_data = pdf_file.read()
+
+    return report_data
+
 
 if __name__ == "__main__":
     # Output file path
@@ -191,5 +200,8 @@ if __name__ == "__main__":
 
     # Generate PDF maintenance report
     generate_maintenance_report(output_file_path)
+
+    # Generate PDF maintenance report
+    report_bytes = generate_maintenance_report(output_file_path)
 
     print(f"Maintenance report generated successfully at: {output_file_path}")

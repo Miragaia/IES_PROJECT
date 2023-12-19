@@ -1,6 +1,7 @@
 // ReportsSection.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Toastify from './Toastify';
 
 const ReportsSection = () => {
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
@@ -14,29 +15,41 @@ const ReportsSection = () => {
     setIsGeneratingReport(true);
 
     // Example: Use fetch or your preferred HTTP library
-    fetch('http://your-backend-url/generate-report', {
+    const response = fetch('http://localhost:8080/sensorsafe/generate-report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
       },
-      body: JSON.stringify({}),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Report generated:', data);
-        // Handle the generated report data as needed
+      // body: JSON.stringify({}),
+    });
 
-        // Set isGeneratingReport back to false after handling the report
-        setIsGeneratingReport(false);
-      })
-      .catch((error) => {
-        console.error('Error generating report:', error);
-        // Handle errors
+    if (!response.ok) {
+      throw new Error('Error generating report');
+    }
 
-        // Set isGeneratingReport back to false in case of an error
-        setIsGeneratingReport(false);
-      });
+
+      // .then((response) => response.json())
+      // .then((data) => {
+      //   console.log('Report generated:', data);
+      //   // Handle the generated report data as needed
+
+      //   // Set isGeneratingReport back to false after handling the report
+      //   setIsGeneratingReport(false);
+      // })
+      // .catch((error) => {
+      //   console.error('Error generating report:', error);
+      //   // Handle errors
+
+      //   // Set isGeneratingReport back to false in case of an error
+      //   setIsGeneratingReport(false);
+      // });
   };
+
+
+
+
+
 
   return (
     <div className="reports-section-container">
