@@ -43,5 +43,9 @@ public class ReportSensorService {
         return sensorReportRepository.findByReportId(reportId);
     }
 
+    public List<ReportSensorItem> getAllReportSensorItem() {
+        return null;
+    }
+
 
 }

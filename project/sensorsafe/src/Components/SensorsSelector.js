@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react';
 import '../Css/RoomSelector.css'; // Import the CSS file
 import Toastify from './Toastify';
 
-const SensorsSelector = () => {
+const SensorsSelector = ({ onSensorSelect }) => {
   const [selectedSensor, setSelectedSensor] = useState(null);
   const [sensors, setSensor] = useState([]);
 
   const handleSensorSelection = (sensor) => {
     setSelectedSensor(sensor);
-    
+    onSensorSelect(sensor);
   };
+
 
   useEffect(() => {
 

@@ -1,15 +1,17 @@
 // GraphicSection.jsx
 
 import React from 'react';
+import ApexChart from './ApexChart';
 
-
-const GraphicSection = () => {
+const GraphicSection = ({selectedSensor}) => {
   // Implementation for displaying graphics
+  console.log('sensoerGera: ', selectedSensor);
 
   return (
     <div>
       <h3>Graphic Section</h3>
-      {/* Add your graphic section UI */}
+
+      <ApexChart />
     </div>
   );
 };
