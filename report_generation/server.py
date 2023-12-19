@@ -52,14 +52,14 @@ def generate_report():
         stats = []      #meter a receber do front
         # p = Process(target=startReport, args=(report_type, stats))
         # p.start()
-        reportData = startReportMan(report_type, stats)
+        reportData = startReport(report_type, stats)
         print("Starting2 "+ report_type +" report: " + report_type)
         # time.sleep(5)
     elif report_type == 'maintenance':
         stats = []
         # p = Process(target=startReport, args=(report_type, stats))
         # p.start()
-        reportData = startReport(report_type, stats)
+        reportData = startReportMan(report_type, stats)
         print("Starting "+ report_type +" report: " + report_type)
         # time.sleep(5)
     else:
