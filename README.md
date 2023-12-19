@@ -45,9 +45,7 @@
 
 - [All available Project Documentation](reports/)
     
-- [Final Report](reports/I3/IES_Project_Specification_ReportFinal.pdf)
-
-- [Project Presentation](reports/I4/IES_Project_Presentation.pdf)
+- [Final Report](reports/I4/IES_Project_Specification_Report.pdf)
 
 - Running the application:
 
