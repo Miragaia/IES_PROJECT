@@ -85,7 +85,7 @@ public class ReportsApiController {
     @GetMapping("/reports_sensors/reports/")
     @ApiOperation(value = "Get all reports", notes = "Get all reports", response = Report.class)
     public List<ReportSensorItem> getAllReports() {
-        return reportSensorService.getAllReportSensorItem();
+        return reportSensorService.getAllReportSensors();
     }
 
 
