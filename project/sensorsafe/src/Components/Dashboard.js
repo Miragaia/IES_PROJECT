@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import Toastify from './Toastify';
 import '../Css/RoomSelector.css'; // Import the CSS file
 import CameraOutlinedIcon from "@mui/icons-material/CameraOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"; 
+
+
 const Dashboard = () => {
   const [showReports, setShowReports] = useState(true);
   const [showNotifications, setShowNotifications] = useState(true);
@@ -112,6 +115,11 @@ const Dashboard = () => {
             <li id="DevicesRep" className={selectedItem === 'devices' ? 'active' : ''}>
               <Link onClick={() => handleItemClick('devices')}>Sensors</Link>
             </li>
+            <li id="Notifications" className={selectedItem === 'notifications' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('notifications')}>
+                Notifications <NotificationsOutlinedIcon /> 
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
@@ -168,7 +176,7 @@ const Dashboard = () => {
 
               </div>
             </>
-          ) : (
+          ) : selectedItem === 'devices' ? (
             <>
             {/* Room Selector */}
             <SensorsSelector />
@@ -200,6 +208,11 @@ const Dashboard = () => {
 
             </div>
             </>
+          ) : (
+            <>
+            </>
+            
+            
           )}
     </div>
       
