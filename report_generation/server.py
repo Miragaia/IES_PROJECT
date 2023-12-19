@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+from multiprocessing import Process
+import time
+
+
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +22,44 @@ def generate_report():
     data = request.json
     print("Received data:")
     print(data)
-    return jsonify(data)
+
+    if data is None:
+        return jsonify({"error": "No data received"}), 400
+    
+    # Extract report type and additional data
+    report_type = data.get('report_type')
+    stats = data.get('stats', [])
+
+    if not report_type:
+        return jsonify({"error": "Report type not provided"}), 400
+
+    # Run the appropriate Python script based on the report type
+    if report_type == 'stats':
+        stats = []      #meter a receber do front
+        # p = Process(target=startReport, args=(report_type, stats))
+        # p.start()
+        reportData = startReport(report_type, stats)
+        print("Starting "+ report_type +" report: " + report_type)
+        # time.sleep(5)
+    elif report_type == 'maintenance':
+        stats = []
+        # p = Process(target=startReport, args=(report_type, stats))
+        # p.start()
+        reportData = startReport(report_type, stats)
+        print("Starting "+ report_type +" report: " + report_type)
+        # time.sleep(5)
+    else:
+        return jsonify({"error": "Invalid report type"}), 400
+
+    return reportData
+
+def startReport(report_type, stats):
+    print("Starting report: " + report_type)
+    os.system("python3 generate_report_" + report_type + ".py ")
+    # Assuming the report is generated in the same directory with the name 'report.pdf'
+    with open("report.pdf", 'rb') as file:
+        report_data = file.read()
+    return report_data
 
 if __name__ == '__main__':
     print("Starting server...")
