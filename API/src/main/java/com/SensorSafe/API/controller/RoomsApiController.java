@@ -162,4 +162,26 @@ public class RoomsApiController {
     public RoomStats getRoomStatistics(@PathVariable ObjectId roomId) {
         return roomService.getRoomStatistics(roomId);
     }
+
+    @GetMapping("/room-devices/{roomId}")
+    @ApiOperation(value = "Get num of Room Devices", notes = "Get num of devices of a room by ID", response = Integer.class)
+    public int getNumRoomDevices(@PathVariable ObjectId roomId) {
+        System.out.println("Entrou no getNumRoomDevices");
+
+        if (!roomService.exists(roomId)) {
+            throw new RoomNotFoundException("Room not found - invalid room ID");
+        }
+
+        Room room = roomService.getRoom(roomId);
+        System.out.println("Olha a room: " + room);
+        // Verificar se há dispositivos na sala
+        if (room.getDevices() != null) {
+            System.out.println("Há dispositivos associados à sala");
+            return room.getDevices().size(); // Retorna o número de dispositivos associados à sala
+        } else {
+            System.out.println("Não há dispositivos associados à sala");
+            return 0; // Se não houver dispositivos associados, retorna 0
+        }
+    }
+
 }
