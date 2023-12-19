@@ -48,7 +48,7 @@ const SensorsSelector = ({ onSensorSelect }) => {
 
   return (
     <div className="sensors-selector-container">
-      <h3 className='select-title'>Select Device</h3>
+      <h3 className='select-title'>Select Sensors</h3>
       <div className="sensors-options">
       {sensors.map((sensor) => (
         <span

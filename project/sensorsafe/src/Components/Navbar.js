@@ -73,9 +73,9 @@ const Navbar = () => {
                 <li className={selectedItem === 'home' ? 'active' : ''}>
                   <Link to="/" onClick={() => handleItemClick('home')}>Home</Link>
                 </li>
-                <li className={selectedItem === 'about' ? 'active' : ''}>
+              {/*  <li className={selectedItem === 'about' ? 'active' : ''}>
                   <Link to="/aboutus" onClick={() => handleItemClick('about')}>About Us</Link>
-                </li>
+          </li> */}
                 <li><Link to="/signIn" className="login-button2">Login</Link></li>
                 <li><Link to="/signup" className="login-button2">Register</Link></li>
               </ul>
