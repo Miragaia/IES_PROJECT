@@ -66,7 +66,7 @@ public class RabbitMQHandler {
             }
     }
 
-    public void publish(String queueName, String message) throws IOException {
+    public void publish(String queueName, String message) {
         try {
             channel.basicPublish(exchange, queueName, null, message.getBytes());
             logger.info("Published message to RabbitMQ: " + message + " on queue: " + queueName);
