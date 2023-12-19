@@ -136,6 +136,7 @@ const Dashboard = () => {
         console.log("Sensors: ", data_f2);
         
         setSensor(data_f2); // Add new elements to the existing list
+
         if (data_f2.length > 0) {
           setSelectedSensor(data_f2[0].deviceId);
           fetchReportBySensor(data_f2[0].deviceId)
@@ -148,9 +149,13 @@ const Dashboard = () => {
     }
     fetchData2();
   
-  }, []);
+  }, [selectedItem]);
 
-    
+    useEffect(() => {
+      console.log('**************************************Selected sensor:', selectedSensor);
+      fetchReportBySensor(selectedSensor);
+    }, [selectedSensor]);
+
 
     const fetchRoomDevices  = async (room) => {
       console.log('RoomId:', room);
@@ -174,6 +179,8 @@ const Dashboard = () => {
       }
     }
 
+  
+  
     const fetchReportBySensor = async (sensorId) => {
       console.log('sensorId:', sensorId);
       try {
@@ -185,12 +192,10 @@ const Dashboard = () => {
           },
         });
 
-        console.log('response:', response)
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
-        console.log('response:', response)
 
         const data = await response.json();
         console.log('Reports by sensor:', data);
@@ -198,15 +203,15 @@ const Dashboard = () => {
         const sensorValue = [];
         const date = [];
         const sensorType = [];
+        const notifications = [];
         for (let i = 0; i < data.length; i++) {
           const report_data = data[i];
-          console.log('report_data:', report_data.type);
           if(report_data.type === 'DEVICES' && report_data.description.includes(sensorId)){
               const formattedValue = parseFloat(report_data.sensorValue).toFixed(2);
-              date.push([report_data.date, parseFloat(formattedValue)]);
+              date.push([(report_data.date), parseFloat(formattedValue)]);
               // date.push(report_data.date);
               sensorType.push(report_data.sensorType);
-
+              notifications.push(report_data.description);
             }
             else{
               console.log("Sensor não encontrado");
@@ -216,6 +221,8 @@ const Dashboard = () => {
           setsensorValue(sensorValue);
           setDate(date);
           setSensorType(sensorType);  
+          // quero apenas os primerios 10notificaçoes
+          setNotifications(notifications.slice(-10));
         
         
          // Isso retornará o número de dispositivos associados ao roomId
@@ -224,9 +231,6 @@ const Dashboard = () => {
         throw new Error('Error fetching reports by sensor');
       }
     }
-    console.log("date: ", date.splice(-9));
-
-
     
     const [chartData, setChartData] = useState({
       series: [{
@@ -239,7 +243,8 @@ const Dashboard = () => {
           type: 'area',
           height: 350,
           zoom: {
-            autoScaleYaxis: true
+            autoScaleYaxis: true,
+            autoScaleXaxis: true
           }
         },
         annotations: {
@@ -298,7 +303,7 @@ const Dashboard = () => {
       },
     
     
-      selection: 'one_year',
+      selection: 'last_10',
     
     });
     const updateData = (timeline) => {
@@ -349,6 +354,13 @@ const Dashboard = () => {
             new Date('27 Feb 2013').getTime()
           )
           break
+          case 'last_10':
+            ApexCharts.exec(
+              'area-datetime',
+              'zoomX',
+              new Date('19 Dez 2023').getTime(),
+              new Date('19 Dez 2023').getTime()
+            )
         default:
       }
     }
@@ -424,9 +436,9 @@ const Dashboard = () => {
                 <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
                   {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
                 </button>
-                <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
+                {/* <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
                   {showGraphicSection ? 'Hide Graphic Section' : 'Show Graphic Section'}
-                </button>
+                </button> */}
               </div>
 
 
@@ -442,7 +454,7 @@ const Dashboard = () => {
 
               </div>
             </>
-          ) : selectedItem === 'sensors' ? (
+          ) : selectedItem === 'devices' ? (
             <>
             {/* Room Selector */}
             <div className="sensors-selector-container">
@@ -479,7 +491,11 @@ const Dashboard = () => {
               {showReports && <ReportsSection />}
 
               {/* Notifications Section */}
-              {showNotifications && <NotificationsSection />}
+              {showNotifications && 
+              // chama o notification section ele vai receber o array de notificações
+              <NotificationsSection notifications={notifications} />
+              }
+
 
               {/* Graphic Section */}
               {showGraphicSection && (

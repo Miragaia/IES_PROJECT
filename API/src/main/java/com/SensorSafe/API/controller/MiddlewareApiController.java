@@ -202,7 +202,7 @@ public class MiddlewareApiController {
             ReportType.DEVICES, 
             new Date(),
             String.format("Sensor %s of type %s update the value to %f.",sensor.getDeviceId(),sensor.getCategory(), value), 
-            sensor.getDeviceId(), 
+            oldSensor.getDeviceId(), 
             sensor.getCategory().toString(), 
             oldSensor.isSensorStatus() ? "ON" : "OFF", 
             value);
