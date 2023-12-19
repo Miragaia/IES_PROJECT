@@ -22,6 +22,7 @@ import com.SensorSafe.API.exceptions.RoomNotFoundException;
 import com.SensorSafe.API.exceptions.UserNotFoundException;
 import com.SensorSafe.API.midleware.MiddlewareHandler;
 import com.SensorSafe.API.midleware.MidlewareInterceptor;
+import com.SensorSafe.API.midleware.rabbitmq.RabbitMQHandler;
 import com.SensorSafe.API.tokens.JwtRequest;
 import com.SensorSafe.API.tokens.JwtResponse;
 import com.SensorSafe.API.tokens.JwtUserDetailsService;
@@ -58,6 +59,9 @@ public class MiddlewareApiController {
     private final SensorService sensorService;
     private final AvailableDeviceService availableSensorService;
     private final ReportSensorService reportSensorService;
+
+    @Autowired
+    private RabbitMQHandler rabbitMQHandler;
 
     @Autowired
     public MiddlewareApiController(MiddlewareHandler middlewareHandler, MidlewareInterceptor middlewareInterceptor, AuthHandler authHandler, RoomService roomService, DeviceService deviceService, ReportService reportService, SensorService sensorService, AvailableDeviceService availableSensorService, ReportSensorService reportSensorService) {
@@ -210,9 +214,11 @@ public class MiddlewareApiController {
         if (room != null && roomService.exists(room.getRoomId())) {
             middlewareHandler.calculateRoomAutomation(room.getRoomId(), sensor.getDeviceId());
             RoomStats roomStats = middlewareHandler.calculateRoomStats(room.getRoomId());
-                            }
+            rabbitMQHandler.publish("frontend_notifications", "Room " + room.getRoomId() + " was update values to " + roomStats);
+         }
 
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
+        rabbitMQHandler.publish("frontend_notifications", "Sensor " + sensor.getDeviceId() + " was update values to " + value);
         
         return new Response("Sensor updated successfully");
     }
