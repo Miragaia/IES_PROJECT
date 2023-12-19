@@ -103,6 +103,10 @@ services:
     build:
       context: ../report_generation
       dockerfile: Dockerfile
+    ports:
+      - 9999:9999
+    expose:
+      - 9999
     networks:
       mongo-compose-network:
         ipv4_address: 172.18.0.11

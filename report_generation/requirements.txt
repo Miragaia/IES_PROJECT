@@ -1,3 +1,5 @@
 pika
 bson==0.5.10
 requests
+flask
+flask_cors
