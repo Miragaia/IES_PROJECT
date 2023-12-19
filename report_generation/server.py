@@ -10,7 +10,7 @@ import os
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/sensorsafe/*": {"origins": "http://localhost:3000"}})
 
 SECRET_KEY = "palavra_passe_ultra_secreta"
 app.config['SECRET_KEY'] = SECRET_KEY
@@ -65,34 +65,37 @@ def generate_report():
     else:
         return jsonify({"error": "Invalid report type"}), 400
 
-    # Return the report data
-    return reportData, 200
+      # Return the report data with the correct Content-Type
+    return jsonify(reportData), 200
 
 def startReport(report_type, stats):
     print("Starting report: " + report_type)
     os.system("python3 generate_report_stats.py ")
-    time.sleep(10)
+    time.sleep(5)
 
     # Assuming the report is generated in the same directory with the name 'report.pdf'
     with open("report.pdf", "rb") as pdf_file:
-        report_data = BytesIO(pdf_file.read())
-    return report_data
+        report_data = pdf_file.read()
+
+    report_data_bytearray = bytearray(report_data)
+    return {'report_data': report_data_bytearray.decode('latin-1')}
 
 def startReportMan(report_type, stats):
     print("Starting2 report: " + report_type)
     os.system("python3 generate_report_maintenance.py ")
-    time.sleep(10)
+    time.sleep(5)
 
     # Assuming the report is generated in the same directory with the name 'report.pdf'
     with open("report.pdf", "rb") as pdf_file:
-        report_data = BytesIO(pdf_file.read())
-    return report_data
+        report_data = pdf_file.read()
+
+    report_data_bytearray = bytearray(report_data)
+    return {'report_data': report_data_bytearray.decode('latin-1')}  # Convert bytes to string for JSON
 
 if __name__ == '__main__':
     
     print("Starting server...")
     app.run(host='0.0.0.0',port=9999)
-    print(os.getcwd())
     print("Server stopped")
 
 

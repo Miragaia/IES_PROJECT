@@ -9,23 +9,33 @@ const ReportsSection = () => {
   // Dummy data for reports (replace with actual reports data)
   const reports = ['Report 1', 'Report 2', 'Report 3'];
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     // Add logic to make an API call to trigger report generation
     // Set isGeneratingReport to true while waiting for the response
     setIsGeneratingReport(true);
+    try {
+      // Example: Use fetch or your preferred HTTP library
+      const response = await fetch('http://localhost:9999/sensorsafe/generate_report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'palavra_passe_ultra_secreta',
+        },
+        body: JSON.stringify({
+          report_type: 'maintenance',
+          stats: [1, 2, 3],
+        }),
+      });
 
-    // Example: Use fetch or your preferred HTTP library
-    const response = fetch('http://localhost:8080/sensorsafe/generate-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
-      },
-      // body: JSON.stringify({}),
-    });
+      console.log(response);
+      
+      const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Error generating report');
+      console.log('Report generated successfully:', data);
+      setIsGeneratingReport(false);
+    }catch(error) {
+      console.error('Error generating report:', error);
+      setIsGeneratingReport(false);
     }
 
 
