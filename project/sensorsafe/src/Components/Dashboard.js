@@ -10,7 +10,10 @@ import Toastify from './Toastify';
 import '../Css/RoomSelector.css'; // Import the CSS file
 import CameraOutlinedIcon from "@mui/icons-material/CameraOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"; 
-
+import io from 'socket.io-client';
+import Divider from '@mui/material/Divider';
+import { styled } from '@mui/material/styles';
+import { List, ListItem, ListItemText } from '@mui/material';
 
 const Dashboard = () => {
   const [showReports, setShowReports] = useState(true);
@@ -18,10 +21,12 @@ const Dashboard = () => {
   const [showGraphicSection, setShowGraphicSection] = useState(true);
   const [selectedItem, setSelectedItem] = useState('rooms');
   const [numberOfDevices, setNumberOfDevices] = useState(0);
-
+  const [notifications, setNotifications] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
-
+  const [array_notif, setArray_notif] = useState([]); // Array de notificações
+  const [array_notif2, setArray_notif2] = useState([]); // Array de notificações
+  const [array_notif3, setArray_notif3] = useState([]); // Array de notificações
   const handleRoomSelection = (room) => {
     setSelectedRoom(room);
     fetchRoomDevices(room);
@@ -30,6 +35,23 @@ const Dashboard = () => {
     // Add additional logic or actions based on the selected room
     
   };
+
+  useEffect(() => {
+    const socket = io('http://localhost:3001');
+
+    socket.on('new_notification', (data) => {
+    console.log('New notification:', data);
+    array_notif.push(data);
+    console.log('Array_notif:', array_notif);
+
+    
+      
+    });
+
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
 
   const toggleReports = () => {
     setShowReports(!showReports);
@@ -102,7 +124,7 @@ const Dashboard = () => {
         throw new Error('Error fetching room devices');
       }
     }
-
+console.log('array_notif:', array_notif);
   return (
     <div className="dashboard-container">
       <h2 className='dash-title'>Dashboard</h2>
@@ -208,12 +230,26 @@ const Dashboard = () => {
 
             </div>
             </>
-          ) : (
+          ) : selectedItem === 'notifications' ? (
             <>
+              <h3 className='select-title'>Real Time Notifications</h3>
+      <div style={{ height: "50%", width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <List sx={{ width: '80%', }} component="nav" aria-label="mailbox folders">
+
+            <Divider />
+            {array_notif.map((notif) => (
+              <ListItem button>
+                <ListItemText primary={notif} />
+                <Divider />
+              </ListItem>
+
+          ))}
+        </List>
+      </div>
             </>
             
             
-          )}
+          ) : (null)}
     </div>
       
   );
