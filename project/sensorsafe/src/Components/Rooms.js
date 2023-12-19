@@ -107,6 +107,7 @@ const handleDeleteRoom = async (roomId) => {
       Toastify.success('Room deleted successfully');
       window.location.reload();
       setOpenDeleteRoom(false);
+      
 
       
     }

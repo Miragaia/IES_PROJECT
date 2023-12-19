@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../Css/Dashboard.css'; // Import the CSS file
-import DeviceInfo from './DeviceInfo';
 import ReportsSection from './ReportsSection';
 import NotificationsSection from './NotificationsSection';
 import GraphicSection from './GraphicSection';
@@ -9,25 +8,64 @@ import { Link } from 'react-router-dom';
 import Toastify from './Toastify';
 import '../Css/RoomSelector.css'; // Import the CSS file
 import CameraOutlinedIcon from "@mui/icons-material/CameraOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"; 
+import ReactApexChart from 'react-apexcharts';
+import ApexCharts from 'apexcharts'; // Importe ApexCharts desta maneira
+import io from 'socket.io-client';
+import Divider from '@mui/material/Divider';
+import { styled } from '@mui/material/styles';
+import { List, ListItem, ListItemText } from '@mui/material';
+
 const Dashboard = () => {
   const [showReports, setShowReports] = useState(true);
   const [showNotifications, setShowNotifications] = useState(true);
   const [showGraphicSection, setShowGraphicSection] = useState(true);
   const [selectedItem, setSelectedItem] = useState('rooms');
   const [numberOfDevices, setNumberOfDevices] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [selectedSensor, setSelectedSensor] = useState(null);
+  const [sensors, setSensor] = useState([]);
+  const [graph, setGraph] = useState([]);
+  const [sensorValue, setsensorValue] = useState([]);
+  const [date, setDate] = useState([]);
+  const [sensorType, setSensorType] = useState([]);
+
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState([]);
+
+  const [sensorDataArray, setSensorDataArray] = useState([]);
+  const [array_notif, setArray_notif] = useState([]); // Array de notificações
+  const [array_notif2, setArray_notif2] = useState([]); // Array de notificações
+  const [array_notif3, setArray_notif3] = useState([]); // Array de notificações
 
   const handleRoomSelection = (room) => {
     setSelectedRoom(room);
     fetchRoomDevices(room);
     console.log('Room selected:', room);
-    
-    // Add additional logic or actions based on the selected room
-    
   };
 
+  const handleSensorSelection = (sensorId) => {
+    console.log('Sensor selected:', sensorId);
+    setSelectedSensor(sensorId);
+    
+  };
+  useEffect(() => {
+    const socket = io('http://localhost:3001');
+
+    socket.on('new_notification', (data) => {
+    console.log('New notification:', data);
+    array_notif.push(data);
+    console.log('Array_notif:', array_notif);
+
+
+
+    });
+
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
   const toggleReports = () => {
     setShowReports(!showReports);
   };
@@ -43,6 +81,8 @@ const Dashboard = () => {
   const handleItemClick = (itemName) => {
     setSelectedItem(itemName);
   }
+
+  
 
   useEffect(() => {
     // Fetch rooms data when the component mounts
@@ -77,8 +117,42 @@ const Dashboard = () => {
   
     fetchData();
   }, []);
+  useEffect(() => {
 
-    const fetchRoomDevices = async (room) => {
+    const fetchData2 = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/devices/sensors', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+  
+        const data_f2 = await response.json();
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log("Sensors: ", data_f2);
+        
+        setSensor(data_f2); // Add new elements to the existing list
+        if (data_f2.length > 0) {
+          setSelectedSensor(data_f2[0].deviceId);
+          fetchReportBySensor(data_f2[0].deviceId)
+        }
+
+      } catch (error) {
+        Toastify.warning('Error fetching devices:', error);
+        console.error('Error fetching devices:', error);
+      }
+    }
+    fetchData2();
+  
+  }, []);
+
+    
+
+    const fetchRoomDevices  = async (room) => {
       console.log('RoomId:', room);
       try {
         const response = await fetch(`http://localhost:8080/api/room-devices/${room}`, {
@@ -100,6 +174,201 @@ const Dashboard = () => {
       }
     }
 
+    const fetchReportBySensor = async (sensorId) => {
+      console.log('sensorId:', sensorId);
+      try {
+        const response = await fetch(`http://localhost:8080/sensorsafe/reports_sensors`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+
+        console.log('response:', response)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+
+        const data = await response.json();
+        console.log('Reports by sensor:', data);
+
+        const sensorValue = [];
+        const date = [];
+        const sensorType = [];
+        for (let i = 0; i < data.length; i++) {
+          const report_data = data[i];
+          console.log('report_data:', report_data.type);
+          if(report_data.type === 'DEVICES' && report_data.description.includes(sensorId)){
+              const formattedValue = parseFloat(report_data.sensorValue).toFixed(2);
+              date.push([report_data.date, parseFloat(formattedValue)]);
+              // date.push(report_data.date);
+              sensorType.push(report_data.sensorType);
+
+            }
+            else{
+              console.log("Sensor não encontrado");
+            }
+          }
+        
+          setsensorValue(sensorValue);
+          setDate(date);
+          setSensorType(sensorType);  
+        
+        
+         // Isso retornará o número de dispositivos associados ao roomId
+      } catch (error) {
+        console.error('Error fetching reports by sensor:', error);
+        throw new Error('Error fetching reports by sensor');
+      }
+    }
+    console.log("date: ", date.splice(-9));
+
+
+    
+    const [chartData, setChartData] = useState({
+      series: [{
+        name: "name",
+        data: date
+      }],
+      options: {
+        chart: {
+          id: 'area-datetime',
+          type: 'area',
+          height: 350,
+          zoom: {
+            autoScaleYaxis: true
+          }
+        },
+        annotations: {
+          yaxis: [{
+            y: 30,
+            borderColor: '#999',
+            label: {
+              show: true,
+              text: 'Support',
+              style: {
+                color: "#fff",
+                background: '#00E396'
+              }
+            }
+          }],
+          xaxis: [{
+            x: new Date('14 Nov 2012').getTime(),
+            borderColor: '#999',
+            yAxisIndex: 0,
+            label: {
+              show: true,
+              text: 'Rally',
+              style: {
+                color: "#fff",
+                background: '#775DD0'
+              }
+            }
+          }]
+        },
+        dataLabels: {
+          enabled: false
+        },
+        markers: {
+          size: 0,
+          style: 'hollow',
+        },
+        xaxis: {
+          type: 'datetime',
+          min: new Date('01 Mar 2012').getTime(),
+          tickAmount: 6,
+        },
+        tooltip: {
+          x: {
+            format: 'dd MMM yyyy'
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 100]
+          }
+        },
+      },
+    
+    
+      selection: 'one_year',
+    
+    });
+    const updateData = (timeline) => {
+      // Código da função updateData
+      setChartData(prevChartData => ({
+        ...prevChartData,
+        selection: timeline
+      }));
+    
+      switch (timeline) {
+        case 'one_month':
+          ApexCharts.exec(
+            'area-datetime',
+            'zoomX',
+            new Date('28 Jan 2013').getTime(),
+            new Date('27 Feb 2013').getTime()
+          )
+          break
+        case 'six_months':
+          ApexCharts.exec(
+            'area-datetime',
+            'zoomX',
+            new Date('27 Sep 2012').getTime(),
+            new Date('27 Feb 2013').getTime()
+          )
+          break
+        case 'one_year':
+          ApexCharts.exec(
+            'area-datetime',
+            'zoomX',
+            new Date('27 Feb 2012').getTime(),
+            new Date('27 Feb 2013').getTime()
+          )
+          break
+        case 'ytd':
+          ApexCharts.exec(
+            'area-datetime',
+            'zoomX',
+            new Date('01 Jan 2013').getTime(),
+            new Date('27 Feb 2013').getTime()
+          )
+          break
+        case 'all':
+          ApexCharts.exec(
+            'area-datetime',
+            'zoomX',
+            new Date('23 Jan 2012').getTime(),
+            new Date('27 Feb 2013').getTime()
+          )
+          break
+        default:
+      }
+    }
+  
+  
+
+    useEffect(() => {
+    setChartData({
+      series: [{
+        name: "name",
+        data: date
+      }],
+      options: {
+        // Restante das opções do gráfico
+      }
+    });
+  }, [sensorValue]);
+  
+    
+    
+  console.log('array_notif:', array_notif);
   return (
     <div className="dashboard-container">
       <h2 className='dash-title'>Dashboard</h2>
@@ -109,8 +378,13 @@ const Dashboard = () => {
             <li id="RoomsRep" className={selectedItem === 'rooms' ? 'active' : ''}>
               <Link onClick={() => handleItemClick('rooms')}>Rooms</Link>
             </li>
-            <li id="DevicesRep" className={selectedItem === 'devices' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('devices')}>Sensors</Link>
+            <li id="DevicesRep" className={selectedItem === 'sensors' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('sensors')}>Sensors</Link>
+            </li>
+            <li id="Notifications" className={selectedItem === 'notifications' ? 'active' : ''}>
+              <Link onClick={() => handleItemClick('notifications')}>
+                Notifications <NotificationsOutlinedIcon /> 
+              </Link>
             </li>
           </ul>
         </nav>
@@ -163,15 +437,26 @@ const Dashboard = () => {
                 {/* Notifications Section */}
                 {showNotifications && <NotificationsSection />}
 
-                {/* Graphic Section */}
-                {showGraphicSection && <GraphicSection />}
+                
 
               </div>
             </>
-          ) : (
+          ) : selectedItem === 'sensors' ? (
             <>
             {/* Room Selector */}
-            <SensorsSelector />
+            <div className="sensors-selector-container">
+              <h3 className='select-title'>Select Device</h3>
+              <div className="sensors-options">
+              {sensors.map((sensor) => (
+                <span
+                  className={`sensors-option ${selectedSensor === sensor.deviceId ? 'active' : ''}`}
+                  onClick={() => handleSensorSelection(sensor.deviceId)}
+                >
+                  {sensor.name}
+                </span>
+              ))}
+              </div>
+            </div>
 
             {/* Toggle Sections */}
             <div className="toggle-buttons">
@@ -196,11 +481,40 @@ const Dashboard = () => {
               {showNotifications && <NotificationsSection />}
 
               {/* Graphic Section */}
-              {showGraphicSection && <GraphicSection />}
+              {showGraphicSection && (
+                <div>
+                  <h3>Graphic Section</h3>
+                  <div id="chart">
+
+                  <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
+
+                  </div>
+                </div>
+              )}
+
 
             </div>
             </>
-          )}
+          ) : selectedItem === 'notifications' ? (
+            <>
+              <h3 className='select-title'>Real Time Notifications</h3>
+              <div style={{ height: "50%", width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <List sx={{ width: '80%', }} component="nav" aria-label="mailbox folders">
+
+                    <Divider />
+                    {array_notif.map((notif) => (
+                      <ListItem button>
+                        <ListItemText primary={notif} />
+                        <Divider />
+                      </ListItem>
+
+                  ))}
+                </List>
+              </div>
+            </>
+            
+            
+          ) : (null)}
     </div>
       
   );

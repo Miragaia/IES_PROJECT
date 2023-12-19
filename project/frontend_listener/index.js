@@ -1,4 +1,20 @@
 const amqp = require('amqplib');
+const express = require('express');
+const http = require('http');
+var cors = require('cors');
+
+const app = express();
+const server = http.createServer(app);
+
+app.use(cors());
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
 async function startListener() {
   try {
@@ -24,7 +40,9 @@ async function startListener() {
 
     // Consumir mensagens
     channel.consume(queue, (message) => {
-      console.log('Mensagem recebida:', message.content.toString());
+      const notification = message.content.toString();
+      console.log('Mensagem recebida:', notification);
+      io.emit('new_notification', notification);
     }, {
       noAck: true
     });
@@ -36,3 +54,8 @@ async function startListener() {
 }
 
 startListener();
+
+const PORT = 3001;
+server.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});

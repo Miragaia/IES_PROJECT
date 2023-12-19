@@ -35,12 +35,16 @@ public class ReportSensorService {
         return sensorReportRepository.findAll();
     }
 
-    public ReportSensorItem getReportSensorBySensorId(ObjectId sensorId){
+    public List<ReportSensorItem> getReportSensorBySensorId(ObjectId sensorId){
         return sensorReportRepository.findBySensorId(sensorId);
     }
     
     public ReportSensorItem getReportSensorByReportId(ObjectId reportId){
         return sensorReportRepository.findByReportId(reportId);
+    }
+
+    public List<ReportSensorItem> getAllReportSensorItem() {
+        return null;
     }
 
 

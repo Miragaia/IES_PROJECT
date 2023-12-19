@@ -20,17 +20,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.SensorSafe.API.auth.AuthHandler;
+import com.SensorSafe.API.exceptions.DeviceNotFoundException;
 import com.SensorSafe.API.model.Response;
 import com.SensorSafe.API.model.report.Report;
 import com.SensorSafe.API.model.report.ReportAggregation;
 import com.SensorSafe.API.model.report.ReportSensorItem;
 import com.SensorSafe.API.model.report.ReportType;
 import com.SensorSafe.API.repository.ReportRepository;
+import com.SensorSafe.API.repository.ReportSensorItemRepository;
 import com.SensorSafe.API.services.AvailableDeviceService;
 import com.SensorSafe.API.services.DeviceService;
 import com.SensorSafe.API.services.ReportSensorService;
 import com.SensorSafe.API.services.ReportService;
 import com.SensorSafe.API.services.RoomService;
+import com.SensorSafe.API.services.ReportSensorItemService;
+
 
 
 
@@ -42,11 +46,13 @@ public class ReportsApiController {
 
     private final ReportService reportsService;
     private final AuthHandler authHandler;
+    private final ReportSensorService reportSensorService;
 
     @Autowired
-    public ReportsApiController(ReportService reportsService, AuthHandler authHandler) {
+    public ReportsApiController(ReportService reportsService, AuthHandler authHandler, ReportSensorService reportSensorService) {
         this.reportsService = reportsService;
         this.authHandler = authHandler;
+        this.reportSensorService = reportSensorService;
     }
 
     @GetMapping("/reports_sensors")
@@ -64,6 +70,24 @@ public class ReportsApiController {
                 .filter(report -> report.getName().equals(authHandler.getUsername()))
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/reports_sensors/{SensorId}")
+    @ApiOperation(value = "Get all reports by sensor id", notes = "Get all reports by sensor id", response = Report.class)
+    public List<ReportSensorItem> getAllReportSensorsById(@PathVariable("id") ObjectId sensorId) {
+        if (sensorId == null) {
+            throw new DeviceNotFoundException("Please provide a sensor id");
+        }
+        
+
+        return reportSensorService.getReportSensorBySensorId(sensorId);
+    }
+
+    @GetMapping("/reports_sensors/reports/")
+    @ApiOperation(value = "Get all reports", notes = "Get all reports", response = Report.class)
+    public List<ReportSensorItem> getAllReports() {
+        return reportSensorService.getAllReportSensorItem();
+    }
+
 
     @GetMapping("/reports_sensors/{id}")
     @ApiOperation(value = "Get report by id", notes = "Get report by id", response = Report.class)
