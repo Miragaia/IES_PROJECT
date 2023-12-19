@@ -95,10 +95,11 @@ public class ReportsApiController {
         return reportsService.getReportById(id);
     }
 
-    @GetMapping("/generate-report")
+    @PostMapping("/generate-report")
     @ApiOperation(value = "Generate report", notes = "Generate a new report", response = Response.class)
     public Response generateReport() {
         try {
+            System.out.println("333Generating report for user: " + authHandler.getUsername());
             // Add logic to generate the report
             // You can call a service method to handle the report generation
             reportsService.generateReport(authHandler.getUsername());
@@ -107,6 +108,7 @@ public class ReportsApiController {
 
             return new Response("Report generated successfully");
         } catch (Exception e) {
+            System.out.println("22Error generating report: " + e.getMessage());
             return new Response("Error generating report: " + e.getMessage());
         }
     }

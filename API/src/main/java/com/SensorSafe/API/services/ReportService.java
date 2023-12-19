@@ -53,34 +53,37 @@ public class ReportService {
 
     public void generateReport(String username) throws IOException {
         // Trigger the Python script
+        System.out.println("Generating report for user: " + username);
         Process pythonProcess = triggerPythonScript(username);
 
         // Note: The actual report generation logic may happen asynchronously in the Python script
-
+        System.out.println("Waiting for report to be generated...");
         // For demonstration purposes, let's assume the Python script generates a report file
         // You might need to wait for the Python script to finish before proceeding
 
         // Example: Wait for the Python script to finish (you might need to implement a more robust mechanism)
         waitForPythonScriptToFinish(pythonProcess);
 
-        // Fetch the generated report from Python (you need to implement this)
-        byte[] reportData = fetchReportFromPython(pythonProcess);
+        System.out.println("Report generated successfully");
 
-        // Save the report to the database
-        Report report = new Report();
-        report.setName(username);   //ns se preciso
-        report.setType(ReportType.DEVICES); // Set the appropriate report type
-        reportRepository.save(report);
+        // // Fetch the generated report from Python (you need to implement this)
+        // byte[] reportData = fetchReportFromPython(pythonProcess);
 
-        // Publish the report to RabbitMQ
-        rabbitMQHandler.publish("SensorSafe", new String(reportData));
+        // // Save the report to the database
+        // Report report = new Report();
+        // report.setName(username);   //ns se preciso
+        // report.setType(ReportType.DEVICES); // Set the appropriate report type
+        // reportRepository.save(report);
+
+        // // Publish the report to RabbitMQ
+        // rabbitMQHandler.publish("SensorSafe", new String(reportData));
 
     }
 
     // Method to trigger the Python script
     private Process triggerPythonScript(String username) {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "path/to/generate_report.py", username);
+            ProcessBuilder processBuilder = new ProcessBuilder("python", "../../../../../data_generation/generate_report_maintenance.py", username);
             return processBuilder.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,21 +92,22 @@ public class ReportService {
         }
     }
 
-    // Example: Wait for the Python script to finish (you might need to implement a more robust mechanism)
+    // Wait for the Python script to finish
     private void waitForPythonScriptToFinish(Process process) {
         try {
-            // Wait for the Python script to finish (you might want to specify a timeout)
-            boolean completed = process.waitFor(2, TimeUnit.MINUTES);
+            // Wait for the Python script to finish
+            int exitCode = process.waitFor();
 
-            if (!completed) {
-                // Handle the case where the Python script didn't finish within the specified time
-                throw new RuntimeException("Python script did not finish within the expected time.");
+            if (exitCode != 0) {
+                // Handle the case where the Python script didn't finish successfully
+                throw new RuntimeException("Python script did not finish successfully. Exit code: " + exitCode);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             // Handle the interruption as needed
         }
     }
+
 
     // Example: Fetch the generated report from Python (you need to implement this)
     private byte[] fetchReportFromPython(Process process) {

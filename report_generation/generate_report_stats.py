@@ -14,7 +14,7 @@ def generate_pdf_report_stats(report_data):
     #Humidade
 
     id = 1      #alterar isto para adicionar sempre um id diferente para cada report
-    file_path = f"report{id}.pdf"
+    file_path = f"report.pdf"
     pdf_canvas = canvas.Canvas(file_path, pagesize=letter)
 
     # Set font and size

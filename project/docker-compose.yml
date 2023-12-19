@@ -112,6 +112,18 @@ services:
         ipv4_address: 172.18.0.9
       #command: tail -F anything
 
+  report_generation:
+    build:
+      context: ../report_generation
+      dockerfile: Dockerfile
+    ports:
+      - 9999:9999
+    expose:
+      - 9999
+    networks:
+      mongo-compose-network:
+        ipv4_address: 172.18.0.11
+      #command: tail -F anything
 
 networks: 
   mongo-compose-network:
@@ -119,3 +131,4 @@ networks:
       driver: default
       config:
         - subnet: 172.18.0.0/16
+
