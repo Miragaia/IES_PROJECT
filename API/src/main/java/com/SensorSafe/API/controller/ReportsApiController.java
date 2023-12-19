@@ -70,9 +70,7 @@ public class ReportsApiController {
     @GetMapping("/reports_sensors/{ReportId}")
     @ApiOperation(value = "Get all reports by id", notes = "Get all reports by id", response = Report.class)
     public List<ReportSensorItem> getAllReportSensorsById(@PathVariable("ReportId") ObjectId reportId) {
-        return reportSensorService.getReportSensorBySensorId(reportId).stream()
-                .filter(report -> report.getName().equals(authHandler.getUsername()))
-                .collect(Collectors.toList());
+        return reportSensorService.getReportSensorBySensorId(reportId);
     }
 
     @GetMapping("/reports_sensors/{id}")
