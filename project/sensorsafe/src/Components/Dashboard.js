@@ -50,23 +50,6 @@ const Dashboard = () => {
     setSelectedSensor(sensorId);
     
   };
-
-  const toggleReports = () => {
-    setShowReports(!showReports);
-  };
-
-  const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
-  };
-
-  const toggleGraphicSection = () => {
-    setShowGraphicSection(!showGraphicSection);
-  };
-
-  const handleItemClick = (itemName) => {
-    setSelectedItem(itemName);
-  }
-
   useEffect(() => {
     const socket = io('http://localhost:3001');
 
@@ -83,6 +66,23 @@ const Dashboard = () => {
       socket.disconnect();
     }
   }, []);
+  const toggleReports = () => {
+    setShowReports(!showReports);
+  };
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const toggleGraphicSection = () => {
+    setShowGraphicSection(!showGraphicSection);
+  };
+
+  const handleItemClick = (itemName) => {
+    setSelectedItem(itemName);
+  }
+
+  
 
   useEffect(() => {
     // Fetch rooms data when the component mounts
