@@ -24,3 +24,10 @@ if __name__ == '__main__':
     print("Starting server...")
     app.run(host='0.0.0.0',port=9999)
     print("Server stopped")
+
+
+# pedido é feito para o servidor
+    # http://localhost:9999/sensorsafe/generate_report
+# com o seguinte formato de header:
+    # Authorization: palavra_passe_ultra_secreta
+    
