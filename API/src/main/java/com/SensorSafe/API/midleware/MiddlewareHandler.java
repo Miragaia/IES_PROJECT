@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.SensorSafe.API.model.room.Room;
 import com.SensorSafe.API.model.room.RoomStats;
+import com.SensorSafe.API.midleware.rabbitmq.RabbitMQHandler;
 import com.SensorSafe.API.model.device.Device;
 import com.SensorSafe.API.model.device.DeviceCategory;
 import com.SensorSafe.API.model.device.Sensor;
@@ -25,6 +26,9 @@ public class MiddlewareHandler {
     private final RoomService roomService;
     private final SensorService sensorService;
     private final ReportService reportService;
+
+    @Autowired
+    private RabbitMQHandler rabbitMQHandler;
 
     @Autowired
     public MiddlewareHandler(RoomService roomService, SensorService sensorService, ReportService reportService) {
@@ -125,11 +129,13 @@ public class MiddlewareHandler {
                     System.out.println("Temperature is too high - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Temperature is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                     reportService.saveReport(report);  
+                    rabbitMQHandler.publish("frontend_notifications","Temperature is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                 } 
                 if (sensor.getValue() < minValueAutomation){
                     System.out.println("Temperature is too low - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Temperature is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
-                    reportService.saveReport(report);                      
+                    reportService.saveReport(report);        
+                    rabbitMQHandler.publish("frontend_notifications","Temperature is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");              
                 }
             }
         }
@@ -142,12 +148,14 @@ public class MiddlewareHandler {
                     System.out.println("Humidity is too high - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Humidity is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                     reportService.saveReport(report);  
+                    rabbitMQHandler.publish("frontend_notifications","Humidity is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                 }
 
                 if (sensor.getValue() < minValueAutomation){
                     System.out.println("Humidity is too low - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Humidity is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                     reportService.saveReport(report);  
+                    rabbitMQHandler.publish("frontend_notifications","Humidity is below of the minimum automation value:" + minValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                 }
 
             }
@@ -161,6 +169,7 @@ public class MiddlewareHandler {
                     System.out.println("Smoke is too high - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                     reportService.saveReport(report);  
+                    rabbitMQHandler.publish("frontend_notifications","Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation");
                 }
                 
             }
