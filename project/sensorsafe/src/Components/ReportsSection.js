@@ -84,6 +84,7 @@ const ReportsSection = () => {
       <div>
         <button
           className="generate-report-button"
+          style={buttonStyle}
           onClick={handleGenerateReportMan}
           disabled={isGeneratingReport}
         >
@@ -96,6 +97,7 @@ const ReportsSection = () => {
         {/* Button to generate Status Report */}
         <button
           className="generate-report-button"
+          style={buttonStyle}
           onClick={handleGenerateReportStats}
           disabled={isGeneratingReport}
         >
@@ -104,32 +106,18 @@ const ReportsSection = () => {
       </div>     
     </div>
   );
+};
 
-
-
-  // return (
-  //   <div className="reports-section-container">
-  //     <h3>Reports Section</h3>
-
-  //     {/* Button to generate reports */}
-  //     <button
-  //       className="generate-report-button"
-  //       onClick={handleGenerateReport}
-  //       disabled={isGeneratingReport}
-  //     >
-  //       {isGeneratingReport ? 'Generating Report...' : 'Generate Report'}
-  //     </button>
-
-  //     {/* Display reports */}
-  //     <div className="reports-container">
-  //       {reports.map((report, index) => (
-  //         <Link key={index} to={`/report-detail/${index}`} className="report-item">
-  //           {report}
-  //         </Link>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
+const buttonStyle = {
+  padding: '10px 20px',
+  fontSize: '16px',
+  backgroundColor: '#4CAF50', // Green color, you can change it
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginRight: '10px', // Adjust as needed
+  marginBottom: '10px', // Adjust as needed
 };
 
 export default ReportsSection;
