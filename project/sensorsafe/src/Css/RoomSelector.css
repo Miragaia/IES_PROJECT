@@ -31,3 +31,34 @@
     margin-bottom: 10px;
     text-align: center;
   }
+
+
+
+
+
+
+
+  .sensors-selector-container {
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+  
+  .sensors-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .sensors-option {
+    padding: 10px;
+    background-color: #007BFF; /* You can customize the color */
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .sensors-option.active {
+    background-color: rgb(216, 131, 12); /* Customize the active state color */
+  }
+  
