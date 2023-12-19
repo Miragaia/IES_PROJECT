@@ -3,6 +3,9 @@ from flask_cors import CORS
 import os
 from multiprocessing import Process
 import time
+from io import BytesIO
+import os
+
 
 
 
@@ -49,8 +52,8 @@ def generate_report():
         stats = []      #meter a receber do front
         # p = Process(target=startReport, args=(report_type, stats))
         # p.start()
-        reportData = startReport(report_type, stats)
-        print("Starting "+ report_type +" report: " + report_type)
+        reportData = startReportMan(report_type, stats)
+        print("Starting2 "+ report_type +" report: " + report_type)
         # time.sleep(5)
     elif report_type == 'maintenance':
         stats = []
@@ -67,17 +70,29 @@ def generate_report():
 
 def startReport(report_type, stats):
     print("Starting report: " + report_type)
-    os.system("python3 generate_report_" + report_type + ".py ")
+    os.system("python3 generate_report_stats.py ")
     time.sleep(10)
 
     # Assuming the report is generated in the same directory with the name 'report.pdf'
     with open("report.pdf", "rb") as pdf_file:
-        report_data = pdf_file.read()
+        report_data = BytesIO(pdf_file.read())
+    return report_data
+
+def startReportMan(report_type, stats):
+    print("Starting2 report: " + report_type)
+    os.system("python3 generate_report_maintenance.py ")
+    time.sleep(10)
+
+    # Assuming the report is generated in the same directory with the name 'report.pdf'
+    with open("report.pdf", "rb") as pdf_file:
+        report_data = BytesIO(pdf_file.read())
     return report_data
 
 if __name__ == '__main__':
+    
     print("Starting server...")
     app.run(host='0.0.0.0',port=9999)
+    print(os.getcwd())
     print("Server stopped")
 
 

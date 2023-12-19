@@ -197,7 +197,7 @@ def generate_maintenance_report(file_path):
 
 if __name__ == "__main__":
     
-
+    print("1111111Entrei para gerar o report")
     # Output file path
     output_file_path = "report.pdf"
 
