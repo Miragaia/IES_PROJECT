@@ -189,7 +189,7 @@ def generate_maintenance_report(file_path):
     pdf_canvas.save()
     time.sleep(10)
     # Save the PDF as bytes
-    with open("./temp_reports/report.pdf", "rb") as pdf_file:
+    with open("report.pdf", "rb") as pdf_file:
         report_data = pdf_file.read()
 
     return report_data
