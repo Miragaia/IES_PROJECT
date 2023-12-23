@@ -201,7 +201,7 @@ public class MiddlewareApiController {
             authHandler.getUsername(), 
             ReportType.DEVICES, 
             new Date(),
-            String.format("Sensor %s of type %s update the value to %f.",sensor.getDeviceId(),sensor.getCategory(), value), 
+            String.format("Sensor %s of type %s update the value to %f. - " + new Date(),sensor.getDeviceId(),sensor.getCategory(), value), 
             oldSensor.getDeviceId(), 
             sensor.getCategory().toString(), 
             oldSensor.isSensorStatus() ? "ON" : "OFF", 
@@ -214,11 +214,11 @@ public class MiddlewareApiController {
         if (room != null && roomService.exists(room.getRoomId())) {
             middlewareHandler.calculateRoomAutomation(room.getRoomId(), sensor.getDeviceId());
             RoomStats roomStats = middlewareHandler.calculateRoomStats(room.getRoomId());
-            rabbitMQHandler.publish("frontend_notifications", "Room " + room.getRoomId() + " was update values to " + roomStats);
+            rabbitMQHandler.publish("frontend_notifications", "Room " + room.getRoomId() + " was update values to " + roomStats + " - " + new Date());
          }
 
         middlewareInterceptor.intercept("/middleware/devices/sensor", RequestType.PUT, sensor);
-        rabbitMQHandler.publish("frontend_notifications", "Sensor " + sensor.getDeviceId() + " was update values to " + value);
+        rabbitMQHandler.publish("frontend_notifications", "Sensor " + sensor.getDeviceId() + " was update values to " + value + " - " + new Date());
         
         return new Response("Sensor updated successfully");
     }
