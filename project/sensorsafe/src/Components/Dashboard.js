@@ -327,7 +327,7 @@ const Dashboard = () => {
             y: 30,
             borderColor: '#999',
             label: {
-              show: true,
+              show: false,
               text: 'Support',
               style: {
                 color: "#fff",
@@ -433,8 +433,8 @@ const Dashboard = () => {
             ApexCharts.exec(
               'area-datetime',
               'zoomX',
-              new Date('19 Dez 2023').getTime(),
-              new Date('19 Dez 2023').getTime()
+              new Date().getTime(),
+              new Date().getTime()
             )
         default:
       }
