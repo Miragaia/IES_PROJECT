@@ -25,24 +25,31 @@ const Dashboard = () => {
   const [notifications, setNotifications] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState(null);
   const [sensors, setSensor] = useState([]);
-  const [graph, setGraph] = useState([]);
+  const [RoomType, setRoomType] = useState(['TEMPERATURE', 'SMOKE', 'HUMIDITY']);
   const [sensorValue, setsensorValue] = useState([]);
   const [date, setDate] = useState([]);
+
   const [sensorType, setSensorType] = useState([]);
 
 
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedType, setSelectedType] = useState('TEMPERATURE');
+
   const [rooms, setRooms] = useState([]);
 
-  const [sensorDataArray, setSensorDataArray] = useState([]);
+  const [NotificationsRoom, setNotificationsRoom] = useState([]);
   const [array_notif, setArray_notif] = useState([]); // Array de notificações
-  const [array_notif2, setArray_notif2] = useState([]); // Array de notificações
-  const [array_notif3, setArray_notif3] = useState([]); // Array de notificações
+  const [RoomSensorValues, setRoomSensorValues] = useState([]); // Array de notificações
+  const [DateRoomVAlue, setDateRoomVAlue] = useState([]); // Array de notificações
 
   const handleRoomSelection = (room) => {
     setSelectedRoom(room);
     fetchRoomDevices(room);
     console.log('Room selected:', room);
+  };
+
+  const handleRoomType = (room) => {
+    setSelectedType(room);
   };
 
   const handleSensorSelection = (sensorId) => {
@@ -56,7 +63,7 @@ const Dashboard = () => {
     socket.on('new_notification', (data) => {
     console.log('New notification:', data);
     array_notif.push(data);
-    console.log('Array_notif:', array_notif);
+    array_notif.reverse();
 
 
 
@@ -102,8 +109,7 @@ const Dashboard = () => {
           throw new Error('Network response was not ok');
         }
   
-        setRooms(data);
-        
+        setRooms(data);        
   
         if (data.length > 0) {
           setSelectedRoom(data[0].roomId);
@@ -116,7 +122,7 @@ const Dashboard = () => {
     };
   
     fetchData();
-  }, []);
+  }, [selectedItem]);
   useEffect(() => {
 
     const fetchData2 = async () => {
@@ -157,6 +163,77 @@ const Dashboard = () => {
     }, [selectedSensor]);
 
 
+
+    useEffect(() => { 
+      setNotificationsRoom();
+      setsensorValue([]);
+      setDate([]);
+      for (let i = 0; i < rooms.length; i++) {
+        const room = rooms[i];
+        if (room.roomId === selectedRoom) {
+          console.log('Selected room:', room);
+          for (let j = 0; j < room.devices.length; j++) {
+            const device = room.devices[j];
+            console.log('Device:', device);
+            if (device.category === selectedType) {
+              console.log('Selected device:', device);
+              fetchReportBySensor2(device.deviceId);
+            }
+          }
+        }
+      }
+    }, [selectedRoom,selectedType]);
+
+    const fetchReportBySensor2 = async (sensorId) => {
+      console.log('sensorId:', sensorId);
+      try {
+        const response = await fetch(`http://localhost:8080/sensorsafe/reports_sensors/reports/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + sessionStorage.getItem('Token:'),
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+
+        const data = await response.json();
+        console.log('Reports by sensor:', data);
+
+        const sensorValue = [];
+        const date = [];
+        const sensorType = [];
+        const notifications = [];
+        for (let i = 0; i < data.length; i++) {
+          const report_data = data[i];
+          if(report_data.type === 'DEVICES' && report_data.description.includes(sensorId)){
+              const formattedValue = parseFloat(report_data.sensorValue).toFixed(2);
+              date.push([(report_data.date), parseFloat(formattedValue)]);
+              // date.push(report_data.date);
+              sensorType.push(report_data.sensorType);
+              notifications.push(report_data.description);
+            }
+            else{
+              console.log("Sensor não encontrado");
+            }
+          }
+        
+          setsensorValue(sensorValue);
+          setDate(date); 
+          // quero apenas os primerios 10notificaçoes
+          setNotificationsRoom(notifications.slice(-10));
+        
+
+         // Isso retornará o número de dispositivos associados ao roomId
+      } catch (error) {
+        console.error('Error fetching reports by sensor:', error);
+        throw new Error('Error fetching reports by sensor');
+      }
+    }
+    
     const fetchRoomDevices  = async (room) => {
       console.log('RoomId:', room);
       try {
@@ -198,7 +275,6 @@ const Dashboard = () => {
 
 
         const data = await response.json();
-        console.log('Reports by sensor:', data);
 
         const sensorValue = [];
         const date = [];
@@ -220,7 +296,6 @@ const Dashboard = () => {
         
           setsensorValue(sensorValue);
           setDate(date);
-          setSensorType(sensorType);  
           // quero apenas os primerios 10notificaçoes
           setNotifications(notifications.slice(-10));
         
@@ -381,7 +456,6 @@ const Dashboard = () => {
   
     
     
-  console.log('array_notif:', array_notif);
   return (
     <div className="dashboard-container">
       <h2 className='dash-title'>Dashboard</h2>
@@ -428,6 +502,20 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              <div className="room-selector-container">
+                <h3 className='select-title'>Type Sensor</h3>
+                <div className="room-options">
+                {RoomType.map((room) => (
+                  <span
+                    className={`room-option ${room === selectedType ? 'active' : ''}`}
+                    onClick={() => handleRoomType(room)}
+                  >
+                    {room}
+                  </span>
+                ))}
+                </div>
+              </div>
+
               {/* Toggle Sections */}
               <div className="toggle-buttons">
                 <button id="hideRep" onClick={toggleReports} data-action={showReports ? 'Hide' : 'Show'}>
@@ -436,21 +524,34 @@ const Dashboard = () => {
                 <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
                   {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
                 </button>
-                {/* <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
+                <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
                   {showGraphicSection ? 'Hide Graphic Section' : 'Show Graphic Section'}
-                </button> */}
+                </button> 
               </div>
 
-
+              
               {/* Sections Side by Side */}
               <div className="sections-container">
                 {/* Reports Section */}
                 {showReports && <ReportsSection />}
 
                 {/* Notifications Section */}
-                {showNotifications && <NotificationsSection />}
-
+                {showNotifications && 
+              // chama o notification section ele vai receber o array de notificações
+              <NotificationsSection notifications={NotificationsRoom} />
+              }
                 
+              {/* Graphic Section */}
+              {showGraphicSection && (
+                <div>
+                  <h3>Graphic Section</h3>
+                  <div id="chart">
+
+                  <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
+
+                  </div>
+                </div>
+              )}
 
               </div>
             </>

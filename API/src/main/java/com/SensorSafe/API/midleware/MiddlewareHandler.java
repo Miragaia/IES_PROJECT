@@ -169,7 +169,7 @@ public class MiddlewareHandler {
                     System.out.println("Smoke is too high - " + sensor.getValue());
                     Report report = new Report(null, sensor.getName(), ReportType.ROOMS, new Date(), "Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation -"+ new Date());
                     reportService.saveReport(report);  
-                    rabbitMQHandler.publish("frontend_notifications","Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation -"+ new Date());");
+                    rabbitMQHandler.publish("frontend_notifications","Smoke is above of the maximum automation value:" + maxValueAutomation + ", current value: " + sensor.getValue()+ " in room: " + room.getRoomName() + " initializing automation -"+ new Date());
                 }
                 
             }
