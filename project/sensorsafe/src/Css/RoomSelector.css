@@ -1,0 +1,97 @@
+ .room-options{
+    width: 65%;
+    display: flex;
+    list-style: none; 
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 20px;
+ }
+  
+
+
+  .room-option {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: rgb(230, 101, 230); 
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    width: 165px;
+
+  }
+  
+  .room-option.active {
+    background-color: rgb(183, 16, 213);
+
+  }
+
+  .type-option{
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: rgb(56, 223, 235);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    width: 165px;
+  }
+
+  .type-option.active {
+    background-color: rgb(12, 151, 216); 
+  }
+
+  .sensors-options{
+    width: 65%;
+    display: flex;
+    list-style: none; 
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .sensors-option{
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: rgb(230, 101, 230); 
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    width: 165px;
+  }
+
+  .sensors-option.active {
+    background-color: rgb(12, 151, 216); 
+  }
+  
+
+  .sensors-selector-container {
+    margin-bottom: 20px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .select-title {
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+
+
+
+
+
+
+ 
+  
+  
+  

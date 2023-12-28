@@ -1,0 +1,267 @@
+/* Dashboard.css */
+.Reports{
+  margin-top: 50px;
+  width: 80%;
+}
+
+
+
+.nav-links-Reports{
+  display: flex;
+  list-style: none; 
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+
+}
+
+.nav-links-Reports li {
+  position: relative;
+  margin-left:30px;
+  margin-right: 30px;
+  width: 150px;
+}
+
+
+.nav-links-Reports li a{
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.nav-links-Reports li a:hover {
+  color: rgb(0, 34, 255);
+}
+
+.nav-links-Reports li a:hover::before{
+  width: 80%;
+}
+
+.nav-links-Reports li.active a {
+  color: rgb(0, 34, 255); 
+  position: relative;
+
+}
+
+
+.nav-links-Reports li.active a::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%; 
+  height: 2px; 
+  background-color:  rgb(0, 34, 255);
+}
+
+.dash-title {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 30px;
+  font-weight: bold;
+  color:  rgb(0, 34, 255);
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+/* Other styles remain the same */
+
+  
+  .toggle-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .toggle-buttons button {
+    text-align: center;
+    outline: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    height: 55px;
+    border: 0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+    margin-top: 1rem;
+    margin-left: 40px;
+    text-decoration: none;
+    transition: background-color 0.3s; 
+  }
+
+.toggle-buttons button[data-action='Show'] {
+  background-color: green;
+}
+
+.toggle-buttons button[data-action='Hide'] {
+  background-color: red;
+}
+
+.toggle-buttons button[data-action='Show']:hover {
+  background-color: rgb(9, 94, 9);
+}
+
+.toggle-buttons button[data-action='Hide']:hover {
+  background-color: rgb(202, 19, 19);
+}
+
+
+
+
+/* Additional styling based on your design preferences */
+
+/* Dashboard.css or your main CSS file */
+
+.reports-section-container {
+  border: 2px solid black; /* Solid black border */
+  padding: 10px;
+  margin-top: 20px; /* Adjust margin as needed */
+  /* quero com uma altura fixa e se ultrupassar ganha a barra lateral para andar para baixo e cima */
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.reports-container {
+  display: flex;
+  flex-direction: column; /* Stack the report items vertically */
+  gap: 10px;
+}
+
+.report-item {
+  padding: 10px;
+  border: 1px solid #ccc; /* Border for individual reports */
+}
+
+/* Additional styling based on your design preferences */
+
+/* Dashboard.css or your main CSS file */
+
+.notifications-section-container {
+  border: 2px solid black;
+  padding: 10px;
+  margin-top: 20px;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.notifications-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notification-date {
+  font-weight: bold;
+}
+
+/* Additional styling based on your design preferences */
+
+.sections-container {
+  display: flex;
+  gap: 20px; /* Adjust the gap as needed */
+  margin-bottom: 30px;
+}
+
+/* Dashboard.css or your main CSS file */
+
+.graphic-section-container {
+  border: 2px solid black;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.filter-selection {
+  margin-bottom: 10px;
+}
+
+
+/* Additional styling based on your design preferences */
+
+.device-info-container {
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.device-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.num_devices {
+  margin-bottom: 20px;
+}
+
+
+
+#hideRep:hover, #hideNot:hover{
+  opacity: .95;
+}
+
+.container-graph{
+  width: 70%;  
+  margin-top: 20px;
+  height: auto;
+  margin-top: 40px;
+}
+
+#apexchartsth6dszlp {
+  height: 900px;
+}
+
+
+#graficozee{
+  color: rgb(20, 146, 225);
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.selDev{
+  color: rgb(12, 151, 216);
+  margin-top: 60px ;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.selRom{
+  color: rgb(183, 16, 213);
+  margin-top: 60px ;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.typesen{
+  color: rgb(12, 151, 216);
+  margin-top: 60px ;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.realTime{
+  color: rgb(12, 151, 216);
+  margin-top: 60px ;
+  margin-bottom: 40px;
+  font-weight: bold;
+}

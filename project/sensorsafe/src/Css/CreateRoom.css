@@ -1,0 +1,176 @@
+.additem-page-room{
+    height: 100vh;
+      background-color: rgb(228, 134, 72);
+      display: flex;
+      font-family: 'Lato', sans-serif;
+      width: 100%;
+  }
+
+.additem-modal-room{
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 50px;
+    display: flex;
+    width: 80%;
+    max-width: 600px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.additem-modal-room h3{
+color:orange;
+font-size:26px;
+font-weight:bold;
+letter-spacing: 1px;
+margin-left: 20px;
+white-space: nowrap;
+padding-bottom: 2.5rem;
+align-items: center;
+text-align: center;
+
+}
+
+  
+  .form-group-item-room {
+    margin: 10px 0;
+  }
+  
+.form-group-item-room label {
+    display: block;
+    margin-bottom: 5px;
+    color:black;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  .form-group-item-room input[type='text'],
+  .form-group-item-room input[type='file'],
+  #description {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: black;
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+button.addroom{
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+
+/* Dentro do arquivo DetailProduct.css */
+
+.category-selection-room {
+    margin-top: 30px;
+  }
+  
+  .category-options-room {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 70px;
+  }
+  
+  .category-option-room {
+    flex: 1;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    max-width: 150px;
+  }
+  
+  .category-option-room.active {
+    background-color: orange;
+    color: white;
+  }
+  
+
+  
+  .room-options-create {
+    gap:20px;
+    margin-top: 10px;
+  }
+  
+  .room-option-create {
+    margin-left: 20px;
+    padding: 10px;
+    width: 130px;
+    background-color: red; /* You can customize the color */
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .room-option-create.active {
+    background-color: green; /* Customize the active state color */
+  }
+  
+  .select-title {
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .inputs-side-by-side {
+    display: flex;
+  }
+
+  .toggle-buttons2 {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Add more styles as needed */
+
+/* Conditional styling based on button text */
+.toggle-buttons2 button[data-action='Show'] {
+  background-color: red;
+}
+
+.toggle-buttons2 button[data-action='Hide'] {
+  background-color: green;
+}
+
+#hideRep2, #hideNot2, #hideGrafSec2{
+  text-align: center;
+  outline: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 150px;
+  height: 55px;
+  border: 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 16px 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-left: 40px;
+  text-decoration: none;
+  transition: background-color 0.3s; 
+
+}
