@@ -347,18 +347,21 @@ const handleAddDevices = () => {
 };
   return (
     <div className="Rooms"> 
-     <nav id="nav1">
-        <ul className="nav-links-Rooms">
-          {rooms.map((room) => (
-            <li key={room.roomId} className={selectedItem === room.roomId ? 'active' : ''}>
-              <Link onClick={() => handleItemClick(room.roomId)}>{room.roomName}</Link>
+      <div className="Devicesnav">
+        <nav id="nav1">
+          <ul className="nav-links-Rooms">
+            {rooms.map((room) => (
+              <li key={room.roomId} className={selectedItem === room.roomId ? 'active' : ''}>
+                <Link onClick={() => handleItemClick(room.roomId)}>{room.roomName}</Link>
+              </li>
+            ))}
+            <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>
+              <Link to='/create_room'>Add Room +</Link>
             </li>
-          ))}
-          <li id="addroom" className={selectedItem === 'addRoom' ? 'active' : ''}>
-            <Link to='/create_room'>Add Room +</Link>
-          </li>
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
+    
       {selectedItem === '' ? (
           null) :(
       <div className="search-bar">

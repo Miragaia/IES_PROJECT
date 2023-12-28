@@ -10,7 +10,7 @@ import '../Css/RoomSelector.css'; // Import the CSS file
 import CameraOutlinedIcon from "@mui/icons-material/CameraOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"; 
 import ReactApexChart from 'react-apexcharts';
-import ApexCharts from 'apexcharts'; // Importe ApexCharts desta maneira
+import ApexCharts from 'apexcharts';
 import io from 'socket.io-client';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
@@ -340,7 +340,7 @@ const Dashboard = () => {
             borderColor: '#999',
             yAxisIndex: 0,
             label: {
-              show: true,
+              show: false,
               text: 'Rally',
               style: {
                 color: "#fff",
@@ -360,7 +360,17 @@ const Dashboard = () => {
           type: 'datetime',
           min: new Date('01 Mar 2012').getTime(),
           tickAmount: 6,
+          title: {
+            text: 'Time', // Legend for X-axis
+            style: {
+              fontSize: '16px',
+              fontWeight: 'bold',
+              fontFamily: 'Arial, sans-serif',
+              color: 'blue'
+            }
+          },
         },
+        
         tooltip: {
           x: {
             format: 'dd MMM yyyy'
@@ -381,64 +391,6 @@ const Dashboard = () => {
       selection: 'last_10',
     
     });
-    const updateData = (timeline) => {
-      // Código da função updateData
-      setChartData(prevChartData => ({
-        ...prevChartData,
-        selection: timeline
-      }));
-    
-      switch (timeline) {
-        case 'one_month':
-          ApexCharts.exec(
-            'area-datetime',
-            'zoomX',
-            new Date('28 Jan 2013').getTime(),
-            new Date('27 Feb 2013').getTime()
-          )
-          break
-        case 'six_months':
-          ApexCharts.exec(
-            'area-datetime',
-            'zoomX',
-            new Date('27 Sep 2012').getTime(),
-            new Date('27 Feb 2013').getTime()
-          )
-          break
-        case 'one_year':
-          ApexCharts.exec(
-            'area-datetime',
-            'zoomX',
-            new Date('27 Feb 2012').getTime(),
-            new Date('27 Feb 2013').getTime()
-          )
-          break
-        case 'ytd':
-          ApexCharts.exec(
-            'area-datetime',
-            'zoomX',
-            new Date('01 Jan 2013').getTime(),
-            new Date('27 Feb 2013').getTime()
-          )
-          break
-        case 'all':
-          ApexCharts.exec(
-            'area-datetime',
-            'zoomX',
-            new Date('23 Jan 2012').getTime(),
-            new Date('27 Feb 2013').getTime()
-          )
-          break
-          case 'last_10':
-            ApexCharts.exec(
-              'area-datetime',
-              'zoomX',
-              new Date().getTime(),
-              new Date().getTime()
-            )
-        default:
-      }
-    }
   
   
 
@@ -476,22 +428,18 @@ const Dashboard = () => {
           </ul>
         </nav>
       </div>
-      <div className="contentRep"></div>
       {selectedItem === 'rooms' ? (
             <>
-              {/* Room Selector */}
-              <div className="room-selector-container">
-                <h3 className='select-title'>Select Room</h3>
-                <div className="room-options">
-                {rooms.map((room) => (
-                  <span
-                    className={`room-option ${selectedRoom === room.roomId ? 'active' : ''}`}
-                    onClick={() => handleRoomSelection(room.roomId)}
-                  >
-                    {room.roomName}
-                  </span>
-                ))}
-                </div>
+              <h3 className='selRom'>Select Room</h3>
+              <div className="room-options">
+              {rooms.map((room) => (
+                <span
+                  className={`room-option ${selectedRoom === room.roomId ? 'active' : ''}`}
+                  onClick={() => handleRoomSelection(room.roomId)}
+                >
+                  {room.roomName}
+                </span>
+              ))}
               </div>
 
               <div className="device-info-container">
@@ -502,18 +450,26 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="room-selector-container">
-                <h3 className='select-title'>Type Sensor</h3>
-                <div className="room-options">
+              <h3 className='typesen'>Type Sensor</h3>
+              
+              <div className="room-options">
                 {RoomType.map((room) => (
                   <span
-                    className={`room-option ${room === selectedType ? 'active' : ''}`}
+                    className={`type-option ${room === selectedType ? 'active' : ''}`}
                     onClick={() => handleRoomType(room)}
                   >
                     {room}
                   </span>
                 ))}
                 </div>
+
+              <div className='container-graph'>
+                  <h3 id='graficozee'>Graphic Section</h3>
+                  <div id="chart">
+
+                  <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={600} />
+
+                  </div>
               </div>
 
               {/* Toggle Sections */}
@@ -524,10 +480,9 @@ const Dashboard = () => {
                 <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
                   {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
                 </button>
-                <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
-                  {showGraphicSection ? 'Hide Graphic Section' : 'Show Graphic Section'}
-                </button> 
               </div>
+
+              
 
               
               {/* Sections Side by Side */}
@@ -540,37 +495,29 @@ const Dashboard = () => {
               // chama o notification section ele vai receber o array de notificações
               <NotificationsSection notifications={NotificationsRoom} />
               }
-                
-              {/* Graphic Section */}
-              {showGraphicSection && (
-                <div>
-                  <h3>Graphic Section</h3>
-                  <div id="chart">
-
-                  <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
-
-                  </div>
-                </div>
-              )}
-
               </div>
             </>
           ) : selectedItem === 'devices' ? (
             <>
-            {/* Room Selector */}
-            <div className="sensors-selector-container">
-              <h3 className='select-title'>Select Device</h3>
-              <div className="sensors-options">
+              <h3 className='selDev'>Select Device</h3>
+              <div className="room-options">
               {sensors.map((sensor) => (
                 <span
-                  className={`sensors-option ${selectedSensor === sensor.deviceId ? 'active' : ''}`}
+                  className={`type-option ${selectedSensor === sensor.deviceId ? 'active' : ''}`}
                   onClick={() => handleSensorSelection(sensor.deviceId)}
                 >
                   {sensor.name}
                 </span>
               ))}
               </div>
-            </div>
+              <div className='container-graph'>
+                  <h3>Graphic Section</h3>
+                  <div id="chart">
+
+                    <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
+
+                  </div>
+              </div>
 
             {/* Toggle Sections */}
             <div className="toggle-buttons">
@@ -580,42 +527,22 @@ const Dashboard = () => {
               <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
                 {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
               </button>
-              <button id="hideGrafSec" onClick={toggleGraphicSection} data-action={showGraphicSection ? 'Hide' : 'Show'}>
-                {showGraphicSection ? 'Hide Graphic Section' : 'Show Graphic Section'}
-              </button>
             </div>
 
 
             {/* Sections Side by Side */}
             <div className="sections-container">
-              {/* Reports Section */}
               {showReports && <ReportsSection />}
-
-              {/* Notifications Section */}
               {showNotifications && 
-              // chama o notification section ele vai receber o array de notificações
               <NotificationsSection notifications={notifications} />
               }
-
-
-              {/* Graphic Section */}
-              {showGraphicSection && (
-                <div>
-                  <h3>Graphic Section</h3>
-                  <div id="chart">
-
-                  <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
-
-                  </div>
-                </div>
-              )}
 
 
             </div>
             </>
           ) : selectedItem === 'notifications' ? (
             <>
-              <h3 className='select-title'>Real Time Notifications</h3>
+              <h3 className='realTime'>Real Time Notifications</h3>
               <div style={{ height: "50%", width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <List sx={{ width: '80%', }} component="nav" aria-label="mailbox folders">
 
