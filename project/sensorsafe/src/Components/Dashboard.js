@@ -89,7 +89,7 @@ const Dashboard = () => {
     setSelectedItem(itemName);
   }
 
-  
+
 
   useEffect(() => {
     // Fetch rooms data when the component mounts
@@ -163,7 +163,6 @@ const Dashboard = () => {
     }, [selectedSensor]);
 
 
-
     useEffect(() => { 
       setNotificationsRoom();
       setsensorValue([]);
@@ -211,7 +210,7 @@ const Dashboard = () => {
           const report_data = data[i];
           if(report_data.type === 'DEVICES' && report_data.description.includes(sensorId)){
               const formattedValue = parseFloat(report_data.sensorValue).toFixed(2);
-              date.push([(report_data.date), parseFloat(formattedValue)]);
+              date.push([report_data.date, parseFloat(formattedValue)]);
               // date.push(report_data.date);
               sensorType.push(report_data.sensorType);
               notifications.push(report_data.description);
@@ -283,11 +282,13 @@ const Dashboard = () => {
         for (let i = 0; i < data.length; i++) {
           const report_data = data[i];
           if(report_data.type === 'DEVICES' && report_data.description.includes(sensorId)){
+
               const formattedValue = parseFloat(report_data.sensorValue).toFixed(2);
               date.push([(report_data.date), parseFloat(formattedValue)]);
               // date.push(report_data.date);
               sensorType.push(report_data.sensorType);
               notifications.push(report_data.description);
+              
             }
             else{
               console.log("Sensor não encontrado");
@@ -298,6 +299,7 @@ const Dashboard = () => {
           setDate(date);
           // quero apenas os primerios 10notificaçoes
           setNotifications(notifications.slice(-10));
+          console.log("Date****************: ", date);
         
         
          // Isso retornará o número de dispositivos associados ao roomId
@@ -336,16 +338,12 @@ const Dashboard = () => {
             }
           }],
           xaxis: [{
-            x: new Date('14 Nov 2012').getTime(),
+            x: new Date().getTime(),
             borderColor: '#999',
             yAxisIndex: 0,
             label: {
               show: false,
-              text: 'Rally',
-              style: {
-                color: "#fff",
-                background: '#775DD0'
-              }
+             
             }
           }]
         },
@@ -355,10 +353,11 @@ const Dashboard = () => {
         markers: {
           size: 0,
           style: 'hollow',
+
         },
         xaxis: {
           type: 'datetime',
-          min: new Date('01 Mar 2012').getTime(),
+          min: new Date().getTime(),
           tickAmount: 6,
           title: {
             text: 'Time', // Legend for X-axis
@@ -369,6 +368,16 @@ const Dashboard = () => {
               color: 'blue'
             }
           },
+        },
+        yaxis: {
+          title: {
+
+          },
+          labels: {
+            formatter: function (value) {
+              return value.toFixed(2);
+            }
+          }
         },
         
         tooltip: {
@@ -388,8 +397,7 @@ const Dashboard = () => {
       },
     
     
-      selection: 'last_10',
-    
+      selection: 'last 10 days',    
     });
   
   
@@ -401,8 +409,22 @@ const Dashboard = () => {
         data: date
       }],
       options: {
-        // Restante das opções do gráfico
-      }
+
+        
+        tooltip: {
+          x: {
+            format: 'dd MMM yyyy'
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        
+      },
+
+      selection: 'last_day',
+
+            
     });
   }, [sensorValue]);
   
@@ -514,9 +536,11 @@ const Dashboard = () => {
                   <h3>Graphic Section</h3>
                   <div id="chart">
 
-                    <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={350} />
+                    <ReactApexChart options={chartData.options} series={chartData.series} type="area" height={650} />
 
                   </div>
+
+
               </div>
 
             {/* Toggle Sections */}
