@@ -178,3 +178,8 @@ To run the application, follow these steps:
       ```bash
       docker-compose down
       ```
+
+## UA Server Deployment
+
+To run the project in the UA server, ensure that you are connected to internet of "Universidade de Aveiro" locally or via vpn.
+The access link to the server is: [http://deti-ies-21.ua.pt:3000/]

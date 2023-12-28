@@ -66,12 +66,23 @@
 
 ## Deployment
 
-- Exist two different forms of deployment:
+- Exist three different forms of deployment:
 
     - [Local Deployment](/reports/Documentation/Deployment.md#local-deployment)
     - [Docker Deployment](/reports/Documentation/Deployment.md#Docker-deployment)
+    - [UA Server Deployment](/reports/Documentation/Deployment.md#UA-server-deployment)
 
 
 ## DataBase Access
 
 - mongosh --username root --password password
+
+## Test Account Credentials
+- For a better flow of the application, this User has already some sensors, rooms, and automation rules configured.
+
+- User
+    ```
+    username: user
+    password: password
+    ```
+
