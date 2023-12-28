@@ -132,22 +132,24 @@ const Devices = () => {
 
     return (
       <div className="Rooms"> 
-       <nav id="nav1">
-          <ul className="nav-links-Rooms">
-            <li id="HUMIDITY" className={selectedItem === 'HUMIDITY' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('HUMIDITY')}>HUMIDITY</Link>
-            </li>
-            <li id="TEMPERATURE" className={selectedItem === 'TEMPERATURE' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('TEMPERATURE')}>TEMPERATURE</Link>
-            </li>
-            <li id="SMOKE" className={selectedItem === 'SMOKE' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('SMOKE')}>SMOKE</Link>
-            </li>
-            <li id="OTHERS" className={selectedItem === 'OTHERS' ? 'active' : ''}>
-              <Link onClick={() => handleItemClick('OTHERS')}>OTHERS</Link>
-            </li>
-          </ul>
-        </nav>
+        <div className="Devicesnav">
+          <nav id="nav1">
+              <ul className="nav-links-Rooms">
+                <li id="HUMIDITY" className={selectedItem === 'HUMIDITY' ? 'active' : ''}>
+                  <Link onClick={() => handleItemClick('HUMIDITY')}>HUMIDITY</Link>
+                </li>
+                <li id="TEMPERATURE" className={selectedItem === 'TEMPERATURE' ? 'active' : ''}>
+                  <Link onClick={() => handleItemClick('TEMPERATURE')}>TEMPERATURE</Link>
+                </li>
+                <li id="SMOKE" className={selectedItem === 'SMOKE' ? 'active' : ''}>
+                  <Link onClick={() => handleItemClick('SMOKE')}>SMOKE</Link>
+                </li>
+                <li id="OTHERS" className={selectedItem === 'OTHERS' ? 'active' : ''}>
+                  <Link onClick={() => handleItemClick('OTHERS')}>OTHERS</Link>
+                </li>
+              </ul>
+            </nav>
+        </div>
         
   
         

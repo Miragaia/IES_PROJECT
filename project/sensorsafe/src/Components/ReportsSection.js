@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toastify from './Toastify';
+import '../Css/ReportsSection.css';
 
 const ReportsSection = ({roomid}) => {
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
@@ -110,13 +111,15 @@ const ReportsSection = ({roomid}) => {
 
   return (
     <div className="reports-section-container">
-      <h3>Reports Section</h3>
-      <div>
+      <h3 className='rpSect'>Reports Section</h3>
+      <div className='but1'>
         <button
           className="generate-report-button"
           style={buttonStyle}
           onClick={handleGenerateReportMan}
           disabled={isGeneratingReport}
+          onMouseOver={(e) => { e.target.style.backgroundColor = '#45a049'; }}
+          onMouseOut={(e) => { e.target.style.backgroundColor = '#4CAF50'; }}
         >
           {isGeneratingReport ? 'Generating Maintenance Report...' : 'Generate Maintenance Report'}
         </button>
@@ -130,6 +133,8 @@ const ReportsSection = ({roomid}) => {
           style={buttonStyle}
           onClick={handleGenerateReportStats}
           disabled={isGeneratingReport}
+          onMouseOver={(e) => { e.target.style.backgroundColor = '#45a049'; }}
+          onMouseOut={(e) => { e.target.style.backgroundColor = '#4CAF50'; }}
         >
           {isGeneratingReport ? 'Generating Status Report...' : 'Generate Status Report'}
         </button>
@@ -165,6 +170,8 @@ const buttonStyle = {
   cursor: 'pointer',
   marginRight: '10px', // Adjust as needed
   marginBottom: '10px', // Adjust as needed
+  fontWeight: 600,
+  width: '340px',
 };
 
 export default ReportsSection;
