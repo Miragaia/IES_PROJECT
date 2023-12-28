@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from multiprocessing import Process
+from pymongo import MongoClient
 import time
 from io import BytesIO
 import os
@@ -14,6 +15,31 @@ CORS(app, resources={r"/sensorsafe/*": {"origins": "http://localhost:3000"}})
 
 SECRET_KEY = "palavra_passe_ultra_secreta"
 app.config['SECRET_KEY'] = SECRET_KEY
+
+# MongoDB setup
+client = MongoClient('mongodb://root:password@172.18.0.5:27017/?readPreference=primary&appname=sensorsafe%20Compass&ssl=false')         
+db = client['sensorsafe']
+collection_name = 'pdfs'
+if "pdfs" not in db.list_collection_names():
+    pdf_collection = db.create_collection(collection_name)
+pdf_collection = db[collection_name]
+
+@app.route('/sensorsafe/pdfs', methods=['GET'])
+def get_pdfs():
+    auth = request.headers.get('Authorization')
+
+    if auth != SECRET_KEY or not auth:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    pdfs = []
+    for pdf in pdf_collection.find():
+        pdfs.append({
+            "roomID": pdf["roomID"],
+            "reportData": pdf["reportData"]
+        })
+    
+    return jsonify(pdfs), 200
+
 
 #remove report.pdf
 def clear_report():
@@ -39,6 +65,7 @@ def generate_report():
     # Extract report type and additional data
     report_type = data.get('report_type')
     stats = data.get('stats', [])
+    roomID = data.get('roomID')
 
     if not report_type:
         return jsonify({"error": "Report type not provided"}), 400
@@ -64,11 +91,15 @@ def generate_report():
         # time.sleep(5)
     else:
         return jsonify({"error": "Invalid report type"}), 400
+    
+
+    # Store the report data in MongoDB
+    file_id = pdf_collection.insert_one({"roomID": roomID, "reportData": reportData}).inserted_id
 
       # Return the report data with the correct Content-Type
     return jsonify(reportData), 200
 
-def startReport(report_type, stats):
+def startReport(report_type, stats):    
     print("Starting report: " + report_type)
     os.system("python3 generate_report_stats.py ")
     time.sleep(5)

@@ -1,6 +1,6 @@
 pika
-bson==0.5.10
 requests
 flask
 flask_cors
 reportlab==3.5.67
+pymongo==3.11.4

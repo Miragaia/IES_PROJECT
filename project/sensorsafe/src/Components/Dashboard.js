@@ -47,7 +47,7 @@ const Dashboard = () => {
     fetchRoomDevices(room);
     console.log('Room selected:', room);
   };
-
+  
   const handleRoomType = (room) => {
     setSelectedType(room);
   };
@@ -533,7 +533,7 @@ const Dashboard = () => {
               {/* Sections Side by Side */}
               <div className="sections-container">
                 {/* Reports Section */}
-                {showReports && <ReportsSection />}
+                {showReports && <ReportsSection roomid={selectedRoom} />}
 
                 {/* Notifications Section */}
                 {showNotifications && 
@@ -589,7 +589,7 @@ const Dashboard = () => {
             {/* Sections Side by Side */}
             <div className="sections-container">
               {/* Reports Section */}
-              {showReports && <ReportsSection />}
+              {showReports && <ReportsSection roomid={selectedRoom} />}
 
               {/* Notifications Section */}
               {showNotifications && 

@@ -3,11 +3,36 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toastify from './Toastify';
 
-const ReportsSection = () => {
+const ReportsSection = ({roomid}) => {
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
-
   // Dummy data for reports (replace with actual reports data)
-  const reports = ['Report 1', 'Report 2', 'Report 3'];
+  const [reports, setReports] = useState([]);
+  const [isLoadingReports, setIsLoadingReports] = useState(true);
+
+
+  const fetchReports = async () => {
+    try {
+      const response = await fetch('http://localhost:9999/sensorsafe/pdfs', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'palavra_passe_ultra_secreta',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      setReports(data);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+    } finally {
+      setIsLoadingReports(false);
+    }
+  };
+  
 
   const handleGenerateReportMan = async () => {
     // Add logic to make an API call to trigger report generation
@@ -24,6 +49,7 @@ const ReportsSection = () => {
         body: JSON.stringify({
           report_type: 'maintenance',
           stats: [1, 2, 3],
+          roomID: roomid,
         }),
       });
 
@@ -77,6 +103,10 @@ const ReportsSection = () => {
     }
   };
 
+  console.log("Reports: ", reports);
+  useEffect(() => {
+    fetchReports();
+  });
 
   return (
     <div className="reports-section-container">
@@ -103,7 +133,24 @@ const ReportsSection = () => {
         >
           {isGeneratingReport ? 'Generating Status Report...' : 'Generate Status Report'}
         </button>
-      </div>     
+      </div> 
+      {/* Show the history of reports */}
+      <div>
+        <h3>Report History</h3>
+        {isLoadingReports ? (
+          <p>Loading reports...</p>
+        ) : (
+          <ul>
+            {reports.map((report, index) => (
+              <li key={index}>
+                <a href={report.reportUrl} target="_blank" rel="noopener noreferrer">
+                  {report.reportName}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>    
     </div>
   );
 };
