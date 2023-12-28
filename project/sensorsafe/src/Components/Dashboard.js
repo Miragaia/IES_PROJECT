@@ -223,7 +223,8 @@ const Dashboard = () => {
           setsensorValue(sensorValue);
           setDate(date); 
           // quero apenas os primerios 10notificaçoes
-          setNotificationsRoom(notifications.slice(-10));
+          notifications.reverse();
+          setNotificationsRoom(notifications);
         
 
          // Isso retornará o número de dispositivos associados ao roomId
@@ -298,7 +299,8 @@ const Dashboard = () => {
           setsensorValue(sensorValue);
           setDate(date);
           // quero apenas os primerios 10notificaçoes
-          setNotifications(notifications.slice(-10));
+          notifications.reverse();
+          setNotifications(notifications);
           console.log("Date****************: ", date);
         
         
@@ -422,14 +424,170 @@ const Dashboard = () => {
         
       },
 
-      selection: 'last_day',
+      selection: 'last_hour',
 
             
     });
   }, [sensorValue]);
   
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  // Dummy data for reports (replace with actual reports data)
+  const [reports, setReports] = useState([]);
+  const [isLoadingReports, setIsLoadingReports] = useState(true);
+
+
+  const fetchReports = async () => {
+    try {
+      const response = await fetch('http://localhost:9999/sensorsafe/pdfs', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'palavra_passe_ultra_secreta',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      const pdf = [];
+      for (let i = 0; i < data.length; i++) {
+        const report_data = data[i];
+        if( report_data.roomID === selectedRoom ){
+          pdf.push(report_data);
+        }
+      }
+      setReports(pdf);
+     
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+    } finally {
+      setIsLoadingReports(false);
+    }
+  };
+  
+
+  const handleGenerateReportMan = async () => {
+    // Add logic to make an API call to trigger report generation
+    // Set isGeneratingReport to true while waiting for the response
+    Toastify.info('Report is beeing generated, please wait a few seconds');
+    try {
+      // Example: Use fetch or your preferred HTTP library
+      const response = await fetch('http://localhost:9999/sensorsafe/generate_report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'palavra_passe_ultra_secreta',
+        },
+        body: JSON.stringify({
+          report_type: 'maintenance',
+          stats: [1, 2, 3],
+          roomID: selectedRoom,
+        }),
+      });
+
+      console.log(response);
+      const data = await response.json();
+
+      console.log('Report generated successfully:', data);
+
+      // Trigger the download
+      downloadReport(data.report_data, `report_Man.pdf`);
+    }catch(error) {
+      console.error('Error generating report:', error);
+    }
+  };
+
+  const downloadReport = (base64Data, fileName) => {
+    const blob = new Blob([base64Data], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+  };
+
+  const handleGenerateReportStats = async () => {
+    // Add logic to make an API call to trigger report generation
+    // Set isGeneratingReport to true while waiting for the response
+    Toastify.info('Report is beeing generated, please wait a few seconds');
+    try {
+      // Example: Use fetch or your preferred HTTP library
+      const response = await fetch('http://localhost:9999/sensorsafe/generate_report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization':'palavra_passe_ultra_secreta',
+        },
+        body: JSON.stringify({
+          report_type: 'stats',
+          stats: [1, 2, 3],
+        }),
+      });
+
+      console.log(response);
+      Toastify.info('Report is beeing generated, please wait a few seconds');
+      const data = await response.json();
+
+      console.log('Report generated successfully:', data);
+      // Trigger the download
+      downloadReport(data.report_data, `report_Stats.pdf`);
+    }catch(error) {
+      console.error('Error generating report:', error);
+    }
+  };
+
+  console.log("Reports: ", reports);
+  useEffect(() => {
+    fetchReports();
+  },[selectedRoom]);
     
-    
+  function stringToBase64(str) {
+    const encodedData = btoa(str);
+    return encodedData;
+}
+
+function downloadPDF(pdfData, filename) {
+    try {
+        // Convertendo a string para Base64
+        const base64Data = stringToBase64(pdfData);
+
+        // Convertendo a string Base64 para Blob
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+        const blob = new Blob(byteArrays, { type: 'application/pdf' });
+
+        // Criando um URL para o Blob
+        const url = URL.createObjectURL(blob);
+
+        // Criando um elemento de link para download
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+
+        // Adicionando o elemento de link ao corpo da página
+        document.body.appendChild(a);
+
+        // Acionando o clique no elemento de link para iniciar o download
+        a.click();
+
+        // Removendo o elemento de link após o download
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error("Erro ao decodificar ou criar o Blob:", error);
+    }
+}
+
   return (
     <div className="dashboard-container">
       <h2 className='dash-title'>Dashboard</h2>
@@ -510,7 +668,66 @@ const Dashboard = () => {
               {/* Sections Side by Side */}
               <div className="sections-container">
                 {/* Reports Section */}
-                {showReports && <ReportsSection roomid={selectedRoom} />}
+                {showReports ? (<>
+                  <div className="reports-section-container">
+      <h3 className='rpSect'>Reports Section</h3>
+      <div className='but1'>
+        <button
+          className="generate-report-button"
+          style={buttonStyle}
+          onClick={handleGenerateReportMan}
+          disabled={isGeneratingReport}
+          onMouseOver={(e) => { e.target.style.backgroundColor = '#45a049'; }}
+          onMouseOut={(e) => { e.target.style.backgroundColor = '#4CAF50'; }}
+        >
+          {isGeneratingReport ? 'Generating Maintenance Report...' : 'Generate Maintenance Report'}
+        </button>
+      </div>
+      {/* Button to generate Maintenance Report */}
+      
+      <div>
+        {/* Button to generate Status Report */}
+        <button
+          className="generate-report-button"
+          style={buttonStyle}
+          onClick={handleGenerateReportStats}
+          disabled={isGeneratingReport}
+          onMouseOver={(e) => { e.target.style.backgroundColor = '#45a049'; }}
+          onMouseOut={(e) => { e.target.style.backgroundColor = '#4CAF50'; }}
+        >
+          {isGeneratingReport ? 'Generating Status Report...' : 'Generate Status Report'}
+        </button>
+      </div> 
+      {/* Show the history of reports */}
+      <div>
+        <h3>Report History</h3>
+        {isLoadingReports ? (
+          <p>Loading reports...</p>
+        ) : (
+         
+<ul>
+  {reports.map((report, index) => (
+    <li key={index}>
+      <a 
+        href="#"
+        onClick={(e) => {
+          e.preventDefault(); // Evita a navegação padrão.
+          const base64String = report.reportData.report_data;
+          const filename = `Report_${report.roomID}.pdf`;
+          downloadPDF(base64String, filename);
+        }}
+      >
+        Report {index + 1} - {report.roomID}
+      </a>
+    </li>
+  ))}
+</ul>
+
+        )}
+      </div>    
+    </div>
+                
+                </>) : null}
 
                 {/* Notifications Section */}
                 {showNotifications && 
@@ -545,9 +762,9 @@ const Dashboard = () => {
 
             {/* Toggle Sections */}
             <div className="toggle-buttons">
-              <button id="hideRep" onClick={toggleReports} data-action={showReports ? 'Hide' : 'Show'}>
+              {/* <button id="hideRep" onClick={toggleReports} data-action={showReports ? 'Hide' : 'Show'}>
                 {showReports ? 'Hide Reports' : 'Show Reports'}
-              </button>
+              </button> */}
               <button id="hideNot" onClick={toggleNotifications} data-action={showNotifications ? 'Hide' : 'Show'}>
                 {showNotifications ? 'Hide Notifications' : 'Show Notifications'}
               </button>
@@ -557,7 +774,7 @@ const Dashboard = () => {
             {/* Sections Side by Side */}
             <div className="sections-container">
               {/* Reports Section */}
-              {showReports && <ReportsSection roomid={selectedRoom} />}
+              {/* {showReports && <ReportsSection roomid={selectedRoom} />} */}
 
               {/* Notifications Section */}
               {showNotifications && 
@@ -590,6 +807,20 @@ const Dashboard = () => {
     </div>
       
   );
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  fontSize: '16px',
+  backgroundColor: '#4CAF50', // Green color, you can change it
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginRight: '10px', // Adjust as needed
+  marginBottom: '10px', // Adjust as needed
+  fontWeight: 600,
+  width: '340px',
 };
 
 export default Dashboard;

@@ -132,6 +132,9 @@
   border: 2px solid black; /* Solid black border */
   padding: 10px;
   margin-top: 20px; /* Adjust margin as needed */
+  /* quero com uma altura fixa e se ultrupassar ganha a barra lateral para andar para baixo e cima */
+  height: 500px;
+  overflow-y: scroll;
 }
 
 .reports-container {
@@ -153,6 +156,8 @@
   border: 2px solid black;
   padding: 10px;
   margin-top: 20px;
+  height: 500px;
+  overflow-y: scroll;
 }
 
 .notifications-container {
