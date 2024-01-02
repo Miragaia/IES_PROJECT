@@ -11,3 +11,4 @@ Updates since Presentation day (19/12/2023)
 > Database.md
 
 - Updated the database diagram to include the new tables and relationships (table pdfs)
+- Updated some of the explanations

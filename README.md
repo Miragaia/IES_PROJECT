@@ -32,7 +32,7 @@
 
 # Database
 
-![Database](reports/I4/Database_UML.png)
+![Database](reports/I5/Database_UML.jpg)
 - ### [Database Explanation](reports/Documentation/Database.md)
 
 # Personas and Scenarios
@@ -45,7 +45,7 @@
 
 - [All available Project Documentation](reports/)
     
-- [Final Report](reports/I4/IES_Project_Specification_Report.pdf)
+- [Final Report](reports/I5/IES_Project_Specification_Report.pdf)
 
 - Running the application:
 

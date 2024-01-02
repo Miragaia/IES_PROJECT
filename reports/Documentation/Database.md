@@ -1,6 +1,6 @@
 # Database
 
-![Database](../I5/Database_UML.jpeg)
+![Database](../I5/Database_UML.jpg)
 
 ### User
 - The user is the entity that is going to interact with SensorSafe (web application).
